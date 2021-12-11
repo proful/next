@@ -29,7 +29,7 @@ export class NuPolygonShape extends TLPolygonShape<NuPolygonShapeProps> {
 
   static id = 'polygon'
 
-  Component = observer(({ events, isSelected }: TLComponentProps) => {
+  Component = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
     const {
       offset: [x, y],
       stroke,
@@ -41,7 +41,7 @@ export class NuPolygonShape extends TLPolygonShape<NuPolygonShapeProps> {
     const path = this.getVertices(strokeWidth / 2).join()
 
     return (
-      <SVGContainer {...events} opacity={opacity}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
         <g transform={`translate(${x}, ${y})`}>
           <polygon className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'} points={path} />
           <polygon

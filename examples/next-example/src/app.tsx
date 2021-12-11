@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import {
-  App as NextApp,
+  App as TLDrawApp,
   TLApp,
   TLComponents,
   TLSerializedApp,
@@ -73,13 +73,13 @@ function App(): JSX.Element {
           //   point: [500, 300],
           //   radius: 3,
           // },
-          {
-            id: 'box1',
-            type: 'box',
-            parentId: 'page1',
-            point: [100, 400],
-            size: [100, 100],
-          },
+          // {
+          //   id: 'box1',
+          //   type: 'box',
+          //   parentId: 'page1',
+          //   point: [100, 400],
+          //   size: [100, 100],
+          // },
           // {
           //   id: 'ellipse1',
           //   type: 'ellipse',
@@ -88,15 +88,30 @@ function App(): JSX.Element {
           //   size: [100, 200],
           //   rotation: Math.PI / 6,
           // },
-          {
-            id: 'polygon2',
-            type: 'polygon',
-            parentId: 'page1',
-            point: [100, 300],
-            size: [150, 150],
-            sides: 5,
-            ratio: 1,
-          },
+          // {
+          //   id: 'polygon2',
+          //   type: 'polygon',
+          //   parentId: 'page1',
+          //   point: [100, 300],
+          //   size: [150, 150],
+          //   sides: 5,
+          //   ratio: 1,
+          // },
+          // {
+          //   id: 'draw1',
+          //   type: 'draw',
+          //   parentId: 'page1',
+          //   point: [100, 100],
+          //   points: [
+          //     [0, 0, 0.5],
+          //     [10, 10, 0.5],
+          //     [20, 20, 0.5],
+          //     [30, 20, 0.5],
+          //     [40, 20, 0.5],
+          //     [20, 60, 0.5],
+          //   ],
+          //   isComplete: true,
+          // },
           // {
           //   id: 'polygon3',
           //   type: 'polygon',
@@ -115,15 +130,15 @@ function App(): JSX.Element {
           //   sides: 5,
           //   ratio: 1,
           // },
-          {
-            id: 'star1',
-            type: 'star',
-            parentId: 'page1',
-            point: [100, 500],
-            size: [150, 150],
-            points: 5,
-            ratio: 1,
-          },
+          // {
+          //   id: 'star1',
+          //   type: 'star',
+          //   parentId: 'page1',
+          //   point: [100, 500],
+          //   size: [150, 150],
+          //   points: 5,
+          //   ratio: 1,
+          // },
           // {
           //   id: 'star2',
           //   type: 'star',
@@ -159,7 +174,7 @@ function App(): JSX.Element {
 
   return (
     <div className="tl-app">
-      <NextApp
+      <TLDrawApp
         onMount={onMount}
         onPersist={onPersist}
         model={model}
@@ -168,7 +183,7 @@ function App(): JSX.Element {
         components={components}
       >
         <AppUI />
-      </NextApp>
+      </TLDrawApp>
     </div>
   )
 }

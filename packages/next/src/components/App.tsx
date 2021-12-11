@@ -27,6 +27,7 @@ const InnerApp = observer(function InnerApp<S extends TLShape>(props: AppProps<S
       hoveredShape={app.hoveredShape}
       selectedBounds={app.selectedBounds}
       selectedShapes={app.selectedShapes}
+      erasingShapes={app.erasingShapes}
       shapes={app.shapesInViewport}
       showGrid={app.showGrid}
       showBounds={app.showBounds}

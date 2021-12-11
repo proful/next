@@ -25,8 +25,8 @@ export class NuHighlighterShape extends TLDrawShape<NuHighlighterShapeProps> {
 
   static id = 'highlighter'
 
-  @observable stroke = '#000000'
-  @observable fill = '#ffffff'
+  @observable stroke = '#e9ff32'
+  @observable fill = '#000000'
   @observable strokeWidth = 2
   @observable opacity = 1
 
@@ -35,20 +35,20 @@ export class NuHighlighterShape extends TLDrawShape<NuHighlighterShapeProps> {
     return SvgPathUtils.getCurvedPathForPoints(points)
   }
 
-  Component = observer(({ events }: TLComponentProps) => {
+  Component = observer(({ events, isErasing }: TLComponentProps) => {
     const { pointsPath, stroke, fill, strokeWidth, opacity } = this
 
     return (
-      <SVGContainer {...events} opacity={opacity}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
         <path
           d={pointsPath}
           strokeWidth={strokeWidth * 16}
           stroke={stroke}
-          fill={fill}
+          fill="none"
           pointerEvents="all"
           strokeLinejoin="round"
           strokeLinecap="round"
-          opacity={0.17}
+          opacity={0.5}
         />
       </SVGContainer>
     )

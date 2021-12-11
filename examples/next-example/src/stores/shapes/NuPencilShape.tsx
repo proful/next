@@ -35,11 +35,11 @@ export class NuPencilShape extends TLDrawShape<NuPencilShapeProps> {
     return SvgPathUtils.getCurvedPathForPoints(points)
   }
 
-  Component = observer(({ events }: TLComponentProps) => {
+  Component = observer(({ events, isErasing }: TLComponentProps) => {
     const { pointsPath, stroke, fill, strokeWidth, opacity } = this
 
     return (
-      <SVGContainer {...events} opacity={opacity}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
         <polyline
           points={pointsPath}
           stroke={stroke}

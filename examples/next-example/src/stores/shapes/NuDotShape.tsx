@@ -27,11 +27,11 @@ export class NuDotShape extends TLDotShape<NuDotShapeProps> {
   @observable strokeWidth = 2
   @observable opacity = 1
 
-  Component = observer(({ events, isSelected }: TLComponentProps) => {
+  Component = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
     const { radius, stroke, fill, strokeWidth, opacity } = this
 
     return (
-      <SVGContainer {...events} opacity={opacity}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
         <circle
           className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           cx={radius}

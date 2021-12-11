@@ -84,6 +84,8 @@ export class TLHistory<S extends TLShape> {
       this.app.select(...selectedIds)
     }
 
+    this.app.setErasingShapes([])
+
     const pagesMap = new Map(this.app.pages.map((page) => [page.id, page]))
     const pagesToAdd: TLPage<S>[] = []
 

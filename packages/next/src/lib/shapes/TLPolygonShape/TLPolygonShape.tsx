@@ -28,13 +28,13 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
 
   static id = 'polygon'
 
-  Component = observer(({ events }: TLComponentProps) => {
+  Component = observer(({ events, isErasing }: TLComponentProps) => {
     const {
       offset: [x, y],
     } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : 1}>
         <polygon
           transform={`translate(${x}, ${y})`}
           points={this.vertices.join()}
@@ -127,7 +127,7 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
 
   hitTestLineSegment = (A: number[], B: number[]): boolean => {
     const { vertices, point } = this
-    return intersectLineSegmentPolyline(Vec.add(A, point), Vec.add(B, point), vertices).didIntersect
+    return intersectLineSegmentPolyline(Vec.sub(A, point), Vec.sub(B, point), vertices).didIntersect
   }
 
   hitTestBounds = (bounds: TLBounds): boolean => {

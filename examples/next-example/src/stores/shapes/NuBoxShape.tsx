@@ -31,7 +31,7 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
   @observable borderRadius = 0
   @observable opacity = 1
 
-  Component = observer(({ events, isSelected }: TLComponentProps) => {
+  Component = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
     const {
       size: [w, h],
       stroke,
@@ -42,7 +42,7 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
     } = this
 
     return (
-      <SVGContainer {...events} opacity={opacity}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
         <rect
           className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           x={strokeWidth / 2}

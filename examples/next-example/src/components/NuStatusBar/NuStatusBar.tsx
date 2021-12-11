@@ -8,7 +8,7 @@ import type { Shape } from 'stores'
 export const NuStatusBar = observer(function StatusBar() {
   const app = useApp<Shape>()
   return (
-    <div className="tl-debug">
+    <div className="nu-statusbar">
       {app.selectedTool.id} | {app.selectedTool.currentState.id}
     </div>
   )

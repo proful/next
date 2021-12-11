@@ -24,13 +24,13 @@ export class TLBoxShape<P extends TLBoxShapeProps = any> extends TLShape<P & TLB
 
   @observable size: number[] = [100, 100]
 
-  Component = observer(({ events }: TLComponentProps) => {
+  Component = observer(({ events, isErasing }: TLComponentProps) => {
     const {
       size: [w, h],
     } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : 1}>
         <rect
           width={Math.max(0.01, w)}
           height={Math.max(0.01, h)}

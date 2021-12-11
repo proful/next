@@ -6,6 +6,7 @@ import {
   SVGContainer,
   SvgPathUtils,
   TLComponentProps,
+  TLCustomProps,
   TLDrawShape,
   TLDrawShapeProps,
   TLIndicatorProps,
@@ -18,7 +19,7 @@ import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 export interface NuPenShapeProps extends TLDrawShapeProps, NuStyleProps {}
 
 export class NuPenShape extends TLDrawShape<NuPenShapeProps> {
-  constructor(props = {} as TLShapeProps & Partial<NuPenShapeProps>) {
+  constructor(props = {} as TLCustomProps<NuPenShapeProps>) {
     super(props)
     assignOwnProps(this, props)
     makeObservable(this)
@@ -38,16 +39,15 @@ export class NuPenShape extends TLDrawShape<NuPenShapeProps> {
       a 4,4 0 1,0 8,0
       a 4,4 0 1,0 -8,0`
     }
-
     const stroke = getStroke(points, { size: 4 + this.strokeWidth * 2, last: isComplete })
     return SvgPathUtils.getCurvedPathForPolygon(stroke)
   }
 
-  Component = observer(({ events }: TLComponentProps) => {
+  Component = observer(({ events, isErasing }: TLComponentProps) => {
     const { pointsPath, stroke, strokeWidth, opacity } = this
 
     return (
-      <SVGContainer {...events} opacity={opacity}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
         <path
           d={pointsPath}
           strokeWidth={strokeWidth}

@@ -1,6 +1,7 @@
 import { IdleState, PointingState, ErasingState } from './states'
 import { TLTool } from '~lib'
 import type { TLApp, TLShape } from '~lib'
+import type { TLKeyboardHandler } from '~types'
 
 export abstract class TLEraseTool<
   S extends TLShape = TLShape,
@@ -11,4 +12,14 @@ export abstract class TLEraseTool<
   static states = [IdleState, PointingState, ErasingState]
 
   static initial = 'idle'
+
+  onKeyDown: TLKeyboardHandler<S> = (_info, e) => {
+    switch (e.key) {
+      case 'Escape': {
+        this.app.setErasingShapes([])
+        this.transition('idle')
+        break
+      }
+    }
+  }
 }

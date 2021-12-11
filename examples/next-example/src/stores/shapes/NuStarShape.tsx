@@ -29,7 +29,7 @@ export class NuStarShape extends TLStarShape<NuStarShapeProps> {
 
   static id = 'star'
 
-  Component = observer(({ events, isSelected }: TLComponentProps) => {
+  Component = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
     const {
       offset: [x, y],
       stroke,
@@ -41,7 +41,7 @@ export class NuStarShape extends TLStarShape<NuStarShapeProps> {
     const path = this.getVertices(strokeWidth / 2).join()
 
     return (
-      <SVGContainer {...events} opacity={opacity}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
         <polygon
           className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           transform={`translate(${x}, ${y})`}

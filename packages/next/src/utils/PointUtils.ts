@@ -197,4 +197,16 @@ export class PointUtils {
     result.push(newPoints[last], points[points.length - 1])
     return result
   }
+
+  static pointNearToPolyline(point: number[], points: number[][], distance = 8) {
+    const len = points.length
+    for (let i = 1; i < len; i++) {
+      const p1 = points[i - 1]
+      const p2 = points[i]
+      const d = Vec.distanceToLineSegment(p1, p2, point)
+      if (d < distance) return true
+    }
+
+    return false
+  }
 }

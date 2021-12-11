@@ -50,7 +50,7 @@ export const NuToolBar = observer(function ToolBar(): JSX.Element {
   }, [app])
 
   return (
-    <div className="tl-toolbar">
+    <div className="nu-toolbar">
       <input type="checkbox" checked={app.isToolLocked} onChange={handleToolLockClick} />
       Camera
       <button onClick={zoomOut}>-</button>

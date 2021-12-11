@@ -35,7 +35,7 @@ export class NuEllipseShape extends TLBoxShape<NuEllipseShapeProps> {
   @observable strokeWidth = 2
   @observable opacity = 1
 
-  Component = observer(({ isSelected, events }: TLComponentProps) => {
+  Component = observer(({ isSelected, isErasing, events }: TLComponentProps) => {
     const {
       size: [w, h],
       stroke,
@@ -45,7 +45,7 @@ export class NuEllipseShape extends TLBoxShape<NuEllipseShapeProps> {
     } = this
 
     return (
-      <SVGContainer {...events} opacity={opacity}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
         <ellipse
           className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           cx={w / 2}

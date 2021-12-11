@@ -48,7 +48,7 @@ button {
   height: 100vh;
 }
 
-.tl-toolbar {
+.nu-toolbar {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -65,7 +65,22 @@ button {
   font-size: inherit;
 }
 
-.tl-debug {
+.nu-contextbar {
+  pointer-events: all;
+  position: relative;
+  background-color: var(--color-panel);
+  padding: 8px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 14px;
+  will-change: transform, contents;
+  box-shadow: var(--shadow-medium);
+}
+
+.nu-statusbar {
   position: fixed;
   bottom: 0px;
   left: 0px;
@@ -85,7 +100,19 @@ button {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.nu-number-input {
   width: 44px;
+  height: 24px;
+  padding: 0;
+}
+
+.nu-color-input {
+  height: 24px;
+  padding: 0 2px;
+  background: none;
+  border-radius: 2px;
 }
 
 .nu-input > label {

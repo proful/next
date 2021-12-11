@@ -94,7 +94,7 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
                 isSelected={selectedShapes?.includes(shape)}
                 isErasing={erasingShapes?.includes(shape)}
                 meta={meta}
-                zIndex={100 + i}
+                zIndex={1000 + i}
               />
             ))}
           {selectedShapes?.map((shape) => (

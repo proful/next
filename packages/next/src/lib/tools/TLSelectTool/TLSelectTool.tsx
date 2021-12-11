@@ -21,7 +21,7 @@ export class TLSelectTool<S extends TLShape, R extends TLApp<S> = TLApp<S>> exte
 
   static initial = 'idle'
 
-  static shortcut = 'v,1'
+  static shortcut = ['v']
 
   static states = [
     IdleState,

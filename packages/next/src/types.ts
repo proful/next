@@ -599,3 +599,5 @@ export interface TLStarShapeProps extends TLPolygonShapeProps {
   ratio: number
   isFlippedY: boolean
 }
+
+export type TLCustomProps<P extends AnyObject = any> = TLShapeProps & Partial<P>

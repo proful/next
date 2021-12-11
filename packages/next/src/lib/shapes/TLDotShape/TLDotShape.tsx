@@ -29,11 +29,11 @@ export class TLDotShape<P extends TLDotShapeProps = any> extends TLShape<P> {
   readonly hideRotateHandle = true
   readonly hideBoundsDetail = true
 
-  Component = observer(({ events }: TLComponentProps) => {
+  Component = observer(({ events, isErasing }: TLComponentProps) => {
     const { radius } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={isErasing ? 0.2 : 1}>
         <circle
           cx={radius}
           cy={radius}

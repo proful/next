@@ -27,6 +27,6 @@ export class IdleState<
 
   onPinchStart: TLPinchHandler<S> = (...args) => {
     this.app.transition('select', { returnTo: 'draw' })
-    this.app.onPinchStart?.(...args)
+    this.app._events.onPinchStart?.(...args)
   }
 }

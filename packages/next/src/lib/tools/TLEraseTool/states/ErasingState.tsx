@@ -28,6 +28,8 @@ export class ErasingState<
     this.app.shapesInViewport
       .filter((shape) => shape.hitTestLineSegment(previousPoint, currentPoint))
       .forEach((shape) => this.hitShapes.add(shape))
+
+    this.app.setErasingShapes(Array.from(this.hitShapes.values()))
   }
 
   onPointerUp: TLPointerHandler<S> = () => {

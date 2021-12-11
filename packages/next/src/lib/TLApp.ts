@@ -290,12 +290,13 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
       viewport: { currentView },
     } = this
 
-    return currentPage.shapes.filter(
-      (shape) =>
+    return currentPage.shapes.filter((shape) => {
+      return (
         shape.parentId === currentPage.id &&
         (BoundsUtils.boundsContain(currentView, shape.rotatedBounds) ||
           BoundsUtils.boundsCollide(currentView, shape.rotatedBounds))
-    )
+      )
+    })
   }
 
   @action readonly createShapes = (shapes: S[] | TLSerializedShape[]): this => {
@@ -353,7 +354,9 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
   }
 
   @computed get selectedShapes(): S[] {
-    const { selectedIds } = this
+    const { selectedIds, selectedTool } = this
+    const stateId = selectedTool.id
+    if (stateId !== 'select') return []
     return this.currentPage.shapes.filter((shape) => selectedIds.includes(shape.id))
   }
 

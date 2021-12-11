@@ -61,24 +61,7 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
 
   return (
     <HTMLContainer centered>
-      <div
-        ref={rContextBar}
-        className="contextbar"
-        style={{
-          pointerEvents: 'all',
-          position: 'relative',
-          backgroundColor: 'white',
-          padding: '8px 12px',
-          borderRadius: '8px',
-          whiteSpace: 'nowrap',
-          display: 'flex',
-          gap: 8,
-          alignItems: 'center',
-          fontSize: 14,
-          willChange: 'transform',
-          boxShadow: 'var(--tl-shadow-elevation-medium)',
-        }}
-      >
+      <div ref={rContextBar} className="nu-contextbar">
         <NuColorInput label="Stroke" value={shapes[0].stroke} onChange={updateStroke} />
         <NuColorInput label="Fill" value={shapes[0].fill} onChange={updateFill} />
         <NuNumberInput

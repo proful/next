@@ -6,9 +6,9 @@ interface NuColorInputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 export function NuColorInput({ label, ...rest }: NuColorInputProps) {
   return (
-    <div className="tl-input">
+    <div className="nu-input">
       <label htmlFor={`#color-${label}`}>{label}</label>
-      <input className="tl-input" name={`#color-${label}`} type="color" {...rest} />
+      <input className="nu-color-input" name={`#color-${label}`} type="color" {...rest} />
     </div>
   )
 }

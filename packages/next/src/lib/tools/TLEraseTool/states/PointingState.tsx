@@ -28,16 +28,9 @@ export class PointingState<
   }
 
   onPointerUp: TLPointerHandler<S> = () => {
+    const shapesToDelete = [...this.app.erasingShapes]
+    this.app.setErasingShapes([])
+    this.app.deleteShapes(shapesToDelete)
     this.tool.transition('idle')
-  }
-
-  onKeyDown: TLKeyboardHandler<S> = (_info, e) => {
-    switch (e.key) {
-      case 'Escape': {
-        this.app.setErasingShapes([])
-        this.tool.transition('idle')
-        break
-      }
-    }
   }
 }
