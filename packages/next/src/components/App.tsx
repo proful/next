@@ -28,6 +28,7 @@ const InnerApp = observer(function InnerApp<S extends TLShape>(props: AppProps<S
       selectedBounds={app.selectedBounds}
       selectedShapes={app.selectedShapes}
       shapes={app.shapesInViewport}
+      showGrid={app.showGrid}
       showBounds={app.showBounds}
       showBoundsRotation={app.showBoundsRotation}
       showResizeHandles={app.showResizeHandles}

@@ -61,6 +61,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
     if (serializedApp) this.history.deserialize(serializedApp)
 
     const ownShortcuts: TLShortcut<S>[] = [
+      { keys: 'mod+shift+g', fn: () => this.toggleGrid() },
       { keys: 'shift+0', fn: () => this.resetZoom() },
       { keys: 'mod+-', fn: () => this.zoomToSelection() },
       { keys: 'mod+-', fn: () => this.zoomOut() },
@@ -109,13 +110,6 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   settings = new TLSettings()
 
-  get selectedTool() {
-    return this.currentState
-  }
-
-  selectTool = this.transition
-  registerTools = this.registerStates
-
   /* --------------------- History -------------------- */
 
   // this needs to be at the bottom
@@ -127,6 +121,29 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
   undo = this.history.undo
 
   redo = this.history.redo
+
+  saving = false // used to capture direct mutations as part of the history stack
+
+  saveState = () => {
+    if (this.history.isPaused) return
+    this.saving = true
+    requestAnimationFrame(() => {
+      if (this.saving) {
+        this.persist()
+        this.saving = false
+      }
+    })
+  }
+
+  /* ---------------------- Tools --------------------- */
+
+  get selectedTool() {
+    return this.currentState
+  }
+
+  selectTool = this.transition
+
+  registerTools = this.registerStates
 
   /* -------------------- App State ------------------- */
 
@@ -186,6 +203,15 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
       stateId === 'idle' &&
       !this.selectedShapes.every((shape) => shape.hideResizeHandles)
     )
+  }
+
+  /* -------------------- Settings -------------------- */
+
+  @observable showGrid = false
+
+  @action setSetting = <T extends 'showGrid'>(setting: T, value: this[T]): this => {
+    this[setting] = value
+    return this
   }
 
   /* ------------------ Shape Classes ----------------- */
@@ -558,18 +584,8 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
     return this
   }
 
-  // This is used to capture direct mutations as part of the history stack
-  saving = false
-
-  saveState = () => {
-    if (this.history.isPaused) return
-    this.saving = true
-    requestAnimationFrame(() => {
-      if (this.saving) {
-        this.persist()
-        this.saving = false
-      }
-    })
+  toggleGrid = (): this => {
+    return this.setSetting('showGrid', !this.showGrid)
   }
 
   save = () => {

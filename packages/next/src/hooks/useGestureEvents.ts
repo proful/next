@@ -43,14 +43,12 @@ export function useGestureEvents(ref: React.RefObject<HTMLDivElement>) {
       const elm = ref.current
       const { event } = gesture
       if (!(event.target === elm || elm?.contains(event.target as Node))) return
-      setTimeout(() => {
-        if (inputs.state !== 'pinching') return
-        callbacks.onPinchEnd?.(
-          { type: TLTargetType.Canvas, target: 'canvas', order: 0 },
-          gesture,
-          event
-        )
-      }, 100)
+      if (inputs.state !== 'pinching') return
+      callbacks.onPinchEnd?.(
+        { type: TLTargetType.Canvas, target: 'canvas', order: 0 },
+        gesture,
+        event
+      )
     }
 
     return {

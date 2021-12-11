@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useRendererContext } from '~hooks'
 import type { TLGridProps } from '~types'
+import { observer } from 'mobx-react-lite'
 import { modulate } from '~utils/DataUtils'
 
 const STEPS = [
@@ -10,7 +11,7 @@ const STEPS = [
   [0.7, 2.5, 1],
 ]
 
-export function Grid({ size }: TLGridProps) {
+export const Grid = observer(function Grid({ size }: TLGridProps) {
   const {
     viewport: {
       camera: { point, zoom },
@@ -45,4 +46,4 @@ export function Grid({ size }: TLGridProps) {
       ))}
     </svg>
   )
-}
+})
