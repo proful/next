@@ -45,6 +45,29 @@ describe('app', () => {
     expect(app.selectedIds.length).toBe(1)
     expect(app.selectedIds[0]).toBe('box1')
   })
+
+  test('change current page', () => {
+    render(
+      <App
+        onMount={jest.fn()}
+        onPersist={jest.fn()}
+        model={mockDocument}
+        shapeClasses={[TLBoxShape]}
+      ></App>
+    )
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    const app = tln as TLApp
+
+    expect(app.currentPageId).toBe('page1')
+
+    app.changePage('page2')
+    app.setSelectedShapes(['box2'])
+
+    expect(app.currentPageId).toBe('page2')
+    expect(app.selectedIds.length).toBe(1)
+    expect(app.selectedIds[0]).toBe('box2')
+  })
 })
 
 const mockDocument = {
@@ -59,6 +82,20 @@ const mockDocument = {
           id: 'box1',
           type: 'box',
           parentId: 'page1',
+          point: [100, 400],
+          size: [100, 100],
+        },
+      ],
+      bindings: [],
+    },
+    {
+      name: 'Page',
+      id: 'page2',
+      shapes: [
+        {
+          id: 'box2',
+          type: 'box',
+          parentId: 'page2',
           point: [100, 400],
           size: [100, 100],
         },

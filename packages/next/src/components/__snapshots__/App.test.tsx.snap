@@ -35,6 +35,37 @@ Object {
         },
       ],
     },
+    Object {
+      "bindings": Array [],
+      "id": "page2",
+      "name": "Page",
+      "nonce": 1,
+      "shapes": Array [
+        Object {
+          "children": undefined,
+          "handles": undefined,
+          "id": "box2",
+          "isAspectRatioLocked": undefined,
+          "isGenerated": undefined,
+          "isGhost": undefined,
+          "isHidden": undefined,
+          "isLocked": undefined,
+          "name": "Shape",
+          "nonce": 0,
+          "parentId": "page2",
+          "point": Array [
+            100,
+            400,
+          ],
+          "rotation": undefined,
+          "size": Array [
+            100,
+            100,
+          ],
+          "type": "box",
+        },
+      ],
+    },
   ],
   "selectedIds": Array [
     "box1",
