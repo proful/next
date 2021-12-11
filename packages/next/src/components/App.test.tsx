@@ -15,7 +15,7 @@ describe('app', () => {
     )
   })
 
-  test('check the attributes', () => {
+  test('check the default attributes with only box shape', () => {
     render(
       <App
         onMount={jest.fn()}
@@ -24,12 +24,26 @@ describe('app', () => {
         shapeClasses={[TLBoxShape]}
       ></App>
     )
-    screen.logTestingPlaygroundURL()
-
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     const app = tln as TLApp
-    console.log(app.currentPageId)
+
+    // App State
+    expect(app.serialized).toMatchSnapshot()
+
+    expect(app.showBounds).toBe(true)
+    expect(app.showBoundsDetail).toBe(true)
+    expect(app.showBoundsRotation).toBe(false)
+    expect(app.showContextBar).toBe(true)
+    expect(app.showRotateHandle).toBe(true)
+    expect(app.showResizeHandles).toBe(true)
+
+    // Settings
+    expect(app.isToolLocked).toBe(false)
+
+    // Selected Shapes
+    expect(app.selectedIds.length).toBe(1)
+    expect(app.selectedIds[0]).toBe('box1')
   })
 })
 
