@@ -9,7 +9,7 @@ import {
 } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
 import { makeObservable, observable } from 'mobx'
-import type { NuStyleProps } from './NuStyleProps'
+import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 export interface NuBoxShapeProps extends TLBoxShapeProps, NuStyleProps {}
 
@@ -23,8 +23,9 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
   static id = 'box'
 
   @observable stroke = '#000000'
-  @observable fill = '#ffffff22'
+  @observable fill = '#ffffff'
   @observable strokeWidth = 2
+  @observable opacity = 1
 
   Component = observer(({ events, isSelected }: TLComponentProps) => {
     const {
@@ -32,10 +33,11 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
       stroke,
       fill,
       strokeWidth,
+      opacity,
     } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={opacity}>
         <rect
           className={isSelected ? 'nu-hitarea-fill' : 'nu-hitarea-stroke'}
           x={strokeWidth / 2}
@@ -57,4 +59,12 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
       </SVGContainer>
     )
   })
+
+  validateProps = (props: Partial<NuBoxShapeProps & TLShapeProps>) => {
+    if (props.size !== undefined) {
+      props.size[0] = Math.max(props.size[0], 1)
+      props.size[1] = Math.max(props.size[1], 1)
+    }
+    return withClampedStyles(props)
+  }
 }

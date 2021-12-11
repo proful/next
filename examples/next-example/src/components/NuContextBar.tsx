@@ -3,6 +3,8 @@ import { BoundsUtils, HTMLContainer, TLContextBarComponent } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
 import { useAppContext } from 'context'
 import type { NuStarShape, NuPolygonShape, Shape } from 'stores'
+import { NuNumberInput } from './inputs/NuNumberInput'
+import { NuColorInput } from './inputs/NuColorInput'
 
 const _NuContextBar: TLContextBarComponent<Shape> = ({
   shapes,
@@ -27,8 +29,12 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
     shapes.forEach((shape) => shape.update({ strokeWidth: +e.currentTarget.value }))
   }, [])
 
-  const updatePoints = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
-    shapes.forEach((shape) => shape.update({ points: +e.currentTarget.value }))
+  const updateOpacity = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
+    shapes.forEach((shape) => shape.update({ opacity: +e.currentTarget.value }))
+  }, [])
+
+  const updateSides = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
+    shapes.forEach((shape) => shape.update({ sides: +e.currentTarget.value }))
   }, [])
 
   const updateRatio = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
@@ -52,8 +58,7 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
 
   if (!app) return null
 
-  const pointsShapes = shapes.filter((shape) => 'points' in shape) as NuStarShape[]
-  const ratioShapes = shapes.filter((shape) => 'ratio' in shape) as (NuPolygonShape | NuStarShape)[]
+  const sidesShapes = shapes.filter((shape) => 'sides' in shape) as (NuPolygonShape | NuStarShape)[]
 
   return (
     <HTMLContainer centered>
@@ -75,42 +80,40 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
           boxShadow: 'var(--nu-shadow-elevation-medium)',
         }}
       >
-        Stroke
-        <input type="color" onChange={updateStroke} />
-        Fill
-        <input type="color" onChange={updateFill} />
-        Width
-        <input
-          type="number"
+        <NuColorInput label="Stroke" value={shapes[0].stroke} onChange={updateStroke} />
+        <NuColorInput label="Fill" value={shapes[0].fill} onChange={updateFill} />
+        <NuNumberInput
+          label="Width"
           value={Math.max(...shapes.map((shape) => shape.strokeWidth))}
           onChange={updateStrokeWidth}
           style={{ width: 48 }}
         />
-        {pointsShapes.length > 0 && (
-          <>
-            Points
-            <input
-              type="number"
-              value={Math.max(...pointsShapes.map((shape) => shape.points))}
-              onChange={updatePoints}
-              style={{ width: 40 }}
-            />
-          </>
+        {sidesShapes.length > 0 && (
+          <NuNumberInput
+            label="Sides"
+            value={Math.max(...sidesShapes.map((shape) => shape.sides))}
+            onChange={updateSides}
+            style={{ width: 40 }}
+          />
         )}
-        {ratioShapes.length > 0 && (
-          <>
-            Ratio
-            <input
-              type="number"
-              value={Math.max(...ratioShapes.map((shape) => shape.ratio))}
-              onChange={updateRatio}
-              step={0.1}
-              min={0}
-              max={2}
-              style={{ width: 40 }}
-            />
-          </>
+        {sidesShapes.length > 0 && (
+          <NuNumberInput
+            label="Ratio"
+            value={Math.max(...sidesShapes.map((shape) => shape.ratio))}
+            onChange={updateRatio}
+            step={0.1}
+            min={0}
+            max={2}
+            style={{ width: 40 }}
+          />
         )}
+        <NuNumberInput
+          label="Opacity"
+          value={Math.max(...shapes.map((shape) => shape.opacity))}
+          onChange={updateOpacity}
+          step={0.1}
+          style={{ width: 48 }}
+        />
       </div>
     </HTMLContainer>
   )

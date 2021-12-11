@@ -16,12 +16,12 @@ export class TLStarShape<P extends TLStarShapeProps = any> extends TLPolygonShap
   id = 'star'
 
   getVertices(padding = 0): number[][] {
-    const { ratio, points, size, isFlippedY } = this
+    const { ratio, sides, size, isFlippedY } = this
     const [w, h] = size
     const vertices = PolygonUtils.getStarVertices(
       Vec.div([w, h], 2),
       [Math.max(1, w - padding), Math.max(1, h - padding)],
-      Math.round(points),
+      Math.round(sides),
       ratio
     )
     if (isFlippedY) {

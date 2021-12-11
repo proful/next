@@ -13,7 +13,7 @@ import {
 } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
 import { observable, computed, makeObservable } from 'mobx'
-import type { NuStyleProps } from './NuStyleProps'
+import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 export interface NuPenShapeProps extends TLDrawShapeProps, NuStyleProps {}
 
@@ -27,8 +27,9 @@ export class NuPenShape extends TLDrawShape<NuPenShapeProps> {
   static id = 'draw'
 
   @observable stroke = '#000000'
-  @observable fill = '#ffffff22'
+  @observable fill = '#ffffff'
   @observable strokeWidth = 2
+  @observable opacity = 1
 
   @computed get pointsPath() {
     const { points, isComplete } = this
@@ -38,15 +39,15 @@ export class NuPenShape extends TLDrawShape<NuPenShapeProps> {
       a 4,4 0 1,0 -8,0`
     }
 
-    const stroke = getStroke(points, { size: 8, last: isComplete })
+    const stroke = getStroke(points, { size: 4 + this.strokeWidth * 2, last: isComplete })
     return SvgPathUtils.getCurvedPathForPolygon(stroke)
   }
 
   Component = observer(({ events }: TLComponentProps) => {
-    const { points, pointsPath, stroke, strokeWidth } = this
+    const { pointsPath, stroke, strokeWidth, opacity } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={opacity}>
         <path
           d={pointsPath}
           strokeWidth={strokeWidth}
@@ -62,4 +63,10 @@ export class NuPenShape extends TLDrawShape<NuPenShapeProps> {
     const { pointsPath } = this
     return <path d={pointsPath} />
   })
+
+  validateProps = (props: Partial<TLShapeProps & NuPenShapeProps>) => {
+    props = withClampedStyles(props)
+    if (props.strokeWidth !== undefined) props.strokeWidth = Math.max(props.strokeWidth, 1)
+    return props
+  }
 }

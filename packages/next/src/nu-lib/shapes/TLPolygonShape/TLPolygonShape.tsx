@@ -10,7 +10,7 @@ import type { TLResizeInfo, TLComponentProps, TLIndicatorProps, TLShapeProps } f
 import type { TLBounds } from '~types'
 
 export interface TLPolygonShapeProps extends TLBoxShapeProps {
-  points: number
+  sides: number
   ratio: number
   isFlippedY: boolean
 }
@@ -22,7 +22,7 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
     makeObservable(this)
   }
 
-  @observable points = 3
+  @observable sides = 3
   @observable ratio = 1
   @observable isFlippedY = false
 
@@ -92,11 +92,11 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
   }
 
   getVertices(padding = 0): number[][] {
-    const { ratio, points, size, isFlippedY } = this
+    const { ratio, sides, size, isFlippedY } = this
     const vertices =
-      points === 3
+      sides === 3
         ? PolygonUtils.getTriangleVertices(size, padding, ratio)
-        : PolygonUtils.getPolygonVertices(size, points, padding, ratio)
+        : PolygonUtils.getPolygonVertices(size, sides, padding, ratio)
 
     if (isFlippedY) {
       return vertices.map((point) => [point[0], size[1] - point[1]])
@@ -140,8 +140,9 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
     )
   }
 
-  validateProps = (props: Partial<TLShapeProps & P>) => {
-    if (props.points !== undefined && props.points < 3) props.points = 3
+  validateProps = (props: Partial<TLShapeProps> & Partial<P>) => {
+    if (props.point) props.point = [0, 0]
+    if (props.sides !== undefined && props.sides < 3) props.sides = 3
     return props
   }
 }

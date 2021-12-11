@@ -63,7 +63,7 @@ export interface TLResizeInfo<P = any> {
   initialProps: TLShapeProps & P
 }
 
-export abstract class TLShape<P extends AnyObject = any, M = any> implements TLShapeProps {
+export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   constructor(props: TLShapeProps & Partial<P>) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -188,7 +188,7 @@ export abstract class TLShape<P extends AnyObject = any, M = any> implements TLS
   }
 
   getSerialized = (): TLSerializedShape<P> => {
-    const propKeys = Array.from(this.propsKeys.values()) as (keyof typeof this)[]
+    const propKeys = Array.from(this.propsKeys.values()) as (keyof TLShapeProps & P)[]
     return deepCopy(
       Object.fromEntries(propKeys.map((key) => [key, this[key]]))
     ) as TLSerializedShape<P>
@@ -207,13 +207,15 @@ export abstract class TLShape<P extends AnyObject = any, M = any> implements TLS
     return this.getCachedSerialized()
   }
 
-  validateProps(props: Partial<TLShapeProps | P>): Partial<TLShapeProps | P> {
+  validateProps = (
+    props: Partial<TLShapeProps> & Partial<P>
+  ): Partial<TLShapeProps> & Partial<P> => {
     return props
   }
 
-  @action update = (props: Partial<TLShapeProps | P>, isDeserializing = false) => {
+  @action update = (props: Partial<TLShapeProps> | Partial<P>, isDeserializing = false) => {
     if (!(isDeserializing || this.isDirty)) this.isDirty = true
-    Object.assign(this, this.validateProps(props))
+    Object.assign(this, this.validateProps(props as Partial<TLShapeProps> & Partial<P>))
     return this
   }
 }

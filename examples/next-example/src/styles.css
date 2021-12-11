@@ -73,3 +73,14 @@ button:hover {
   background: white;
   border-top: 1px solid black;
 }
+
+.nu-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 44px;
+}
+
+.nu-input > label {
+  font-size: 10px;
+}

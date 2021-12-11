@@ -18,6 +18,12 @@ export class IdleState<
         app.selectAll()
       },
     },
+    {
+      keys: 'del,backspace',
+      fn: (app) => {
+        app.delete()
+      },
+    },
   ]
 
   onPointerDown: TLPointerHandler = (info, e) => {

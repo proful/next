@@ -42,12 +42,39 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLCallba
     this._id = id
     this._initial = initial
     this._states = states
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const shortcuts = this.constructor['shortcuts'] as TLShortcut<S>[]
+    if (shortcuts?.length) this.registerKeyboardShortcuts(shortcuts, this)
   }
 
   private _id: string
   private _initial?: string
   private _states: TLStateClass<S, any, any>[]
   private _isActive = false
+  private _disposables: (() => void)[] = []
+
+  registerKeyboardShortcuts = <R extends TLRootState<S>>(
+    shortcuts: TLShortcut<S>[],
+    root: R
+  ): void => {
+    if (!shortcuts?.length) return
+
+    this._disposables.push(
+      ...shortcuts.map(({ keys, fn }) =>
+        KeyUtils.registerShortcut(keys, () => {
+          if (!this.isActive) return
+          fn(root, this)
+        })
+      )
+    )
+  }
+
+  dispose() {
+    this._disposables.forEach((disposable) => disposable())
+    return this
+  }
 
   get initial() {
     return this._initial
@@ -113,28 +140,6 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLCallba
       this.currentState = nextState
       nextState._events.onEnter({ ...data, fromId: '' })
     }
-  }
-
-  /* --------------- Keyboard Shortcuts --------------- */
-
-  protected registerKeyboardShortcuts = (): void => {
-    if (!this.shortcuts?.length) return
-
-    this.disposables.push(
-      ...this.shortcuts.map(({ keys, fn }) =>
-        KeyUtils.registerShortcut(keys, () => {
-          if (!this.isActive) return
-          fn(this, this)
-        })
-      )
-    )
-  }
-
-  protected disposables: (() => void)[] = []
-
-  dispose() {
-    this.disposables.forEach((disposable) => disposable())
-    return this
   }
 
   /* ----------------- Internal Events ---------------- */
@@ -346,7 +351,7 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLCallba
 
   static id: string
 
-  shortcuts?: TLShortcut<S>[]
+  static shortcuts?: TLShortcut<any, any>[]
 
   onEnter?: TLOnEnter<any>
 
@@ -400,32 +405,21 @@ export abstract class TLState<
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const shortcut = this.constructor['shortcut'] as string
-
     if (shortcut) {
       KeyUtils.registerShortcut(shortcut, () => {
         this.parent.transition(this.id)
       })
     }
 
-    this.registerKeyboardShortcuts()
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const shortcuts = this.constructor['shortcuts'] as TLShortcut<S>[]
+    if (shortcuts?.length) this.registerKeyboardShortcuts(shortcuts, this.root)
 
     makeObservable(this)
   }
 
-  /* --------------- Keyboard Shortcuts --------------- */
-
-  protected registerKeyboardShortcuts = () => {
-    if (!this.shortcuts?.length) return
-
-    this.disposables.push(
-      ...this.shortcuts.map(({ keys, fn }) =>
-        KeyUtils.registerShortcut(keys, () => {
-          if (!this.isActive) return
-          fn(this.root, this)
-        })
-      )
-    )
-  }
+  /* --------------------- States --------------------- */
 
   protected _root: R
   protected _parent: P

@@ -56,8 +56,6 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
       }
     }
 
-    this.registerKeyboardShortcuts()
-
     if (shapeClasses) this.registerShapes(...shapeClasses)
     if (tools) this.registerStates(...tools)
     if (serializedApp) this.history.deserialize(serializedApp)
