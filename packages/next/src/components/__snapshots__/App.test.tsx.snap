@@ -1,47 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`app check the attributes 1`] = `
-Object {
-  "currentPageId": "page1",
-  "pages": Array [
-    Object {
-      "bindings": Array [],
-      "id": "page1",
-      "name": "Page",
-      "nonce": 1,
-      "shapes": Array [
-        Object {
-          "children": undefined,
-          "handles": undefined,
-          "id": "box1",
-          "isAspectRatioLocked": undefined,
-          "isGenerated": undefined,
-          "isGhost": undefined,
-          "isHidden": undefined,
-          "isLocked": undefined,
-          "name": "Shape",
-          "nonce": 0,
-          "parentId": "page1",
-          "point": Array [
-            100,
-            400,
-          ],
-          "rotation": undefined,
-          "size": Array [
-            100,
-            100,
-          ],
-          "type": "box",
-        },
-      ],
-    },
-  ],
-  "selectedIds": Array [
-    "box1",
-  ],
-}
-`;
-
 exports[`app check the default attributes with only box shape 1`] = `
 Object {
   "currentPageId": "page1",
