@@ -5,9 +5,6 @@ import { action, computed, makeObservable, observable } from 'mobx'
 import { BoundsUtils } from '~utils'
 import {
   TLSelectTool,
-  TLInputs,
-  TLPage,
-  TLViewport,
   TLShape,
   TLSerializedPage,
   TLShapeClass,
@@ -31,6 +28,10 @@ import type {
 import { TLHistory } from './TLHistory'
 import { TLSettings } from './TLSettings'
 import { TLRootState } from './TLState'
+import { TLInputs } from './TLInputs'
+import { TLViewport } from './TLViewport'
+import { TLPage } from './TLPage'
+
 
 export interface TLSerializedApp {
   currentPageId: string

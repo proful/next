@@ -6,7 +6,7 @@ import { App } from './App'
 import { TLApp, TLBoxShape, TLBoxShapeProps, TLComponentProps, TLShapeProps } from '~nu-lib'
 import { SVGContainer } from '~components'
 
-describe('renderer', () => {
+describe('app', () => {
   test('mounts component without crashing', () => {
     render(<App onMount={jest.fn()} onPersist={jest.fn()} model={mockDocument}></App>)
   })
