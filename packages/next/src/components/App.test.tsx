@@ -8,7 +8,14 @@ import { SVGContainer } from '~components'
 
 describe('app', () => {
   test('mounts component without crashing', () => {
-    render(<App onMount={jest.fn()} onPersist={jest.fn()} model={mockDocument}></App>)
+    render(
+      <App
+        onMount={jest.fn()}
+        onPersist={jest.fn()}
+        model={mockDocument}
+        shapeClasses={[NuBoxShape]}
+      ></App>
+    )
   })
 })
 
