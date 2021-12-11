@@ -34,14 +34,14 @@ export class PinchingState<
     this.origin = info.gesture.origin
   }
 
-  onPinch: TLPinchHandler = (info, gesture, event) => {
+  onPinch: TLPinchHandler<S> = (info, gesture, event) => {
     // const delta = Vec.sub(this.origin, gesture.origin)
     // const trueDelta = Vec.sub(delta, this.prevDelta)
     // this.prevDelta = gesture.delta
     this.pinchCamera(gesture.origin, [0, 0], gesture.offset[0])
   }
 
-  onPinchEnd: TLPinchHandler = (_info, gesture, event) => {
+  onPinchEnd: TLPinchHandler<S> = (_info, gesture, event) => {
     this.tool.transition('idle')
   }
 }

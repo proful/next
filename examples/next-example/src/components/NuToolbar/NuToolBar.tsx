@@ -3,10 +3,10 @@
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
 import type { Shape } from 'stores'
-import { useAppContext } from '@tldraw/next'
+import { useApp } from '@tldraw/next'
 
-export const ToolBar = observer(function ToolBar(): JSX.Element {
-  const app = useAppContext<Shape>()
+export const NuToolBar = observer(function ToolBar(): JSX.Element {
+  const app = useApp<Shape>()
 
   const handleToolClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -52,20 +52,6 @@ export const ToolBar = observer(function ToolBar(): JSX.Element {
   return (
     <div className="tl-toolbar">
       <input type="checkbox" checked={app.isToolLocked} onChange={handleToolLockClick} />
-      {Array.from(app.children.values()).map((tool) => {
-        const isActive = app.selectedTool === tool
-        return (
-          <button
-            key={tool.id}
-            data-tool={tool.id}
-            onClick={handleToolClick}
-            onDoubleClick={handleToolDoubleClick}
-            style={{ textDecoration: isActive ? 'underline' : 'none' }}
-          >
-            {tool.id}
-          </button>
-        )
-      })}
       Camera
       <button onClick={zoomOut}>-</button>
       <button onClick={zoomIn}>+</button>

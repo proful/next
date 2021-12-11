@@ -160,11 +160,16 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
   }
 
   @computed get showBounds() {
-    return this.selectedShapes.length > 0 && !this.selectedShapes.every((shape) => shape.hideBounds)
+    return (
+      this.currentState.id === 'select' &&
+      this.selectedShapes.length > 0 &&
+      !this.selectedShapes.every((shape) => shape.hideBounds)
+    )
   }
 
   @computed get showBoundsDetail() {
     return (
+      this.currentState.id === 'select' &&
       this.selectedShapes.length > 0 &&
       !this.selectedShapes.every((shape) => shape.hideBoundsDetail)
     )
@@ -173,14 +178,16 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
   @computed get showBoundsRotation() {
     const stateId = this.selectedTool.currentState.id
     return (
-      (this.selectedShapes.length > 0 && stateId === 'rotating') ||
-      stateId === 'pointingRotateHandle'
+      this.currentState.id === 'select' &&
+      ((this.selectedShapes.length > 0 && stateId === 'rotating') ||
+        stateId === 'pointingRotateHandle')
     )
   }
 
   @computed get showContextBar() {
     const stateId = this.selectedTool.currentState.id
     return (
+      this.currentState.id === 'select' &&
       this.selectedShapes.length > 0 &&
       stateId === 'idle' &&
       !this.selectedShapes.every((shape) => shape.hideContextBar)
@@ -190,6 +197,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
   @computed get showRotateHandle() {
     const stateId = this.selectedTool.currentState.id
     return (
+      this.currentState.id === 'select' &&
       this.selectedShapes.length > 0 &&
       stateId === 'idle' &&
       !this.selectedShapes.every((shape) => shape.hideRotateHandle)
@@ -199,6 +207,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
   @computed get showResizeHandles() {
     const stateId = this.selectedTool.currentState.id
     return (
+      this.currentState.id === 'select' &&
       this.selectedShapes.length > 0 &&
       stateId === 'idle' &&
       !this.selectedShapes.every((shape) => shape.hideResizeHandles)
@@ -325,16 +334,27 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   /* ----------------- Selected Shapes ---------------- */
 
+  @observable erasingIds: string[] = []
+
   @observable selectedIds: string[] = []
 
-  @computed get selectedShapes(): S[] {
-    return this.currentPage.shapes.filter((shape) => this.selectedIds.includes(shape.id))
+  @computed get erasingShapes(): S[] {
+    const { erasingIds } = this
+    return this.currentPage.shapes.filter((shape) => erasingIds.includes(shape.id))
   }
 
-  @computed get selectedBounds(): TLBounds | undefined {
-    return this.selectedShapes.length === 1
-      ? { ...this.selectedShapes[0].bounds, rotation: this.selectedShapes[0].rotation }
-      : BoundsUtils.getCommonBounds(this.selectedShapes.map((shape) => shape.rotatedBounds))
+  @action readonly setErasingShapes = (shapes: S[] | string[]): this => {
+    if (shapes[0] && typeof shapes[0] === 'string') {
+      this.erasingIds = shapes as string[]
+    } else {
+      this.erasingIds = (shapes as S[]).map((shape) => shape.id)
+    }
+    return this
+  }
+
+  @computed get selectedShapes(): S[] {
+    const { selectedIds } = this
+    return this.currentPage.shapes.filter((shape) => selectedIds.includes(shape.id))
   }
 
   @action readonly setSelectedShapes = (shapes: S[] | string[]): this => {
@@ -344,6 +364,12 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
       this.selectedIds = (shapes as S[]).map((shape) => shape.id)
     }
     return this
+  }
+
+  @computed get selectedBounds(): TLBounds | undefined {
+    return this.selectedShapes.length === 1
+      ? { ...this.selectedShapes[0].bounds, rotation: this.selectedShapes[0].rotation }
+      : BoundsUtils.getCommonBounds(this.selectedShapes.map((shape) => shape.rotatedBounds))
   }
 
   /* ---------------------- Brush --------------------- */
@@ -412,12 +438,12 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   /* ----------------- Event Handlers ----------------- */
 
-  readonly onWheel: TLWheelHandler = (info, gesture, e) => {
+  readonly onWheel: TLWheelHandler<S> = (info, gesture, e) => {
     this.viewport.panCamera(gesture.delta)
     this.inputs.onWheel([...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5], e)
   }
 
-  readonly onPointerDown: TLPointerHandler = (info, e) => {
+  readonly onPointerDown: TLPointerHandler<S> = (info, e) => {
     if ('clientX' in e) {
       this.inputs.onPointerDown(
         [...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5],
@@ -426,7 +452,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
     }
   }
 
-  readonly onPointerUp: TLPointerHandler = (info, e) => {
+  readonly onPointerUp: TLPointerHandler<S> = (info, e) => {
     if ('clientX' in e) {
       this.inputs.onPointerUp(
         [...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5],
@@ -435,29 +461,29 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
     }
   }
 
-  readonly onPointerMove: TLPointerHandler = (info, e) => {
+  readonly onPointerMove: TLPointerHandler<S> = (info, e) => {
     if ('clientX' in e) {
       this.inputs.onPointerMove([...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5], e)
     }
   }
 
-  readonly onKeyDown: TLKeyboardHandler = (info, e) => {
+  readonly onKeyDown: TLKeyboardHandler<S> = (info, e) => {
     this.inputs.onKeyDown(e)
   }
 
-  readonly onKeyUp: TLKeyboardHandler = (info, e) => {
+  readonly onKeyUp: TLKeyboardHandler<S> = (info, e) => {
     this.inputs.onKeyUp(e)
   }
 
-  readonly onPinchStart: TLPinchHandler = (info, gesture, e) => {
+  readonly onPinchStart: TLPinchHandler<S> = (info, gesture, e) => {
     this.inputs.onPinchStart([...this.viewport.getPagePoint(gesture.origin), 0.5], e)
   }
 
-  readonly onPinch: TLPinchHandler = (info, gesture, e) => {
+  readonly onPinch: TLPinchHandler<S> = (info, gesture, e) => {
     this.inputs.onPinch([...this.viewport.getPagePoint(gesture.origin), 0.5], e)
   }
 
-  readonly onPinchEnd: TLPinchHandler = (info, gesture, e) => {
+  readonly onPinchEnd: TLPinchHandler<S> = (info, gesture, e) => {
     this.inputs.onPinchEnd([...this.viewport.getPagePoint(gesture.origin), 0.5], e)
   }
 

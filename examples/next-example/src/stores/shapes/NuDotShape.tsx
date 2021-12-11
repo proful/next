@@ -6,7 +6,6 @@ import {
   TLDotShape,
   TLShapeProps,
   TLDotShapeProps,
-  TLBoxShapeProps,
 } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
 import { makeObservable, observable } from 'mobx'

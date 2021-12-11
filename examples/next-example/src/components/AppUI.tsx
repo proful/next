@@ -1,13 +1,15 @@
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
-import { ToolBar } from './ToolBar'
-import { StatusBar } from './StatusBar'
+import { NuToolBar } from './NuToolbar'
+import { NuStatusBar } from './NuStatusBar'
+import { NuPrimaryTools } from './NuPrimaryTools'
 
 export const AppUI = observer(function AppUI() {
   return (
     <>
-      <ToolBar />
-      <StatusBar />
+      <NuToolBar />
+      <NuStatusBar />
+      <NuPrimaryTools />
     </>
   )
 })

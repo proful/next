@@ -21,13 +21,14 @@ import {
   NuHighlighterTool,
   NuDotShape,
   NuDotTool,
+  NuEraseTool,
   NuStarTool,
   NuStarShape,
   Shape,
   NuApp,
 } from 'stores'
 import { AppUI } from 'components/AppUI'
-import { NuContextBar } from 'components/NuContextBar'
+import { NuContextBar } from 'components/NuContextBar/NuContextBar'
 
 const components: TLComponents<Shape> = {
   ContextBar: NuContextBar,
@@ -54,6 +55,7 @@ function App(): JSX.Element {
     NuHighlighterTool,
     NuDotTool,
     NuStarTool,
+    NuEraseTool,
   ])
 
   const [model] = React.useState<TLSerializedApp>({

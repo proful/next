@@ -7,7 +7,6 @@ import type {
   TLInputs,
   TLSerializedApp,
   TLShape,
-  TLShapeClass,
   TLToolClass,
   TLViewport,
   TLRootState,
@@ -439,16 +438,17 @@ export interface TLAppPropsWithApp<S extends TLShape, R extends TLApp<S> = TLApp
 /* ------------------ Canvas Props ------------------ */
 
 export interface TLCanvasProps<S extends TLShape> {
-  bindings: TLBinding[]
-  brush: TLBounds
-  hoveredShape: S
-  editingShape: S
-  bindingShape: S
-  id: string
-  selectedBounds: TLBounds
-  selectedShapes: S[]
-  shapes: S[]
-  theme: TLTheme
+  id?: string
+  bindings?: TLBinding[]
+  brush?: TLBounds
+  shapes?: S[]
+  theme?: TLTheme
+  hoveredShape?: S
+  editingShape?: S
+  bindingShape?: S
+  selectedBounds?: TLBounds
+  selectedShapes?: S[]
+  erasingShapes?: S[]
   gridSize?: number
   showGrid?: boolean
   showBounds?: boolean
@@ -503,3 +503,99 @@ export function isStringArray(arr: string[] | any[]): asserts arr is string[] {
 /* ---------------------- Misc ---------------------- */
 
 export type AnyObject = { [key: string]: any }
+
+/* ---------------------- Shape --------------------- */
+
+export interface TLShapeProps {
+  id: string
+  parentId: string
+  point: number[]
+  rotation?: number
+  name?: string
+  children?: string[]
+  handles?: Record<string, TLHandle>
+  isGhost?: boolean
+  isHidden?: boolean
+  isLocked?: boolean
+  isGenerated?: boolean
+  isAspectRatioLocked?: boolean
+}
+
+export type TLSerializedShape<P = AnyObject> = TLShapeProps & {
+  type: string
+  nonce?: number
+} & P
+
+export interface TLShapeClass<S extends TLShape = TLShape> {
+  new (props: any): S
+  id: string
+}
+
+export interface TLCommonProps<M = unknown> {
+  meta: M
+  isEditing: boolean
+  isBinding: boolean
+  isHovered: boolean
+  isSelected: boolean
+  isErasing: boolean
+}
+
+export interface TLIndicatorProps<M = unknown> extends TLCommonProps<M> {
+  meta: M
+}
+
+export interface TLComponentProps<M = unknown> extends TLIndicatorProps<M> {
+  events: {
+    onPointerMove: React.PointerEventHandler
+    onPointerDown: React.PointerEventHandler
+    onPointerUp: React.PointerEventHandler
+    onPointerEnter: React.PointerEventHandler
+    onPointerLeave: React.PointerEventHandler
+    onKeyUp: React.KeyboardEventHandler
+    onKeyDown: React.KeyboardEventHandler
+  }
+}
+
+export interface TLResizeInfo<P = any> {
+  type: TLBoundsEdge | TLBoundsCorner
+  scaleX: number
+  scaleY: number
+  transformOrigin: number[]
+  initialBounds: TLBounds
+  initialProps: TLShapeProps & P
+}
+
+/* ----------------------- Dot ---------------------- */
+
+export interface TLDotShapeProps {
+  radius: number
+}
+
+/* -------------------- Box Shape ------------------- */
+
+export interface TLBoxShapeProps {
+  size: number[]
+}
+
+/* ------------------- Draw Shape ------------------- */
+
+export interface TLDrawShapeProps {
+  points: number[][]
+  isComplete: boolean
+}
+
+/* --------------------- Polygon -------------------- */
+
+export interface TLPolygonShapeProps extends TLBoxShapeProps {
+  sides: number
+  ratio: number
+  isFlippedY: boolean
+}
+
+/* ---------------------- Star ---------------------- */
+
+export interface TLStarShapeProps extends TLPolygonShapeProps {
+  points: number
+  ratio: number
+  isFlippedY: boolean
+}

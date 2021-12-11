@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { BoundsUtils, HTMLContainer, TLContextBarComponent } from '@tldraw/next'
+import { BoundsUtils, HTMLContainer, TLContextBarComponent, useApp } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
-import { useAppContext } from 'context'
 import type { NuStarShape, NuPolygonShape, Shape } from 'stores'
-import { NuNumberInput } from './inputs/NuNumberInput'
-import { NuColorInput } from './inputs/NuColorInput'
+import { NuNumberInput } from '../inputs/NuNumberInput'
+import { NuColorInput } from '../inputs/NuColorInput'
 
 const _NuContextBar: TLContextBarComponent<Shape> = ({
   shapes,
@@ -12,7 +11,7 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
   scaledBounds,
   // rotation,
 }) => {
-  const app = useAppContext()
+  const app = useApp()
 
   const rSize = React.useRef([0, 0])
   const rContextBar = React.useRef<HTMLDivElement>(null)

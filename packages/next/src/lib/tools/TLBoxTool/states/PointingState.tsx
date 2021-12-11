@@ -11,7 +11,7 @@ export class PointingState<
 > extends TLToolState<S, R, P> {
   static id = 'pointing'
 
-  onPointerMove: TLPointerHandler = () => {
+  onPointerMove: TLPointerHandler<S> = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
       this.tool.transition('creating')

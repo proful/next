@@ -26,7 +26,7 @@ export class CreatingState<
     this.app.select(shape)
   }
 
-  onPointerMove: TLPointerHandler = () => {
+  onPointerMove: TLPointerHandler<S> = () => {
     if (!this.creatingShape) throw Error('Expected a creating shape.')
     const { currentPoint } = this.app.inputs
     this.creatingShape.update({
@@ -34,7 +34,7 @@ export class CreatingState<
     })
   }
 
-  onPointerUp: TLPointerHandler = () => {
+  onPointerUp: TLPointerHandler<S> = () => {
     this.tool.transition('idle')
     if (this.creatingShape) {
       this.app.select(this.creatingShape)
@@ -44,7 +44,7 @@ export class CreatingState<
     }
   }
 
-  onWheel: TLWheelHandler = (info, gesture, e) => {
+  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 }

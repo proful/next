@@ -20,12 +20,12 @@ export class IdleState<
     },
   ]
 
-  onPointerDown: TLPointerHandler = (info, e) => {
+  onPointerDown: TLPointerHandler<S> = (info, e) => {
     if (info.order > 0) return
     this.tool.transition('pointing')
   }
 
-  onPinchStart: TLPinchHandler = (...args) => {
+  onPinchStart: TLPinchHandler<S> = (...args) => {
     this.app.transition('select', { returnTo: 'box' })
     this.app.onPinchStart?.(...args)
   }

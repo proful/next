@@ -10,7 +10,7 @@ import {
   assignOwnProps,
 } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
-import { makeObservable, observable } from 'mobx'
+import { computed, makeObservable, observable } from 'mobx'
 import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 interface NuStarShapeProps extends NuStyleProps, TLStarShapeProps {}

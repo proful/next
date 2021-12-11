@@ -1,4 +1,4 @@
-import { TLApp, TLBinding } from '@tldraw/next'
+import { TLApp, TLEraseTool } from '@tldraw/next'
 import {
   NuBoxShape,
   NuDotShape,
@@ -15,7 +15,10 @@ import {
   NuBoxTool,
   NuEllipseTool,
   NuHighlighterTool,
+  NuEraseTool,
 } from './tools'
+
+// Not used! (It could be, but we're not using it. Just here for types.)
 
 export class NuApp extends TLApp<Shape> {
   constructor() {
@@ -34,7 +37,8 @@ export class NuApp extends TLApp<Shape> {
       NuPolygonTool,
       NuPenTool,
       NuHighlighterTool,
-      NuDotTool
+      NuDotTool,
+      NuEraseTool
     )
     this.selectTool('select')
   }

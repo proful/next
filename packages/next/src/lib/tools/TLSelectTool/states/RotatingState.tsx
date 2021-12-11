@@ -44,11 +44,11 @@ export class RotatingState<
     this.snapshot = {}
   }
 
-  onWheel: TLWheelHandler = (info, gesture, e) => {
+  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler = () => {
+  onPointerMove: TLPointerHandler<S> = () => {
     const {
       selectedShapes,
       inputs: { shiftKey, currentPoint },
@@ -103,13 +103,13 @@ export class RotatingState<
     })
   }
 
-  onPointerUp: TLPointerHandler = () => {
+  onPointerUp: TLPointerHandler<S> = () => {
     this.app.history.resume()
     this.app.persist()
     this.tool.transition('idle')
   }
 
-  onKeyDown: TLKeyboardHandler = (info, e) => {
+  onKeyDown: TLKeyboardHandler<S> = (info, e) => {
     switch (e.key) {
       case 'Escape': {
         this.app.selectedShapes.forEach((shape) => {

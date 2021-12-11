@@ -61,12 +61,12 @@ export class BrushingState<
     }
   }
 
-  onPointerUp: TLPointerHandler = () => {
+  onPointerUp: TLPointerHandler<S> = () => {
     this.app.clearBrush()
     this.tool.transition('idle')
   }
 
-  handleModifierKey: TLKeyboardHandler = (info, e) => {
+  handleModifierKey: TLKeyboardHandler<S> = (info, e) => {
     switch (e.key) {
       case 'Escape': {
         this.app.clearBrush()

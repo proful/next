@@ -1,17 +1,18 @@
 import * as React from 'react'
 import { Vec } from '@tldraw/vec'
 import { computed, makeObservable, observable } from 'mobx'
-import { TLShape, TLShapeProps } from '~lib'
+import { TLShape } from '~lib'
 import { BoundsUtils } from '~utils'
 import { observer } from 'mobx-react-lite'
 import { SVGContainer } from '~components'
-import type { TLBounds } from '~types'
-import type { TLComponentProps, TLIndicatorProps, TLResizeInfo } from '~lib'
-
-export interface TLDrawShapeProps {
-  points: number[][]
-  isComplete: boolean
-}
+import type {
+  TLBounds,
+  TLShapeProps,
+  TLComponentProps,
+  TLIndicatorProps,
+  TLResizeInfo,
+  TLDrawShapeProps,
+} from '~types'
 
 export class TLDrawShape<P extends TLDrawShapeProps = any> extends TLShape<P> {
   constructor(props = {} as TLShapeProps & Partial<P>) {

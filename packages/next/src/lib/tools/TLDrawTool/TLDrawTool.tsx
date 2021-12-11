@@ -1,6 +1,6 @@
 import { IdleState, PointingState, CreatingState } from './states'
-import { TLTool } from '~lib'
-import type { TLApp, TLDrawShape, TLDrawShapeProps, TLShapeProps, TLShape } from '~lib'
+import type { TLShapeProps, TLDrawShapeProps } from '~types'
+import { TLTool, TLApp, TLDrawShape, TLShape } from '~lib'
 
 export abstract class TLDrawTool<
   T extends TLDrawShape = TLDrawShape,

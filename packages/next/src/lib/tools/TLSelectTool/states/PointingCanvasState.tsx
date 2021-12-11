@@ -14,25 +14,25 @@ export class PointingCanvasState<
     if (!shiftKey) this.app.deselectAll()
   }
 
-  onWheel: TLWheelHandler = (info, gesture, e) => {
+  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler = () => {
+  onPointerMove: TLPointerHandler<S> = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
       this.tool.transition('brushing')
     }
   }
 
-  onPointerUp: TLPointerHandler = () => {
+  onPointerUp: TLPointerHandler<S> = () => {
     if (!this.app.inputs.shiftKey) {
       this.app.deselectAll()
     }
     this.tool.transition('idle')
   }
 
-  onPinchStart: TLPinchHandler = (info, gesture, event) => {
+  onPinchStart: TLPinchHandler<S> = (info, gesture, event) => {
     this.tool.transition('pinching', { info, gesture, event })
   }
 }

@@ -4,14 +4,12 @@ import * as React from 'react'
 import { autorun } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import {
-  Brush,
-  Container,
-  HTMLLayer,
-  Indicator,
   Shape,
+  Indicator,
+  HTMLLayer,
+  Container,
   BoundsDetailContainer,
   ContextBarContainer,
-  Grid,
 } from '~components'
 import {
   useCanvasEvents,
@@ -23,17 +21,18 @@ import {
 } from '~hooks'
 import type { TLShape } from '~lib'
 import type { TLCanvasProps } from '~types'
-import { EMPTY_ARRAY, EMPTY_OBJECT } from '~constants'
+import { EMPTY_OBJECT } from '~constants'
 
 export const Canvas = observer(function Renderer<S extends TLShape>({
-  bindingShape,
+  id,
   brush,
+  shapes,
+  bindingShape,
   editingShape,
   hoveredShape,
-  id,
   selectedBounds,
-  selectedShapes = EMPTY_ARRAY,
-  shapes = EMPTY_ARRAY,
+  selectedShapes,
+  erasingShapes,
   showBounds = true,
   showBoundsRotation = false,
   showResizeHandles = true,
@@ -71,9 +70,9 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
   return (
     <div ref={rContainer} className="tl-container">
       <div tabIndex={-1} className="tl-absolute tl-canvas" {...events}>
-        {showGrid && <Grid size={gridSize} />}
+        {showGrid && components.Grid && <components.Grid size={gridSize} />}
         <HTMLLayer>
-          {components.BoundsBackground && selectedBounds && showBounds && (
+          {components.BoundsBackground && selectedShapes && selectedBounds && showBounds && (
             <Container bounds={selectedBounds} zIndex={2}>
               <components.BoundsBackground
                 zoom={zoom}
@@ -84,19 +83,21 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
               />
             </Container>
           )}
-          {shapes.map((shape, i) => (
-            <Shape
-              key={'shape_' + shape.id}
-              shape={shape}
-              isEditing={editingShape === shape}
-              isHovered={hoveredShape === shape}
-              isBinding={bindingShape === shape}
-              isSelected={selectedShapes.includes(shape)}
-              meta={meta}
-              zIndex={100 + i}
-            />
-          ))}
-          {selectedShapes.map((shape) => (
+          {shapes &&
+            shapes.map((shape, i) => (
+              <Shape
+                key={'shape_' + shape.id}
+                shape={shape}
+                isEditing={editingShape === shape}
+                isHovered={hoveredShape === shape}
+                isBinding={bindingShape === shape}
+                isSelected={selectedShapes?.includes(shape)}
+                isErasing={erasingShapes?.includes(shape)}
+                meta={meta}
+                zIndex={100 + i}
+              />
+            ))}
+          {selectedShapes?.map((shape) => (
             <Indicator
               key={'selected_indicator_' + shape.id}
               shape={shape}
@@ -112,7 +113,7 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
           {brush && components.Brush && <components.Brush bounds={brush} />}
           {selectedBounds && (
             <>
-              {components.BoundsForeground && showBounds && (
+              {selectedShapes && showBounds && components.BoundsForeground && (
                 <Container bounds={selectedBounds} zIndex={10002}>
                   <components.BoundsForeground
                     zoom={zoom}
@@ -123,7 +124,7 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
                   />
                 </Container>
               )}
-              {components.BoundsDetail && (
+              {selectedShapes && components.BoundsDetail && (
                 <BoundsDetailContainer
                   key={'detail' + selectedShapes.map((shape) => shape.id).join('')}
                   shapes={selectedShapes}
@@ -132,7 +133,7 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
                   hidden={!showBoundsDetail}
                 />
               )}
-              {components.ContextBar && (
+              {selectedShapes && components.ContextBar && (
                 <ContextBarContainer
                   key={'context' + selectedShapes.map((shape) => shape.id).join('')}
                   shapes={selectedShapes}

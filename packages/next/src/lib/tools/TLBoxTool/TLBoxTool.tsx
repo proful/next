@@ -1,7 +1,7 @@
 import { IdleState, PointingState, CreatingState } from './states'
 import { TLTool } from '~lib'
-import type { TLShortcut } from '~types'
-import type { TLApp, TLShape, TLBoxShapeProps, TLBoxShape, TLShapeProps } from '~lib'
+import type { TLShortcut, TLShapeProps, TLBoxShapeProps } from '~types'
+import type { TLApp, TLShape, TLBoxShape } from '~lib'
 
 // shape tools need to have two generics: a union of all shapes in
 // the app, and the particular shape that they'll be creating

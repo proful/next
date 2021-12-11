@@ -33,6 +33,7 @@
   },
   "gitHead": "a7dac0f83ad998e205c2aab58182cb4ba4e099a6",
   "dependencies": {
+    "@radix-ui/react-icons": "^1.0.3",
     "perfect-freehand": "^1.0.16"
   }
 }

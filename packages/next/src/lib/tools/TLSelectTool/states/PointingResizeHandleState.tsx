@@ -21,22 +21,22 @@ export class PointingResizeHandleState<
     this.pointedHandle = info.target
   }
 
-  onWheel: TLWheelHandler = (info, gesture, e) => {
+  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler = () => {
+  onPointerMove: TLPointerHandler<S> = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
       this.tool.transition('resizing', { handle: this.pointedHandle })
     }
   }
 
-  onPointerUp: TLPointerHandler = () => {
+  onPointerUp: TLPointerHandler<S> = () => {
     this.tool.transition('idle')
   }
 
-  onPinchStart: TLPinchHandler = (info, gesture, event) => {
+  onPinchStart: TLPinchHandler<S> = (info, gesture, event) => {
     this.tool.transition('pinching', { info, gesture, event })
   }
 }

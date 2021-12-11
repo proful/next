@@ -9,23 +9,23 @@ export class PointingBoundsBackgroundState<
 > extends TLToolState<S, R, P> {
   static id = 'pointingBoundsBackground'
 
-  onWheel: TLWheelHandler = (info, gesture, e) => {
+  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler = () => {
+  onPointerMove: TLPointerHandler<S> = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
       this.tool.transition('translating')
     }
   }
 
-  onPointerUp: TLPointerHandler = () => {
+  onPointerUp: TLPointerHandler<S> = () => {
     this.app.deselectAll()
     this.tool.transition('idle')
   }
 
-  onPinchStart: TLPinchHandler = (info, gesture, event) => {
+  onPinchStart: TLPinchHandler<S> = (info, gesture, event) => {
     this.tool.transition('pinching', { info, gesture, event })
   }
 }

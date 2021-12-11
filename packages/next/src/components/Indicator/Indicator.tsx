@@ -32,6 +32,7 @@ export const Indicator = observer(function Shape({
             isBinding={isBinding}
             isHovered={isHovered}
             isSelected={isSelected}
+            isErasing={false}
             meta={meta}
           />
         </g>

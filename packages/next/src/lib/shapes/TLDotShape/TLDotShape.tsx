@@ -2,14 +2,16 @@ import * as React from 'react'
 import { makeObservable, observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { SVGContainer } from '~components'
-import { TLShape, TLShapeProps } from '../../TLShape'
+import { TLShape } from '~lib'
 import { BoundsUtils } from '~utils'
-import type { TLBounds } from '~types'
-import type { TLComponentProps, TLIndicatorProps, TLResizeInfo } from '~lib'
-
-export interface TLDotShapeProps {
-  radius: number
-}
+import type {
+  TLBounds,
+  TLShapeProps,
+  TLComponentProps,
+  TLIndicatorProps,
+  TLResizeInfo,
+  TLDotShapeProps,
+} from '~types'
 
 export class TLDotShape<P extends TLDotShapeProps = any> extends TLShape<P> {
   constructor(props = {} as TLShapeProps & Partial<P>) {

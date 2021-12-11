@@ -37,7 +37,7 @@ export class CreatingState<
     this.offset = [0, 0, originPoint[2]]
   }
 
-  onPointerMove: TLPointerHandler = () => {
+  onPointerMove: TLPointerHandler<S> = () => {
     if (!this.creatingShape) throw Error('Expected a creating shape.')
     const { currentPoint, previousPoint, originPoint } = this.app.inputs
     if (Vec.isEqual(previousPoint, currentPoint)) return
@@ -67,7 +67,7 @@ export class CreatingState<
     }
   }
 
-  onPointerUp: TLPointerHandler = () => {
+  onPointerUp: TLPointerHandler<S> = () => {
     if (!this.creatingShape) throw Error('Expected a creating shape.')
 
     this.creatingShape.update({
@@ -80,7 +80,7 @@ export class CreatingState<
     this.tool.transition('idle')
   }
 
-  onWheel: TLWheelHandler = (info, gesture, e) => {
+  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 }

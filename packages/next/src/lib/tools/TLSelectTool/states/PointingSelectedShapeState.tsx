@@ -17,18 +17,18 @@ export class PointingSelectedShapeState<
 
   onExit = () => (this.pointedSelectedShape = undefined)
 
-  onWheel: TLWheelHandler = (info, gesture, e) => {
+  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler = () => {
+  onPointerMove: TLPointerHandler<S> = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
       this.tool.transition('translating')
     }
   }
 
-  onPointerUp: TLPointerHandler = () => {
+  onPointerUp: TLPointerHandler<S> = () => {
     const { shiftKey } = this.app.inputs
 
     if (!this.pointedSelectedShape) throw Error('Expected a pointed selected shape')
@@ -40,7 +40,7 @@ export class PointingSelectedShapeState<
     this.tool.transition('idle')
   }
 
-  onPinchStart: TLPinchHandler = (info, gesture, event) => {
+  onPinchStart: TLPinchHandler<S> = (info, gesture, event) => {
     this.tool.transition('pinching', { info, gesture, event })
   }
 }

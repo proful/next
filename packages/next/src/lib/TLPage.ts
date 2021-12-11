@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { action, observable, makeObservable, computed, observe } from 'mobx'
-import type { TLBinding } from '~types'
-import type { TLSerializedShape, TLApp, TLShape } from '~lib'
+import type { TLBinding, TLSerializedShape } from '~types'
+import type { TLApp, TLShape } from '~lib'
 
 export interface TLSerializedPage {
   id: string

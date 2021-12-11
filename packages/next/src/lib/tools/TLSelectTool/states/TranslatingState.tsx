@@ -116,21 +116,21 @@ export class TranslatingState<
     this.initialClonePoints = {}
   }
 
-  onWheel: TLWheelHandler = (info, gesture, e) => {
+  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler = () => {
+  onPointerMove: TLPointerHandler<S> = () => {
     this.moveSelectedShapesToPointer()
   }
 
-  onPointerUp: TLPointerHandler = () => {
+  onPointerUp: TLPointerHandler<S> = () => {
     this.app.history.resume()
     this.app.persist()
     this.tool.transition('idle')
   }
 
-  onKeyDown: TLKeyboardHandler = (info, e) => {
+  onKeyDown: TLKeyboardHandler<S> = (info, e) => {
     switch (e.key) {
       case 'Alt': {
         this.startCloning()
@@ -146,7 +146,7 @@ export class TranslatingState<
     }
   }
 
-  onKeyUp: TLKeyboardHandler = (info, e) => {
+  onKeyUp: TLKeyboardHandler<S> = (info, e) => {
     switch (e.key) {
       case 'Alt': {
         if (!this.isCloning) throw Error('Expected to be cloning.')

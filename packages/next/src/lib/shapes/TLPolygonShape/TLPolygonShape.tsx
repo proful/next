@@ -1,19 +1,19 @@
 import * as React from 'react'
 import { computed, makeObservable, observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
-import { Vec } from '@tldraw/vec'
 import { intersectLineSegmentPolyline, intersectPolygonBounds } from '@tldraw/intersect'
+import { Vec } from '@tldraw/vec'
 import { SVGContainer } from '~components'
 import { BoundsUtils, PointUtils, PolygonUtils } from '~utils'
-import { TLBoxShape, TLBoxShapeProps } from '../TLBoxShape'
-import type { TLResizeInfo, TLComponentProps, TLIndicatorProps, TLShapeProps } from '~lib'
-import type { TLBounds } from '~types'
-
-export interface TLPolygonShapeProps extends TLBoxShapeProps {
-  sides: number
-  ratio: number
-  isFlippedY: boolean
-}
+import { TLBoxShape } from '~lib'
+import type {
+  TLResizeInfo,
+  TLComponentProps,
+  TLIndicatorProps,
+  TLShapeProps,
+  TLBounds,
+  TLPolygonShapeProps,
+} from '~types'
 
 export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxShape<P> {
   constructor(props = {} as TLShapeProps & Partial<P>) {
