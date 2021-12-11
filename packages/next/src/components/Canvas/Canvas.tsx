@@ -60,7 +60,7 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
   const { zoom } = viewport.camera
 
   return (
-    <div ref={rContainer} className="nu-container">
+    <div ref={rContainer} className="nu-container" aria-label="nu container">
       <div tabIndex={-1} className="nu-absolute nu-canvas" {...events}>
         <HTMLLayer>
           {components.BoundsBackground && selectedBounds && showBounds && (
