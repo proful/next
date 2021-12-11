@@ -4,8 +4,8 @@ import { KeyUtils } from '~utils'
 
 export class TLHistory<S extends TLShape> {
   constructor(app: TLApp<S>) {
-    KeyUtils.registerShortcut('cmd+z,ctrl+z', () => this.undo())
-    KeyUtils.registerShortcut('cmd+shift+z,ctrl+shift+z', () => this.redo())
+    KeyUtils.registerShortcut('command+z,ctrl+z', () => this.undo())
+    KeyUtils.registerShortcut('command+shift+z,ctrl+shift+z', () => this.redo())
     this.app = app
   }
 

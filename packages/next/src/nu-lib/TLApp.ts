@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Vec } from '@tldraw/vec'
 import { action, computed, makeObservable, observable } from 'mobx'
-import { BoundsUtils } from '~utils'
+import { BoundsUtils, KeyUtils } from '~utils'
 import {
   TLSelectTool,
   TLInputs,
@@ -59,6 +59,19 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
     if (shapeClasses) this.registerShapes(...shapeClasses)
     if (tools) this.registerStates(...tools)
     if (serializedApp) this.history.deserialize(serializedApp)
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const shortcuts = this.constructor['shortcuts'] as TLShortcut<S>[]
+    if (shortcuts?.length) {
+      this._disposables.push(
+        ...shortcuts.map(({ keys, fn }) => {
+          return KeyUtils.registerShortcut(keys, () => {
+            fn(this, this)
+          })
+        })
+      )
+    }
 
     makeObservable(this)
 
@@ -247,6 +260,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
     }
     this.selectedIds = this.selectedIds.filter((id) => !ids.has(id))
     this.currentPage.removeShapes(...shapes)
+    this.persist()
     return this
   }
 
@@ -454,7 +468,6 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
    */
   delete = (...shapes: S[] | string[]): this => {
     if (shapes.length === 0) shapes = this.selectedIds
-    if (shapes.length === 0) shapes = this.currentPage.shapes
     return this.deleteShapes(shapes)
   }
 

@@ -9,9 +9,10 @@ export class IdleState<
   P extends TLDrawTool<T, S, R>
 > extends TLToolState<S, R, P> {
   static id = 'idle'
+
   static shortcuts: TLShortcut<TLShape, TLApp>[] = [
     {
-      keys: 'cmd+a,ctrl+a',
+      keys: ['mod+a'],
       fn: (app) => {
         app.transition('select')
         app.selectAll()

@@ -14,7 +14,7 @@ import type {
   AnyObject,
 } from '~types'
 import type { TLShape } from '~nu-lib'
-import { KeyUtils } from '~utils'
+import { KeyUtils, throttle } from '~utils'
 
 export interface TLStateClass<
   S extends TLShape,
@@ -42,34 +42,14 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLCallba
     this._id = id
     this._initial = initial
     this._states = states
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const shortcuts = this.constructor['shortcuts'] as TLShortcut<S>[]
-    if (shortcuts?.length) this.registerKeyboardShortcuts(shortcuts, this)
   }
 
   private _id: string
   private _initial?: string
   private _states: TLStateClass<S, any, any>[]
   private _isActive = false
-  private _disposables: (() => void)[] = []
 
-  registerKeyboardShortcuts = <R extends TLRootState<S>>(
-    shortcuts: TLShortcut<S>[],
-    root: R
-  ): void => {
-    if (!shortcuts?.length) return
-
-    this._disposables.push(
-      ...shortcuts.map(({ keys, fn }) =>
-        KeyUtils.registerShortcut(keys, () => {
-          if (!this.isActive) return
-          fn(root, this)
-        })
-      )
-    )
-  }
+  protected _disposables: (() => void)[] = []
 
   dispose() {
     this._disposables.forEach((disposable) => disposable())
@@ -133,6 +113,8 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLCallba
     if (!nextState) throw Error(`Could not find a state named ${id}.`)
     if (this.currentState) {
       prevState._events.onExit({ ...data, toId: id })
+      prevState.dispose()
+      nextState.registerKeyboardShortcuts()
       this.setCurrentState(nextState)
       this._events.onTransition({ ...data, fromId: prevState.id, toId: id })
       nextState._events.onEnter({ ...data, fromId: prevState.id })
@@ -414,15 +396,29 @@ export abstract class TLState<
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const shortcuts = this.constructor['shortcuts'] as TLShortcut<S>[]
-    if (shortcuts?.length) this.registerKeyboardShortcuts(shortcuts, this.root)
+    this._shortcuts = shortcuts
 
     makeObservable(this)
+  }
+
+  registerKeyboardShortcuts = (): void => {
+    if (!this._shortcuts?.length) return
+
+    this._disposables.push(
+      ...this._shortcuts.map(({ keys, fn }) => {
+        return KeyUtils.registerShortcut(keys, () => {
+          if (!this.isActive) return
+          fn(this.root, this)
+        })
+      })
+    )
   }
 
   /* --------------------- States --------------------- */
 
   protected _root: R
   protected _parent: P
+  private _shortcuts: TLShortcut<S>[] = []
 
   get root() {
     return this._root

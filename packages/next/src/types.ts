@@ -476,6 +476,6 @@ export type TLShortcut<
   R extends TLRootState<S> = TLRootState<S>,
   T extends R | TLState<S, R, any> = any
 > = {
-  keys: string
+  keys: string | string[]
   fn: (root: R, state: T) => void
 }

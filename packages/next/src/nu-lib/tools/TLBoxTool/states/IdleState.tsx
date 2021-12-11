@@ -12,16 +12,10 @@ export class IdleState<
 
   static shortcuts: TLShortcut<TLShape, TLApp>[] = [
     {
-      keys: 'cmd+a,ctrl+a',
+      keys: ['mod+a'],
       fn: (app) => {
         app.transition('select')
         app.selectAll()
-      },
-    },
-    {
-      keys: 'del,backspace',
-      fn: (app) => {
-        app.delete()
       },
     },
   ]
