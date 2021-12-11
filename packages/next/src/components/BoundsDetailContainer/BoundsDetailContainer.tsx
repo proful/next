@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { useRendererContext } from '~hooks'
 import { BoundsUtils } from '~utils'
 import type { TLBounds } from '~types'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import { useCounterScaledPosition } from '~hooks'
 
 export interface TLBoundsDetailContainerProps<S extends TLShape> {
@@ -35,7 +35,7 @@ export const BoundsDetailContainer = observer(function BoundsDetail<S extends TL
   return (
     <div
       ref={rBounds}
-      className={`nu-counter-scaled-positioned ${hidden ? `nu-fade-out` : ''}`}
+      className={`tl-counter-scaled-positioned ${hidden ? `tl-fade-out` : ''}`}
       aria-label="bounds-detail-container"
     >
       <BoundsDetail

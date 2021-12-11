@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
 import type { TLAppPropsWithoutApp, TLAppPropsWithApp } from '~types'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import { AppContext, Renderer } from '~components'
 import { useAppContext } from '~hooks'
 

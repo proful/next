@@ -34,7 +34,7 @@ export class NuDotShape extends TLDotShape<NuDotShapeProps> {
     return (
       <SVGContainer {...events} opacity={opacity}>
         <circle
-          className={isSelected ? 'nu-hitarea-fill' : 'nu-hitarea-stroke'}
+          className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           cx={radius}
           cy={radius}
           r={radius}

@@ -28,7 +28,7 @@ export const HTMLLayer = observer(function HTMLLayer({ children }: HTMLLayerProp
   )
 
   return (
-    <div ref={rLayer} className="nu-absolute nu-layer">
+    <div ref={rLayer} className="tl-absolute tl-layer">
       {children}
     </div>
   )

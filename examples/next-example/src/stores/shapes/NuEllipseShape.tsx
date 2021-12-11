@@ -47,7 +47,7 @@ export class NuEllipseShape extends TLBoxShape<NuEllipseShapeProps> {
     return (
       <SVGContainer {...events} opacity={opacity}>
         <ellipse
-          className={isSelected ? 'nu-hitarea-fill' : 'nu-hitarea-stroke'}
+          className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           cx={w / 2}
           cy={h / 2}
           rx={Math.max(0.01, (w - strokeWidth) / 2)}

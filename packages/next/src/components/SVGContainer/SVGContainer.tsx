@@ -11,8 +11,8 @@ export const SVGContainer = React.forwardRef<SVGSVGElement, SvgContainerProps>(
     return (
       <Observer>
         {() => (
-          <svg ref={ref} className={`nu-positioned-svg ${className}`} {...rest}>
-            <g id={id} className="nu-centered-g">
+          <svg ref={ref} className={`tl-positioned-svg ${className}`} {...rest}>
+            <g id={id} className="tl-centered-g">
               {children}
             </g>
           </svg>

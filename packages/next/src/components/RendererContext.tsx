@@ -5,10 +5,12 @@ import {
   BoundsBackground as _BoundsBackground,
   BoundsForeground as _BoundsForeground,
   BoundsDetail as _BoundsDetail,
+  Grid as _Grid,
+  Brush as _Brush,
 } from '~components'
-import type { TLShape, TLInputs, TLViewport } from '~nu-lib'
+import type { TLShape, TLInputs, TLViewport } from '~lib'
 import { autorun } from 'mobx'
-import type { TLRendererContext, TLComponents, TLCallbacks } from '~types'
+import type { TLRendererContext, TLComponents, TLEventHandlers } from '~types'
 import { getRendererContext } from '~hooks'
 import { EMPTY_OBJECT } from '~constants'
 
@@ -16,7 +18,7 @@ export interface TLRendererContextProps<S extends TLShape = TLShape> {
   id?: string
   viewport: TLViewport
   inputs: TLInputs
-  callbacks?: Partial<TLCallbacks<S>>
+  callbacks?: Partial<TLEventHandlers<S>>
   components?: Partial<TLComponents<S>>
   meta?: any
   children?: React.ReactNode
@@ -32,7 +34,7 @@ export const RendererContext = observer(function App<S extends TLShape>({
   children,
 }: TLRendererContextProps<S>): JSX.Element {
   const [currentContext, setCurrentContext] = React.useState<TLRendererContext<S>>(() => {
-    const { ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } = components
+    const { Brush, Grid, ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } = components
 
     return {
       id,
@@ -44,13 +46,15 @@ export const RendererContext = observer(function App<S extends TLShape>({
         BoundsBackground: BoundsBackground === null ? undefined : _BoundsBackground,
         BoundsForeground: BoundsForeground === null ? undefined : _BoundsForeground,
         BoundsDetail: BoundsDetail === null ? undefined : _BoundsDetail,
+        Brush: Brush === null ? undefined : _Brush,
+        Grid: Grid === null ? undefined : _Grid,
         ContextBar,
       },
     }
   })
 
   React.useEffect(() => {
-    const { ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } = components
+    const { Brush, Grid, ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } = components
 
     autorun(() => {
       setCurrentContext({
@@ -63,6 +67,8 @@ export const RendererContext = observer(function App<S extends TLShape>({
           BoundsBackground: BoundsBackground === null ? undefined : _BoundsBackground,
           BoundsForeground: BoundsForeground === null ? undefined : _BoundsForeground,
           BoundsDetail: BoundsDetail === null ? undefined : _BoundsDetail,
+          Brush: Brush === null ? undefined : _Brush,
+          Grid: Grid === null ? undefined : _Grid,
           ContextBar,
         },
       })

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import type { TLRendererProps } from '~types'
 import { Canvas, RendererContext } from '~components'
 

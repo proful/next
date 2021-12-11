@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { TLAppPropsWithoutApp, TLAppPropsWithApp } from '~types'
-import { TLApp, TLShape } from '~nu-lib'
+import { TLApp, TLShape } from '~lib'
 
 export function useApp<S extends TLShape, R extends TLApp<S> = TLApp<S>>(
   props: TLAppPropsWithoutApp<S> | TLAppPropsWithApp<S, R>

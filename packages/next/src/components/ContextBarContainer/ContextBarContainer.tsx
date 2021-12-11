@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { useRendererContext } from '~hooks'
 import { BoundsUtils } from '~utils'
 import { useCounterScaledPosition } from '~hooks'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import type { TLBounds, TLOffset } from '~types'
 
 const stopEventPropagation = (e: React.PointerEvent) => e.stopPropagation()
@@ -57,18 +57,18 @@ export const ContextBarContainer = observer(function ContextBar({
     const elm = rBounds.current
     if (!elm) return
     if (hidden || !inView) {
-      elm.classList.add('nu-fade-out')
-      elm.classList.remove('nu-fade-in')
+      elm.classList.add('tl-fade-out')
+      elm.classList.remove('tl-fade-in')
     } else {
-      elm.classList.add('nu-fade-in')
-      elm.classList.remove('nu-fade-out')
+      elm.classList.add('tl-fade-in')
+      elm.classList.remove('tl-fade-out')
     }
   }, [hidden, inView])
 
   return (
     <div
       ref={rBounds}
-      className="nu-counter-scaled-positioned nu-fade-out"
+      className="tl-counter-scaled-positioned tl-fade-out"
       aria-label="context-bar-container"
       onPointerMove={stopEventPropagation}
       onPointerUp={stopEventPropagation}

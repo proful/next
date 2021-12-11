@@ -30,8 +30,8 @@ export const Container = observer<ContainerProps>(function Container({
     elm.style.setProperty(
       'transform',
       `translate(
-          calc(${bounds.minX}px - var(--nu-padding)),
-          calc(${bounds.minY}px - var(--nu-padding))
+          calc(${bounds.minX}px - var(--tl-padding)),
+          calc(${bounds.minY}px - var(--tl-padding))
         )
         rotate(${rotation + (bounds.rotation || 0)}rad)`
     )
@@ -40,11 +40,11 @@ export const Container = observer<ContainerProps>(function Container({
   React.useLayoutEffect(() => {
     const elm = rBounds.current!
 
-    elm.style.setProperty('width', `calc(${Math.floor(bounds.width)}px + (var(--nu-padding) * 2))`)
+    elm.style.setProperty('width', `calc(${Math.floor(bounds.width)}px + (var(--tl-padding) * 2))`)
 
     elm.style.setProperty(
       'height',
-      `calc(${Math.floor(bounds.height)}px + (var(--nu-padding) * 2))`
+      `calc(${Math.floor(bounds.height)}px + (var(--tl-padding) * 2))`
     )
 
     if (zIndex !== undefined) {
@@ -56,7 +56,7 @@ export const Container = observer<ContainerProps>(function Container({
     <div
       id={id}
       ref={rBounds}
-      className={`nu-positioned ${className}`}
+      className={`tl-positioned ${className}`}
       aria-label="container"
       {...props}
     >

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useRendererContext } from '~hooks'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import { TLPointerEventHandler, TLTargetType } from '~types'
 
 export function useShapeEvents(shape: TLShape) {

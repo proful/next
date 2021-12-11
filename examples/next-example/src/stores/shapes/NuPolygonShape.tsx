@@ -43,7 +43,7 @@ export class NuPolygonShape extends TLPolygonShape<NuPolygonShapeProps> {
     return (
       <SVGContainer {...events} opacity={opacity}>
         <g transform={`translate(${x}, ${y})`}>
-          <polygon className={isSelected ? 'nu-hitarea-fill' : 'nu-hitarea-stroke'} points={path} />
+          <polygon className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'} points={path} />
           <polygon
             points={path}
             stroke={stroke}

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
 import { Container } from '~components'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import { useShapeEvents } from '~hooks/useShapeEvents'
 
 interface ShapeProps {

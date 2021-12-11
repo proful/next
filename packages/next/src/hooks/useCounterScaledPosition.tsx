@@ -18,7 +18,7 @@ export function useCounterScaledPosition(
           calc(${bounds.minX - 64}px),
           calc(${bounds.minY - 64}px)
         )
-        scale(var(--nu-scale))`
+        scale(var(--tl-scale))`
     )
   }, [bounds.minX, bounds.minY])
 

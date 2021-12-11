@@ -1,22 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as React from 'react'
+import { autorun } from 'mobx'
 import { observer } from 'mobx-react-lite'
-import { Brush, Container, HTMLLayer, Indicator, Shape } from '~components'
+import {
+  Brush,
+  Container,
+  HTMLLayer,
+  Indicator,
+  Shape,
+  BoundsDetailContainer,
+  ContextBarContainer,
+  Grid,
+} from '~components'
 import {
   useCanvasEvents,
   useGestureEvents,
   useResizeObserver,
   useStylesheet,
   useRendererContext,
+  usePreventNavigation,
 } from '~hooks'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import type { TLCanvasProps } from '~types'
 import { EMPTY_ARRAY, EMPTY_OBJECT } from '~constants'
-import { autorun } from 'mobx'
-import { ContextBarContainer } from '~components/ContextBarContainer'
-import { usePreventNavigation } from '~hooks/usePreventNavigation'
-import { BoundsDetailContainer } from '~components/BoundsDetailContainer/BoundsDetailContainer'
 
 export const Canvas = observer(function Renderer<S extends TLShape>({
   bindingShape,
@@ -33,6 +40,8 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
   showRotateHandle = true,
   showBoundsDetail = true,
   showContextBar = true,
+  showGrid = true,
+  gridSize = 8,
   theme = EMPTY_OBJECT,
   children,
 }: Partial<TLCanvasProps<S>>): JSX.Element {
@@ -51,7 +60,7 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
       const { zoom } = viewport.camera
       const container = rContainer.current
       if (!container) return
-      container.style.setProperty('--nu-zoom', zoom.toString())
+      container.style.setProperty('--tl-zoom', zoom.toString())
     })
   }, [])
 
@@ -60,8 +69,9 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
   const { zoom } = viewport.camera
 
   return (
-    <div ref={rContainer} className="nu-container">
-      <div tabIndex={-1} className="nu-absolute nu-canvas" {...events}>
+    <div ref={rContainer} className="tl-container">
+      <div tabIndex={-1} className="tl-absolute tl-canvas" {...events}>
+        {showGrid && <Grid size={gridSize} />}
         <HTMLLayer>
           {components.BoundsBackground && selectedBounds && showBounds && (
             <Container bounds={selectedBounds} zIndex={2}>
@@ -99,7 +109,7 @@ export const Canvas = observer(function Renderer<S extends TLShape>({
           {hoveredShape && (
             <Indicator key={'hovered_indicator_' + hoveredShape.id} shape={hoveredShape} />
           )}
-          {brush && <Brush brush={brush} />}
+          {brush && components.Brush && <components.Brush bounds={brush} />}
           {selectedBounds && (
             <>
               {components.BoundsForeground && showBounds && (

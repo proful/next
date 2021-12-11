@@ -43,7 +43,7 @@ export class NuStarShape extends TLStarShape<NuStarShapeProps> {
     return (
       <SVGContainer {...events} opacity={opacity}>
         <polygon
-          className={isSelected ? 'nu-hitarea-fill' : 'nu-hitarea-stroke'}
+          className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           transform={`translate(${x}, ${y})`}
           points={path}
         />

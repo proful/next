@@ -44,6 +44,38 @@ export function deepCopy<T>(target: T): T {
   return target
 }
 
+/**
+ * Modulate a value between two ranges.
+ *
+ * @param value
+ * @param rangeA From [low, high]
+ * @param rangeB To [low, high]
+ * @param clamp
+ */
+export function modulate(value: number, rangeA: number[], rangeB: number[], clamp = false): number {
+  const [fromLow, fromHigh] = rangeA
+  const [v0, v1] = rangeB
+  const result = v0 + ((value - fromLow) / (fromHigh - fromLow)) * (v1 - v0)
+
+  return clamp
+    ? v0 < v1
+      ? Math.max(Math.min(result, v1), v0)
+      : Math.max(Math.min(result, v0), v1)
+    : result
+}
+
+/**
+ * Clamp a value into a range.
+ *
+ * @param n
+ * @param min
+ */
+export function clamp(n: number, min: number): number
+export function clamp(n: number, min: number, max: number): number
+export function clamp(n: number, min: number, max?: number): number {
+  return Math.max(min, typeof max !== 'undefined' ? Math.min(n, max) : n)
+}
+
 const serializableTypes = new Set(['string', 'number', 'boolean', 'undefined'])
 
 export function isSerializable(value: any): boolean {

@@ -77,7 +77,7 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
           alignItems: 'center',
           fontSize: 14,
           willChange: 'transform',
-          boxShadow: 'var(--nu-shadow-elevation-medium)',
+          boxShadow: 'var(--tl-shadow-elevation-medium)',
         }}
       >
         <NuColorInput label="Stroke" value={shapes[0].stroke} onChange={updateStroke} />
