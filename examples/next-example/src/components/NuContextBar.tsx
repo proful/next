@@ -10,11 +10,10 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
   scaledBounds,
   // rotation,
 }) => {
-  const rContextBar = React.useRef<HTMLDivElement>(null)
-
-  // const rotatedBounds = BoundsUtils.getRotatedBounds(scaledBounds, rotation)
-
   const app = useAppContext()
+
+  const rSize = React.useRef([0, 0])
+  const rContextBar = React.useRef<HTMLDivElement>(null)
 
   const updateStroke = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
     shapes.forEach((shape) => shape.update({ stroke: e.currentTarget.value }))
@@ -26,10 +25,6 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
 
   const updateStrokeWidth = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
     shapes.forEach((shape) => shape.update({ strokeWidth: +e.currentTarget.value }))
-  }, [])
-
-  const updateSides = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
-    shapes.forEach((shape) => shape.update({ sides: +e.currentTarget.value }))
   }, [])
 
   const updatePoints = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
@@ -44,16 +39,20 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
     const elm = rContextBar.current
     if (!elm) return
     const { offsetWidth, offsetHeight } = elm
-    const [x, y] = BoundsUtils.getContextBarTranslation([offsetWidth, offsetHeight], offset)
+    rSize.current = [offsetWidth, offsetHeight]
+  }, [])
+
+  React.useLayoutEffect(() => {
+    const elm = rContextBar.current
+    if (!elm) return
+    const size = rSize.current
+    const [x, y] = BoundsUtils.getContextBarTranslation(size, offset)
     elm.style.setProperty('transform', `translateX(${x}px) translateY(${y}px)`)
   }, [scaledBounds, offset])
 
   if (!app) return null
 
-  const starShapes = shapes.filter((shape) => shape.type === 'star') as NuStarShape[]
-
-  const polygonShapes = shapes.filter((shape) => shape.type === 'polygon') as NuPolygonShape[]
-
+  const pointsShapes = shapes.filter((shape) => 'points' in shape) as NuStarShape[]
   const ratioShapes = shapes.filter((shape) => 'ratio' in shape) as (NuPolygonShape | NuStarShape)[]
 
   return (
@@ -87,23 +86,12 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
           onChange={updateStrokeWidth}
           style={{ width: 48 }}
         />
-        {polygonShapes.length > 0 && (
-          <>
-            Sides
-            <input
-              type="number"
-              value={Math.max(...polygonShapes.map((shape) => shape.sides))}
-              onChange={updateSides}
-              style={{ width: 40 }}
-            />
-          </>
-        )}
-        {starShapes.length > 0 && (
+        {pointsShapes.length > 0 && (
           <>
             Points
             <input
               type="number"
-              value={Math.max(...starShapes.map((shape) => shape.points))}
+              value={Math.max(...pointsShapes.map((shape) => shape.points))}
               onChange={updatePoints}
               style={{ width: 40 }}
             />

@@ -1,16 +1,16 @@
 import * as React from 'react'
-import { Vec } from '@tldraw/vec'
 import { computed, makeObservable, observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
+import { Vec } from '@tldraw/vec'
+import { intersectLineSegmentPolyline, intersectPolygonBounds } from '@tldraw/intersect'
 import { SVGContainer } from '~components'
 import { BoundsUtils, PointUtils, PolygonUtils } from '~utils'
 import { TLBoxShape, TLBoxShapeProps } from '../TLBoxShape'
 import type { TLResizeInfo, TLComponentProps, TLIndicatorProps, TLShapeProps } from '~nu-lib'
 import type { TLBounds } from '~types'
-import { intersectLineSegmentPolyline, intersectPolygonBounds } from '@tldraw/intersect'
 
 export interface TLPolygonShapeProps extends TLBoxShapeProps {
-  sides: number
+  points: number
   ratio: number
   isFlippedY: boolean
 }
@@ -22,7 +22,7 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
     makeObservable(this)
   }
 
-  @observable sides = 3
+  @observable points = 3
   @observable ratio = 1
   @observable isFlippedY = false
 
@@ -59,6 +59,30 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
     return this.getVertices()
   }
 
+  @computed get pageVertices() {
+    const { point, vertices } = this
+    return vertices.map((vert) => Vec.add(vert, point))
+  }
+
+  @computed get centroid() {
+    const { vertices } = this
+    return PolygonUtils.getPolygonCentroid(vertices)
+  }
+
+  @computed get rotatedVertices() {
+    const { vertices, centroid, rotation } = this
+    if (!rotation) return vertices
+    return vertices.map((v) => Vec.rotWith(v, centroid, rotation))
+  }
+
+  getRotatedBounds = (): TLBounds => {
+    const { rotatedVertices, point, offset } = this
+    return BoundsUtils.translateBounds(
+      BoundsUtils.getBoundsFromPoints(rotatedVertices),
+      Vec.add(point, offset)
+    )
+  }
+
   @computed get offset() {
     const {
       size: [w, h],
@@ -67,51 +91,15 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
     return Vec.sub(Vec.div([w, h], 2), center)
   }
 
-  @computed get pageVertices() {
-    const { point, vertices } = this
-    return vertices.map((vert) => Vec.add(vert, point))
-  }
-
   getVertices(padding = 0): number[][] {
-    const { ratio, sides, size, isFlippedY } = this
-    const [w, h] = size
-
-    if (sides === 3) {
-      const A = [w / 2, padding / 2]
-      const B = [w - padding, h - padding]
-      const C = [padding / 2, h - padding]
-
-      const centroid = PolygonUtils.getPolygonCentroid([A, B, C])
-
-      const AB = Vec.med(A, B)
-      const BC = Vec.med(B, C)
-      const CA = Vec.med(C, A)
-
-      const r = 1 - ratio
-
-      const dAB = Vec.dist(AB, centroid) * r
-      const dBC = Vec.dist(BC, centroid) * r
-      const dCA = Vec.dist(CA, centroid) * r
-
-      return [
-        A,
-        dAB ? Vec.nudge(AB, centroid, dAB) : AB,
-        B,
-        dBC ? Vec.nudge(BC, centroid, dBC) : BC,
-        C,
-        dCA ? Vec.nudge(CA, centroid, dCA) : CA,
-      ]
-    }
-
-    const vertices = PolygonUtils.getPolygonVertices(
-      Vec.div([w, h], 2),
-      [Math.max(1, w - padding), Math.max(1, h - padding)],
-      Math.round(sides),
-      ratio
-    )
+    const { ratio, points, size, isFlippedY } = this
+    const vertices =
+      points === 3
+        ? PolygonUtils.getTriangleVertices(size, padding, ratio)
+        : PolygonUtils.getPolygonVertices(size, points, padding, ratio)
 
     if (isFlippedY) {
-      return vertices.map((point) => [point[0], h - point[1]])
+      return vertices.map((point) => [point[0], size[1] - point[1]])
     }
 
     return vertices
@@ -143,12 +131,17 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
   }
 
   hitTestBounds = (bounds: TLBounds): boolean => {
-    const { rotatedBounds, offset, vertices, point } = this
+    const { rotatedBounds, offset, rotatedVertices, point } = this
     const oBounds = BoundsUtils.translateBounds(bounds, Vec.neg(Vec.add(point, offset)))
     return (
       BoundsUtils.boundsContain(bounds, rotatedBounds) ||
-      vertices.every((vert) => PointUtils.pointInBounds(vert, oBounds)) ||
-      intersectPolygonBounds(vertices, oBounds).length > 0
+      rotatedVertices.every((vert) => PointUtils.pointInBounds(vert, oBounds)) ||
+      intersectPolygonBounds(rotatedVertices, oBounds).length > 0
     )
+  }
+
+  validateProps = (props: Partial<TLShapeProps & P>) => {
+    if (props.points !== undefined && props.points < 3) props.points = 3
+    return props
   }
 }

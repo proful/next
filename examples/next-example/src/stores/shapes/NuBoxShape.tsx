@@ -52,6 +52,7 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
           strokeWidth={strokeWidth}
           stroke={stroke}
           fill={fill}
+          rx={10}
         />
       </SVGContainer>
     )

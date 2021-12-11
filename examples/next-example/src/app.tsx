@@ -28,7 +28,6 @@ import {
 } from 'stores'
 import { AppUI } from 'components/AppUI'
 import { NuContextBar } from 'components/NuContextBar'
-import { appContext } from 'context'
 
 const components: TLComponents<Shape> = {
   ContextBar: NuContextBar,
@@ -149,6 +148,7 @@ function App(): JSX.Element {
 
   const onMount = React.useCallback<TLSubscriptionCallbacks<Shape, NuApp>['onMount']>((app) => {
     setApp(app)
+    // app.selectAll()
   }, [])
 
   const onPersist = React.useCallback<TLSubscriptionCallbacks<Shape, NuApp>['onPersist']>(() => {

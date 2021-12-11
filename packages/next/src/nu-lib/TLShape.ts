@@ -187,16 +187,6 @@ export abstract class TLShape<P extends AnyObject = any, M = any> implements TLS
     return this.getRotatedBounds()
   }
 
-  /**
-   * Get a new serialized copy of the shape.
-   *
-   * ```tsx
-   * myShape.getSerialized()
-   * ```
-   *
-   * @returns The new serialized shape.
-   * @public
-   */
   getSerialized = (): TLSerializedShape<P> => {
     const propKeys = Array.from(this.propsKeys.values()) as (keyof typeof this)[]
     return deepCopy(
@@ -204,16 +194,6 @@ export abstract class TLShape<P extends AnyObject = any, M = any> implements TLS
     ) as TLSerializedShape<P>
   }
 
-  /**
-   * Get a serialized copy of the shape. This method will return a cached copy unless the shape has changed.
-   *
-   * ```tsx
-   * myShape.getCachedSerialized()
-   * ```
-   *
-   * @private
-   * @returns The serialized shape.
-   */
   protected getCachedSerialized = (): TLSerializedShape<P> => {
     if (this.isDirty) {
       this.nonce++
@@ -223,33 +203,17 @@ export abstract class TLShape<P extends AnyObject = any, M = any> implements TLS
     return this.lastSerialized
   }
 
-  /**
-   * Get a serialized copy of the shape.
-   *
-   * ```tsx
-   * example
-   * ```
-   *
-   * @returns The serialized shape.
-   * @public
-   */
   get serialized(): TLSerializedShape<P> {
     return this.getCachedSerialized()
   }
 
-  /**
-   * Update the shape with new properties.
-   *
-   * ```tsx
-   * myShape.update({ size: [200, 200] })
-   * ```
-   *
-   * @returns The shape instance.
-   * @public
-   */
+  validateProps(props: Partial<TLShapeProps | P>): Partial<TLShapeProps | P> {
+    return props
+  }
+
   @action update = (props: Partial<TLShapeProps | P>, isDeserializing = false) => {
     if (!(isDeserializing || this.isDirty)) this.isDirty = true
-    Object.assign(this, props)
+    Object.assign(this, this.validateProps(props))
     return this
   }
 }

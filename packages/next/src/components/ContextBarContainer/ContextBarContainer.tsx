@@ -12,12 +12,14 @@ export interface TLContextBarContainerProps {
   shapes: TLShape[]
   hidden: boolean
   bounds: TLBounds
+  rotation?: number
 }
 
 export const ContextBarContainer = observer(function ContextBar({
   shapes,
   hidden,
   bounds,
+  rotation = 0,
 }: TLContextBarContainerProps) {
   const {
     components: { ContextBar },
@@ -29,23 +31,16 @@ export const ContextBarContainer = observer(function ContextBar({
       },
     },
   } = useRendererContext()
-
   const rBounds = React.useRef<HTMLDivElement>(null)
-  const scaledBounds = BoundsUtils.multiplyBounds(bounds, zoom)
-  const minX = (bounds.minX + x) * zoom
-  const maxX = (bounds.maxX + x) * zoom
-  const minY = (bounds.minY + y) * zoom
-  const maxY = (bounds.maxY + y) * zoom
 
-  const screenBounds: TLBounds = {
-    minX,
-    minY,
-    maxX,
-    maxY,
-    width: maxX - minX,
-    height: maxY - minY,
-  }
+  const rotatedBounds = BoundsUtils.getRotatedBounds(bounds, rotation)
+  const scaledBounds = BoundsUtils.multiplyBounds(rotatedBounds, zoom)
 
+  useCounterScaledPosition(rBounds, scaledBounds, zoom, 10003)
+
+  if (!ContextBar) throw Error('Expected a ContextBar component.')
+
+  const screenBounds = BoundsUtils.translateBounds(scaledBounds, [x, y])
   const offsets: TLOffset = {
     left: screenBounds.minX,
     right: vpBounds.width - screenBounds.maxX,
@@ -54,13 +49,9 @@ export const ContextBarContainer = observer(function ContextBar({
     width: screenBounds.width,
     height: screenBounds.height,
   }
-
   const inView =
     BoundsUtils.boundsContain(vpBounds, screenBounds) ||
     BoundsUtils.boundsCollide(vpBounds, screenBounds)
-
-  useCounterScaledPosition(rBounds, scaledBounds, zoom, 10003)
-  if (!ContextBar) throw Error('Expected a ContextBar component.')
 
   React.useLayoutEffect(() => {
     const elm = rBounds.current
@@ -88,7 +79,7 @@ export const ContextBarContainer = observer(function ContextBar({
         bounds={bounds}
         offset={offsets}
         scaledBounds={scaledBounds}
-        rotation={bounds.rotation || 0}
+        rotation={rotation}
       />
     </div>
   )
