@@ -18,7 +18,11 @@
   ],
   "scripts": {
     "build": "lerna run build --stream",
+    "build:shapes": "lerna run build:shapes --stream",
+    "build:tools": "lerna run build:tools --stream",
     "build:packages": "lerna run build:packages --stream",
+    "start:shapes": "lerna run start:shapes --stream",
+    "start:tools": "lerna run start:tools --stream",
     "start": "yarn build:packages && lerna run start --stream --parallel",
     "fix:style": "yarn run pretty-quick",
     "lerna": "lerna",

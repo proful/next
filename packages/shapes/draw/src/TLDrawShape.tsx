@@ -13,7 +13,11 @@ import {
   TLCustomProps,
 } from '@tldraw/core'
 import { Vec } from '@tldraw/vec'
-import { intersectLineSegmentPolyline, intersectPolylineBounds } from '@tldraw/intersect'
+import {
+  intersectBoundsLineSegment,
+  intersectLineSegmentPolyline,
+  intersectPolylineBounds,
+} from '@tldraw/intersect'
 
 export interface TLDrawShapeProps {
   points: number[][]
@@ -123,11 +127,20 @@ export class TLDrawShape<P extends TLDrawShapeProps = any> extends TLShape<P> {
   }
 
   hitTestLineSegment = (A: number[], B: number[]): boolean => {
-    const { points, point } = this
-    const rA = Vec.sub(A, point)
-    const rB = Vec.sub(B, point)
-    if (points.length === 1) return Vec.dist(rA, points[0]) < 5 || Vec.dist(rB, points[0]) < 5
-    return intersectLineSegmentPolyline(rA, rB, points).didIntersect
+    const { bounds, points, point } = this
+    if (
+      PointUtils.pointInBounds(A, bounds) ||
+      PointUtils.pointInBounds(B, bounds) ||
+      intersectBoundsLineSegment(bounds, A, B).length > 0
+    ) {
+      const rA = Vec.sub(A, point)
+      const rB = Vec.sub(B, point)
+      return (
+        intersectLineSegmentPolyline(rA, rB, points).didIntersect ||
+        !!points.find((point) => Vec.dist(rA, point) < 5 || Vec.dist(rB, point) < 5)
+      )
+    }
+    return false
   }
 
   hitTestBounds = (bounds: TLBounds): boolean => {
