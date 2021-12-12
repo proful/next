@@ -4,10 +4,22 @@ describe('TLApp', () => {
   it('creates a new app', () => {
     new TLApp()
   })
+})
 
-  it.todo('Mounts (triggers onMount prop)') // create
-  it.todo('Persists (triggers onPersist prop)') // create
-  it.todo('Registers shape classes via shapeClasses prop')
+describe('When creating a TLApp', () => {
+  it.todo('Loads serialized document via constructor')
+  it.todo('Registers shape classes via constructor')
+  it.todo('Registers tool classes via constructor')
+})
+
+describe('When adding event subscriptions', () => {
+  it.todo('Notifies onPersist subscription')
+  it.todo('Notifies onSave subscription')
+  it.todo('Notifies onSaveAs subscription')
+})
+
+describe('When interacting with the public API', () => {
+  it.todo('Registers shape classes (provided in constructor')
   it.todo('Registers tools via tools prop')
   it.todo('Changes selected tool...')
   it.todo('Handles events...')
