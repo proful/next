@@ -1,7 +1,7 @@
 {
   "version": "2.0.0-alpha.1",
-  "name": "@tldraw/core",
-  "description": "The core library for a spatial UI application.",
+  "name": "@tldraw/box-shape",
+  "description": "A shape for tldraw/core.",
   "author": "@steveruizok",
   "repository": {
     "type": "git",
@@ -37,15 +37,7 @@
     "test:watch": "jest --watchAll"
   },
   "dependencies": {
-    "@tldraw/intersect": "2.0.0-alpha.1",
-    "@tldraw/vec": "2.0.0-alpha.1",
-    "@use-gesture/react": "^10.1.3",
-    "hotkeys-js": "^3.8.7",
-    "is-plain-object": "^5.0.0",
-    "mobx-react-lite": "^3.2.2",
-    "mousetrap": "^1.6.5",
-    "nanoid": "^3.1.30",
-    "rbush": "^3.0.1",
+    "@tldraw/core": "2.0.0-alpha.1",
     "mobx": "^6.3.8"
   },
   "peerDependencies": {
@@ -53,14 +45,11 @@
     "react-dom": "^16.8 || ^17.0"
   },
   "devDependencies": {
-    "@types/mousetrap": "^1.6.8",
     "@swc-node/jest": "^1.3.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
-    "@types/is-plain-object": "^2.0.4",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.6",
-    "@types/rbush": "^3.0.0",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
     "tsconfig-replace-paths": "^0.0.11"

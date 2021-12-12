@@ -14,6 +14,7 @@
     "packages/curve",
     "packages/vec",
     "packages/intersect",
+    "packages/shapes/*",
     "examples/example"
   ],
   "scripts": {

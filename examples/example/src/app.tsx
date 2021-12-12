@@ -11,22 +11,23 @@ import {
 import {
   NuBoxShape,
   NuEllipseShape,
+  NuPolygonShape,
+  NuPenShape,
+  NuHighlighterShape,
+  NuDotShape,
+  NuStarShape,
+  Shape,
+} from 'lib/shapes'
+import {
   NuBoxTool,
   NuEllipseTool,
   NuPolygonTool,
-  NuPolygonShape,
-  NuPenShape,
   NuPenTool,
-  NuHighlighterShape,
   NuHighlighterTool,
-  NuDotShape,
   NuDotTool,
   NuEraseTool,
   NuStarTool,
-  NuStarShape,
-  Shape,
-  NuApp,
-} from 'stores'
+} from 'lib/tools'
 import { AppUI } from 'components/AppUI'
 import { NuContextBar } from 'components/NuContextBar/NuContextBar'
 
@@ -163,12 +164,12 @@ function App(): JSX.Element {
     ],
   })
 
-  const onMount = React.useCallback<TLSubscriptionCallbacks<Shape, NuApp>['onMount']>((app) => {
+  const onMount = React.useCallback<TLSubscriptionCallbacks<Shape>['onMount']>((app) => {
     setApp(app)
     // app.selectAll()
   }, [])
 
-  const onPersist = React.useCallback<TLSubscriptionCallbacks<Shape, NuApp>['onPersist']>(() => {
+  const onPersist = React.useCallback<TLSubscriptionCallbacks<Shape>['onPersist']>(() => {
     // todo
   }, [])
 

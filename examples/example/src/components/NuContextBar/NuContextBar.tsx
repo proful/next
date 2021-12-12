@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { BoundsUtils, HTMLContainer, TLContextBarComponent, useApp } from '@tldraw/core'
 import { observer } from 'mobx-react-lite'
-import type { NuStarShape, NuPolygonShape, Shape } from 'stores'
-import { NuNumberInput } from '../inputs/NuNumberInput'
-import { NuColorInput } from '../inputs/NuColorInput'
+import type { NuStarShape, NuPolygonShape, Shape } from '~lib/shapes'
+import { NuNumberInput } from '~components/inputs/NuNumberInput'
+import { NuColorInput } from '~components/inputs/NuColorInput'
 
 const _NuContextBar: TLContextBarComponent<Shape> = ({
   shapes,

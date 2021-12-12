@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
 import { useApp } from '@tldraw/core'
-import type { Shape } from 'stores'
+import type { Shape } from 'unused-app'
 
 export const NuStatusBar = observer(function StatusBar() {
   const app = useApp<Shape>()

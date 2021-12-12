@@ -223,7 +223,10 @@ export type TLSubscribe<S extends TLShape = TLShape, R extends TLApp<S> = TLApp<
   ): () => void
 }
 
-export interface TLSubscriptionCallbacks<S extends TLShape, R extends TLApp<S>> {
+export interface TLSubscriptionCallbacks<
+  S extends TLShape = TLShape,
+  R extends TLApp<S> = TLApp<S>
+> {
   onMount: TLSubscriptionCallback<S, R, 'mount'>
   onPersist: TLSubscriptionCallback<S, R, 'persist'>
   onSave: TLSubscriptionCallback<S, R, 'save'>

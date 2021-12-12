@@ -16,15 +16,13 @@ async function main() {
 
   try {
     esbuild.buildSync({
-      entryPoints: ['./src/index.tsx'],
-      outdir: 'dist',
-      minify: false,
+      entryPoints: ['src/index.tsx'],
+      outfile: 'dist/bundle.js',
       bundle: true,
-      format: 'cjs',
-      target: 'es6',
-      jsxFactory: 'React.createElement',
-      jsxFragment: 'React.Fragment',
-      tsconfig: './tsconfig.json',
+      minify: true,
+      sourcemap: true,
+      incremental: false,
+      target: ['chrome58', 'firefox57', 'safari11', 'edge18'],
       define: {
         'process.env.NODE_ENV': '"production"',
       },

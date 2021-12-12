@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
-import type { Shape } from 'stores'
+import type { Shape } from 'unused-app'
 import { useApp } from '@tldraw/core'
 
 export const NuToolBar = observer(function ToolBar(): JSX.Element {
