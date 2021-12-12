@@ -124,7 +124,10 @@ export class TLDrawShape<P extends TLDrawShapeProps = any> extends TLShape<P> {
 
   hitTestLineSegment = (A: number[], B: number[]): boolean => {
     const { points, point } = this
-    return intersectLineSegmentPolyline(Vec.sub(A, point), Vec.sub(B, point), points).didIntersect
+    const rA = Vec.sub(A, point)
+    const rB = Vec.sub(B, point)
+    if (points.length === 1) return Vec.dist(rA, points[0]) < 5 || Vec.dist(rB, points[0]) < 5
+    return intersectLineSegmentPolyline(rA, rB, points).didIntersect
   }
 
   hitTestBounds = (bounds: TLBounds): boolean => {
