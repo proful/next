@@ -1,7 +1,7 @@
 {
   "name": "@tldraw/monorepo",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.1",
   "description": "A tiny little drawing app.",
   "author": "@steveruizok",
   "repository": {
@@ -10,24 +10,17 @@
   },
   "license": "MIT",
   "workspaces": [
-    "packages/next",
+    "packages/core",
     "packages/curve",
     "packages/vec",
     "packages/intersect",
-    "apps/www",
-    "apps/electron",
-    "apps/vscode/editor",
-    "apps/vscode/extension",
-    "examples/tldraw-example",
-    "examples/core-example",
-    "examples/next-example",
-    "examples/core-example-advanced"
+    "examples/example"
   ],
   "scripts": {
     "build": "lerna run build --stream",
     "build:packages": "lerna run build:packages --stream",
     "start": "yarn build:packages && lerna run start:next --stream --parallel",
-    "fix:style": "yarn run prettier ./packages/core/src --write && yarn run prettier ./packages/tldraw/src --write",
+    "fix:style": "yarn run pretty-quick",
     "lerna": "lerna",
     "test": "lerna run test --stream",
     "test:ci": "lerna run test:ci --stream",

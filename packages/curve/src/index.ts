@@ -11,6 +11,7 @@ export interface TLBezierCurveSegment {
 
 /**
  * Get bezier curve segments that pass through an array of points.
+ *
  * @param points
  * @param tension
  */
@@ -84,6 +85,7 @@ export function getTLBezierCurveSegments(
 
 /**
  * Find a point along a curve segment, via pomax.
+ *
  * @param t
  * @param points [cpx1, cpy1, cpx2, cpy2, px, py][]
  */
@@ -141,6 +143,7 @@ export function computePointOnCurve(t: number, points: number[][]): number[] {
 
 /**
  * Evaluate a 2d cubic bezier at a point t on the x axis.
+ *
  * @param tx
  * @param x1
  * @param y1
@@ -194,6 +197,7 @@ export function cubicBezier(tx: number, x1: number, y1: number, x2: number, y2: 
 
 /**
  * Get a bezier curve data for a spline that fits an array of points.
+ *
  * @param points An array of points formatted as [x, y]
  * @param k Tension
  */
@@ -241,6 +245,7 @@ export function getSpline(
 
 /**
  * Get a bezier curve data for a spline that fits an array of points.
+ *
  * @param pts
  * @param tension
  * @param isClosed
@@ -318,6 +323,7 @@ export function getCurvePoints(
 
 /**
  * Simplify a line (using Ramer-Douglas-Peucker algorithm).
+ *
  * @param points An array of points as [x, y, ...][]
  * @param tolerance The minimum line distance (also called epsilon).
  * @returns Simplified array as [x, y, ...][]
