@@ -6,10 +6,10 @@ import {
   TLShape,
   BoundsUtils,
   TLBounds,
-  TLShapeProps,
   TLComponentProps,
   TLIndicatorProps,
   TLResizeInfo,
+  TLCustomProps,
 } from '@tldraw/core'
 
 export interface TLBoxShapeProps {
@@ -17,7 +17,7 @@ export interface TLBoxShapeProps {
 }
 
 export class TLBoxShape<P extends TLBoxShapeProps = any> extends TLShape<P & TLBoxShapeProps> {
-  constructor(props = {} as TLShapeProps & Partial<P & TLBoxShapeProps>) {
+  constructor(props = {} as TLCustomProps<Partial<P>>) {
     super(props)
     this.init(props)
     makeObservable(this)

@@ -11,11 +11,10 @@
   "license": "MIT",
   "workspaces": [
     "packages/core",
-    "packages/curve",
-    "packages/vec",
-    "packages/intersect",
+    "packages/utils/*",
     "packages/shapes/*",
-    "examples/example"
+    "packages/tools/*",
+    "apps/*"
   ],
   "scripts": {
     "build": "lerna run build --stream",

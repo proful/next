@@ -1,5 +1,0 @@
-export * from './TLBoxShape'
-export * from './TLPolygonShape'
-export * from './TLStarShape'
-export * from './TLDrawShape'
-export * from './TLDotShape'

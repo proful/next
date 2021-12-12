@@ -568,39 +568,4 @@ export interface TLResizeInfo<P = any> {
   initialProps: TLShapeProps & P
 }
 
-/* ----------------------- Dot ---------------------- */
-
-export interface TLDotShapeProps {
-  radius: number
-}
-
-/* -------------------- Box Shape ------------------- */
-
-export interface TLBoxShapeProps {
-  size: number[]
-}
-
-/* ------------------- Draw Shape ------------------- */
-
-export interface TLDrawShapeProps {
-  points: number[][]
-  isComplete: boolean
-}
-
-/* --------------------- Polygon -------------------- */
-
-export interface TLPolygonShapeProps extends TLBoxShapeProps {
-  sides: number
-  ratio: number
-  isFlippedY: boolean
-}
-
-/* ---------------------- Star ---------------------- */
-
-export interface TLStarShapeProps extends TLPolygonShapeProps {
-  points: number
-  ratio: number
-  isFlippedY: boolean
-}
-
 export type TLCustomProps<P extends AnyObject = any> = TLShapeProps & Partial<P>

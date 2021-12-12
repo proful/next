@@ -11,7 +11,7 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": true
   },
-  "references": [{ "path": "../vec" }, { "path": "../intersect" }],
+  "references": [{ "path": "../utils/vec" }, { "path": "../utils/intersect" }],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],
     "out": "docs"

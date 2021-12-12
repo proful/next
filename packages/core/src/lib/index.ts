@@ -1,10 +1,9 @@
 // The order of these imports matters!
+export * from './TLShape'
 export * from './TLState'
 export * from './TLToolState'
 export * from './TLTool'
-export * from './TLShape'
-export * from './shapes'
-export * from './tools'
+export * from './TLSelectTool'
 export * from './TLPage'
 export * from './TLViewport'
 export * from './TLInputs'

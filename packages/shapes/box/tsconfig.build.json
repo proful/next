@@ -17,6 +17,5 @@
     "declarationMap": true,
     "useDefineForClassFields": true,
     "sourceMap": true
-  },
-  "references": [{ "path": "../../core" }, { "path": "../../vec" }, { "path": "../../intersect" }]
+  }
 }
