@@ -19,7 +19,7 @@
   "scripts": {
     "build": "lerna run build --stream",
     "build:packages": "lerna run build:packages --stream",
-    "start": "yarn build:packages && lerna run start:next --stream --parallel",
+    "start": "yarn build:packages && lerna run start --stream --parallel",
     "fix:style": "yarn run pretty-quick",
     "lerna": "lerna",
     "test": "lerna run test --stream",

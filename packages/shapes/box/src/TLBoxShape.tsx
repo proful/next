@@ -2,8 +2,8 @@ import * as React from 'react'
 import { makeObservable, observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import {
-  SVGContainer,
   TLShape,
+  SVGContainer,
   BoundsUtils,
   TLBounds,
   TLComponentProps,

@@ -56,7 +56,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "<rootDir>/../../setupTests.ts"
+      "<rootDir>/../../../setupTests.ts"
     ],
     "transform": {
       "^.+\\.(tsx|jsx|ts|js|mjs)?$": [
@@ -83,7 +83,9 @@
       "<rootDir>/src/test/"
     ],
     "moduleNameMapper": {
-      "@tldraw/core": "<rootDir>/src",
+      "@tldraw/core": "<rootDir>../../core",
+      "@tldraw/vec": "<rootDir>../../utils/vec",
+      "@tldraw/intersect": "<rootDir>../../utils/intersect",
       "\\~(.*)": "<rootDir>/src/$1"
     }
   },
