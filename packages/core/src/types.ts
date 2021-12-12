@@ -99,8 +99,8 @@ export type TLBoundsComponentProps<S extends TLShape = TLShape> = {
   zoom: number
   shapes: S[]
   bounds: TLBounds
-  showResizeHandles: boolean
-  showRotateHandle: boolean
+  showResizeHandles?: boolean
+  showRotateHandle?: boolean
 }
 
 export type TLBoundsComponent<S extends TLShape = TLShape> = (
