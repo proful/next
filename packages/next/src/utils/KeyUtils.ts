@@ -1,4 +1,4 @@
-import hotkeys, { HotkeysEvent } from 'hotkeys-js'
+import Mousetrap from 'mousetrap'
 
 type AvailableTags = 'INPUT' | 'TEXTAREA' | 'SELECT'
 
@@ -11,23 +11,20 @@ const tagFilter = ({ target }: KeyboardEvent, enableOnTags?: AvailableTags[]) =>
 
 export class KeyUtils {
   static registerShortcut(
-    key: string,
-    callback: (keyboardEvent: KeyboardEvent, hotkeysEvent: HotkeysEvent) => void
+    keys: string | string[],
+    callback: (keyboardEvent: Mousetrap.ExtendedKeyboardEvent, combo: string) => void
   ) {
-    const fn = (keyboardEvent: KeyboardEvent, hotkeysEvent: HotkeysEvent): void => {
+    const fn = (keyboardEvent: Mousetrap.ExtendedKeyboardEvent, combo: string): void => {
       keyboardEvent.preventDefault()
-
       if (
         tagFilter(keyboardEvent, ['INPUT', 'TEXTAREA', 'SELECT']) ||
         (keyboardEvent.target as HTMLElement)?.isContentEditable
       ) {
         return
       }
-
-      callback(keyboardEvent, hotkeysEvent)
+      callback(keyboardEvent, combo)
     }
-
-    hotkeys(key, { keydown: true, keyup: false }, fn)
-    return () => hotkeys.unbind(key, fn)
+    Mousetrap.bind(keys, fn)
+    return () => Mousetrap.unbind(keys)
   }
 }

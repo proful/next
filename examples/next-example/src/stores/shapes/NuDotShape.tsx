@@ -9,7 +9,7 @@ import {
 } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
 import { makeObservable, observable } from 'mobx'
-import type { NuStyleProps } from './NuStyleProps'
+import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 export interface NuDotShapeProps extends TLDotShapeProps, NuStyleProps {}
 
@@ -25,14 +25,15 @@ export class NuDotShape extends TLDotShape<NuDotShapeProps> {
   @observable stroke = '#000000'
   @observable fill = '#000000'
   @observable strokeWidth = 2
+  @observable opacity = 1
 
   Component = observer(({ events, isSelected }: TLComponentProps) => {
-    const { radius, stroke, fill, strokeWidth } = this
+    const { radius, stroke, fill, strokeWidth, opacity } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={opacity}>
         <circle
-          className={isSelected ? 'nu-hitarea-fill' : 'nu-hitarea-stroke'}
+          className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           cx={radius}
           cy={radius}
           r={radius}
@@ -49,4 +50,9 @@ export class NuDotShape extends TLDotShape<NuDotShapeProps> {
       </SVGContainer>
     )
   })
+
+  validateProps = (props: Partial<TLShapeProps & NuDotShapeProps>) => {
+    if (props.radius !== undefined) props.radius = Math.max(props.radius, 1)
+    return withClampedStyles(props)
+  }
 }

@@ -6,12 +6,15 @@ import {
   TLBoxShape,
   TLShapeProps,
   TLBoxShapeProps,
+  TLIndicatorProps,
 } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
 import { makeObservable, observable } from 'mobx'
-import type { NuStyleProps } from './NuStyleProps'
+import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
-export interface NuBoxShapeProps extends TLBoxShapeProps, NuStyleProps {}
+export interface NuBoxShapeProps extends TLBoxShapeProps, NuStyleProps {
+  borderRadius: number
+}
 
 export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
   constructor(props = {} as TLShapeProps & Partial<NuBoxShapeProps>) {
@@ -23,8 +26,10 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
   static id = 'box'
 
   @observable stroke = '#000000'
-  @observable fill = '#ffffff22'
+  @observable fill = '#ffffff'
   @observable strokeWidth = 2
+  @observable borderRadius = 0
+  @observable opacity = 1
 
   Component = observer(({ events, isSelected }: TLComponentProps) => {
     const {
@@ -32,14 +37,19 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
       stroke,
       fill,
       strokeWidth,
+      borderRadius,
+      opacity,
     } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={opacity}>
         <rect
-          className={isSelected ? 'nu-hitarea-fill' : 'nu-hitarea-stroke'}
+          className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           x={strokeWidth / 2}
           y={strokeWidth / 2}
+          rx={borderRadius}
+          ry={borderRadius}
+          radius={10}
           width={Math.max(0.01, w - strokeWidth)}
           height={Math.max(0.01, h - strokeWidth)}
           pointerEvents="all"
@@ -47,6 +57,8 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
         <rect
           x={strokeWidth / 2}
           y={strokeWidth / 2}
+          rx={borderRadius}
+          ry={borderRadius}
           width={Math.max(0.01, w - strokeWidth)}
           height={Math.max(0.01, h - strokeWidth)}
           strokeWidth={strokeWidth}
@@ -56,4 +68,21 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
       </SVGContainer>
     )
   })
+
+  Indicator = observer((props: TLIndicatorProps) => {
+    const {
+      size: [w, h],
+      borderRadius,
+    } = this
+    return <rect width={w} height={h} rx={borderRadius} ry={borderRadius} fill="transparent" />
+  })
+
+  validateProps = (props: Partial<NuBoxShapeProps & TLShapeProps>) => {
+    if (props.size !== undefined) {
+      props.size[0] = Math.max(props.size[0], 1)
+      props.size[1] = Math.max(props.size[1], 1)
+    }
+    if (props.borderRadius !== undefined) props.borderRadius = Math.max(0, props.borderRadius)
+    return withClampedStyles(props)
+  }
 }

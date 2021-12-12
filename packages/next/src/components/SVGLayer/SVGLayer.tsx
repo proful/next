@@ -28,7 +28,7 @@ export const SVGLayer = observer(function SVGLayer({ children }: SVGLayerProps) 
   )
 
   return (
-    <svg className="nu-absolute nu-overlay" pointerEvents="none">
+    <svg className="tl-absolute tl-overlay" pointerEvents="none">
       <g ref={rGroup} pointerEvents="none">
         {children}
       </g>

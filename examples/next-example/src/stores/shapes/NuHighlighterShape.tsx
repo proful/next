@@ -12,7 +12,7 @@ import {
 } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
 import { observable, computed, makeObservable } from 'mobx'
-import type { NuStyleProps } from './NuStyleProps'
+import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 export interface NuHighlighterShapeProps extends TLDrawShapeProps, NuStyleProps {}
 
@@ -26,8 +26,9 @@ export class NuHighlighterShape extends TLDrawShape<NuHighlighterShapeProps> {
   static id = 'highlighter'
 
   @observable stroke = '#000000'
-  @observable fill = '#ffffff22'
+  @observable fill = '#ffffff'
   @observable strokeWidth = 2
+  @observable opacity = 1
 
   @computed get pointsPath() {
     const { points } = this
@@ -35,10 +36,10 @@ export class NuHighlighterShape extends TLDrawShape<NuHighlighterShapeProps> {
   }
 
   Component = observer(({ events }: TLComponentProps) => {
-    const { pointsPath, stroke, fill, strokeWidth } = this
+    const { pointsPath, stroke, fill, strokeWidth, opacity } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={opacity}>
         <path
           d={pointsPath}
           strokeWidth={strokeWidth * 16}
@@ -57,4 +58,10 @@ export class NuHighlighterShape extends TLDrawShape<NuHighlighterShapeProps> {
     const { pointsPath } = this
     return <path d={pointsPath} fill="none" />
   })
+
+  validateProps = (props: Partial<TLShapeProps & NuHighlighterShapeProps>) => {
+    props = withClampedStyles(props)
+    if (props.strokeWidth !== undefined) props.strokeWidth = Math.max(props.strokeWidth, 1)
+    return props
+  }
 }

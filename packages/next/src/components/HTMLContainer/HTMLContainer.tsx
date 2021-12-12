@@ -11,8 +11,8 @@ export const HTMLContainer = React.forwardRef<HTMLDivElement, HTMLContainerProps
     return (
       <Observer>
         {() => (
-          <div ref={ref} className={`nu-positioned-div ${className}`} {...rest}>
-            <div className={`nu-positioned-inner ${centered ? 'nu-centered' : ''}`}>{children}</div>
+          <div ref={ref} className={`tl-positioned-div ${className}`} {...rest}>
+            <div className={`tl-positioned-inner ${centered ? 'tl-centered' : ''}`}>{children}</div>
           </div>
         )}
       </Observer>

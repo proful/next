@@ -1,24 +1,32 @@
 import * as React from 'react'
-import type { TLSubscriptionCallback } from '~types'
-import type { TLApp, TLShape } from '~nu-lib'
+import type { TLAppPropsWithoutApp, TLAppPropsWithApp } from '~types'
+import type { TLApp, TLShape } from '~lib'
 
 declare const window: Window & { tln: TLApp<any> }
 
 export function useSetup<S extends TLShape, R extends TLApp<S>>(
   app: R,
-  onMount: TLSubscriptionCallback<S, R, 'mount'>,
-  onPersist: TLSubscriptionCallback<S, R, 'persist'>
+  props: TLAppPropsWithApp<S> | TLAppPropsWithoutApp<S>
 ) {
+  const { onPersist, onSave, onSaveAs, onMount } = props
+
   React.useLayoutEffect(() => {
     const unsubs: (() => void)[] = []
     if (!app) return
     app.history.reset()
     if (typeof window !== undefined) window['tln'] = app
     if (onMount) onMount(app, null)
-    if (onPersist) unsubs.push(app.subscribe('persist', onPersist))
     return () => {
       unsubs.forEach((unsub) => unsub())
       app.dispose()
     }
-  }, [app, onMount, onPersist])
+  }, [app])
+
+  React.useLayoutEffect(() => {
+    const unsubs: (() => void)[] = []
+    if (onPersist) unsubs.push(app.subscribe('persist', onPersist))
+    if (onSave) unsubs.push(app.subscribe('save', onSave))
+    if (onSaveAs) unsubs.push(app.subscribe('saveAs', onSaveAs))
+    return () => unsubs.forEach((unsub) => unsub())
+  }, [app, onPersist, onSave, onSaveAs])
 }

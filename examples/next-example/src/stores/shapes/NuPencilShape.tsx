@@ -12,7 +12,7 @@ import {
 } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
 import { observable, computed, makeObservable } from 'mobx'
-import type { NuStyleProps } from './NuStyleProps'
+import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 export interface NuPencilShapeProps extends TLDrawShapeProps, NuStyleProps {}
 
@@ -26,8 +26,9 @@ export class NuPencilShape extends TLDrawShape<NuPencilShapeProps> {
   static id = 'pencil'
 
   @observable stroke = '#000000'
-  @observable fill = '#ffffff22'
+  @observable fill = '#ffffff'
   @observable strokeWidth = 2
+  @observable opacity = 1
 
   @computed get pointsPath() {
     const { points } = this
@@ -35,10 +36,10 @@ export class NuPencilShape extends TLDrawShape<NuPencilShapeProps> {
   }
 
   Component = observer(({ events }: TLComponentProps) => {
-    const { pointsPath, stroke, fill, strokeWidth } = this
+    const { pointsPath, stroke, fill, strokeWidth, opacity } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={opacity}>
         <polyline
           points={pointsPath}
           stroke={stroke}
@@ -54,4 +55,8 @@ export class NuPencilShape extends TLDrawShape<NuPencilShapeProps> {
     const { pointsPath } = this
     return <path d={pointsPath} fill="none" />
   })
+
+  validateProps = (props: Partial<TLShapeProps & NuPencilShapeProps>) => {
+    return withClampedStyles(props)
+  }
 }

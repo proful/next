@@ -15,7 +15,7 @@ import {
 import { observer } from 'mobx-react-lite'
 import { observable, makeObservable } from 'mobx'
 import { intersectEllipseBounds, intersectLineSegmentEllipse } from '@tldraw/intersect'
-import type { NuStyleProps } from './NuStyleProps'
+import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 export interface NuEllipseShapeProps extends NuStyleProps {
   size: number[]
@@ -31,8 +31,9 @@ export class NuEllipseShape extends TLBoxShape<NuEllipseShapeProps> {
   static id = 'ellipse'
 
   @observable stroke = '#000000'
-  @observable fill = '#ffffff22'
+  @observable fill = '#ffffff'
   @observable strokeWidth = 2
+  @observable opacity = 1
 
   Component = observer(({ isSelected, events }: TLComponentProps) => {
     const {
@@ -40,12 +41,13 @@ export class NuEllipseShape extends TLBoxShape<NuEllipseShapeProps> {
       stroke,
       fill,
       strokeWidth,
+      opacity,
     } = this
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={opacity}>
         <ellipse
-          className={isSelected ? 'nu-hitarea-fill' : 'nu-hitarea-stroke'}
+          className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           cx={w / 2}
           cy={h / 2}
           rx={Math.max(0.01, (w - strokeWidth) / 2)}
@@ -130,5 +132,13 @@ export class NuEllipseShape extends TLBoxShape<NuEllipseShapeProps> {
       point: [bounds.minX, bounds.minY],
       size: [Math.max(1, bounds.width), Math.max(1, bounds.height)],
     })
+  }
+
+  validateProps = (props: Partial<TLShapeProps & NuEllipseShapeProps>) => {
+    if (props.size !== undefined) {
+      props.size[0] = Math.max(props.size[0], 1)
+      props.size[1] = Math.max(props.size[1], 1)
+    }
+    return withClampedStyles(props)
   }
 }

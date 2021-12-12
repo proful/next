@@ -1,13 +1,17 @@
 import * as React from 'react'
-import type { TLAppPropsWithoutApp, TLAppPropsWithApp } from '~types'
-import { TLApp, TLShape } from '~nu-lib'
+import type { TLApp, TLShape } from '~lib'
 
-export function useApp<S extends TLShape, R extends TLApp<S> = TLApp<S>>(
-  props: TLAppPropsWithoutApp<S> | TLAppPropsWithApp<S, R>
-): R {
-  if ('app' in props) return props.app
-  const [app] = React.useState<R>(
-    () => new TLApp(props.model, props.shapeClasses, props.toolClasses) as R
-  )
-  return app
+const contextMap: Record<string, React.Context<any>> = {}
+
+export function getAppContext<S extends TLShape = TLShape, R extends TLApp<S> = TLApp<S>>(
+  id = 'noid'
+): React.Context<R> {
+  if (!contextMap[id]) {
+    contextMap[id] = React.createContext({} as R)
+  }
+  return contextMap[id]
+}
+
+export function useApp<S extends TLShape = TLShape, R extends TLApp<S> = TLApp<S>>(id = 'noid'): R {
+  return React.useContext(getAppContext<S, R>(id))
 }

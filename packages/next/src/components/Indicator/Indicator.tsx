@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import { Container, SVGContainer } from '~components'
 
 interface IndicatorProps {
@@ -26,12 +26,13 @@ export const Indicator = observer(function Shape({
   return (
     <Container bounds={bounds} rotation={rotation} zIndex={10000}>
       <SVGContainer>
-        <g className={`nu-indicator-container ${isSelected ? 'nu-selected' : 'nu-hovered'}`}>
+        <g className={`tl-indicator-container ${isSelected ? 'tl-selected' : 'tl-hovered'}`}>
           <Indicator
             isEditing={isEditing}
             isBinding={isBinding}
             isHovered={isHovered}
             isSelected={isSelected}
+            isErasing={false}
             meta={meta}
           />
         </g>

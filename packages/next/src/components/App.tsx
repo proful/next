@@ -2,9 +2,9 @@
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
 import type { TLAppPropsWithoutApp, TLAppPropsWithApp } from '~types'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import { AppContext, Renderer } from '~components'
-import { useAppContext } from '~hooks'
+import { useApp } from '~hooks'
 
 export type AppProps<S extends TLShape> = TLAppPropsWithoutApp<S> | TLAppPropsWithApp<S>
 
@@ -17,7 +17,7 @@ export function App<S extends TLShape>(props: AppProps<S>): JSX.Element {
 }
 
 const InnerApp = observer(function InnerApp<S extends TLShape>(props: AppProps<S>): JSX.Element {
-  const app = useAppContext<S>()
+  const app = useApp<S>()
   return (
     <Renderer
       viewport={app.viewport}
@@ -28,6 +28,7 @@ const InnerApp = observer(function InnerApp<S extends TLShape>(props: AppProps<S
       selectedBounds={app.selectedBounds}
       selectedShapes={app.selectedShapes}
       shapes={app.shapesInViewport}
+      showGrid={app.showGrid}
       showBounds={app.showBounds}
       showBoundsRotation={app.showBoundsRotation}
       showResizeHandles={app.showResizeHandles}

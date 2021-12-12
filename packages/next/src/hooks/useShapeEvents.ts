@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { useRendererContext } from '~hooks'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import { TLPointerEventHandler, TLTargetType } from '~types'
 
-export function useShapeEvents(shape: TLShape) {
+export function useShapeEvents<S extends TLShape>(shape: S) {
   const { inputs, callbacks } = useRendererContext()
 
   const events = React.useMemo(() => {

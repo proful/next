@@ -55,8 +55,9 @@ export class PolygonUtils {
     )
   }
 
-  static getPolygonVertices = (center: number[], size: number[], sides: number, ratio = 1) => {
-    const [rx, ry] = Vec.div(size, 2)
+  static getPolygonVertices = (size: number[], sides: number, padding = 0, ratio = 1) => {
+    const center = Vec.div(size, 2)
+    const [rx, ry] = [Math.max(1, center[0] - padding), Math.max(1, center[1] - padding)]
     const pointsOnPerimeter = []
     for (let i = 0, step = PI2 / sides; i < sides; i++) {
       const t1 = (-TAU + i * step) % PI2
@@ -68,6 +69,29 @@ export class PolygonUtils {
       pointsOnPerimeter.push(p1, p2, p3)
     }
     return pointsOnPerimeter
+  }
+
+  static getTriangleVertices = (size: number[], padding = 0, ratio = 1) => {
+    const [w, h] = size
+    const r = 1 - ratio
+    const A = [w / 2, padding / 2]
+    const B = [w - padding, h - padding]
+    const C = [padding / 2, h - padding]
+    const centroid = PolygonUtils.getPolygonCentroid([A, B, C])
+    const AB = Vec.med(A, B)
+    const BC = Vec.med(B, C)
+    const CA = Vec.med(C, A)
+    const dAB = Vec.dist(AB, centroid) * r
+    const dBC = Vec.dist(BC, centroid) * r
+    const dCA = Vec.dist(CA, centroid) * r
+    return [
+      A,
+      dAB ? Vec.nudge(AB, centroid, dAB) : AB,
+      B,
+      dBC ? Vec.nudge(BC, centroid, dBC) : BC,
+      C,
+      dCA ? Vec.nudge(CA, centroid, dCA) : CA,
+    ]
   }
 
   static getStarVertices = (center: number[], size: number[], sides: number, ratio = 1) => {

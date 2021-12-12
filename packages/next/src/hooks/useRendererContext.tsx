@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import type { TLRendererContext } from '~types'
 
 export const contextMap: Record<string, React.Context<TLRendererContext<any>>> = {}

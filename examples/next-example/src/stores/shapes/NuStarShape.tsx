@@ -10,8 +10,8 @@ import {
   assignOwnProps,
 } from '@tldraw/next'
 import { observer } from 'mobx-react-lite'
-import { makeObservable, observable } from 'mobx'
-import type { NuStyleProps } from './NuStyleProps'
+import { computed, makeObservable, observable } from 'mobx'
+import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 interface NuStarShapeProps extends NuStyleProps, TLStarShapeProps {}
 
@@ -23,8 +23,9 @@ export class NuStarShape extends TLStarShape<NuStarShapeProps> {
   }
 
   @observable stroke = '#000000'
-  @observable fill = '#ffffff22'
+  @observable fill = '#ffffff'
   @observable strokeWidth = 2
+  @observable opacity = 1
 
   static id = 'star'
 
@@ -34,14 +35,15 @@ export class NuStarShape extends TLStarShape<NuStarShapeProps> {
       stroke,
       fill,
       strokeWidth,
+      opacity,
     } = this
 
     const path = this.getVertices(strokeWidth / 2).join()
 
     return (
-      <SVGContainer {...events}>
+      <SVGContainer {...events} opacity={opacity}>
         <polygon
-          className={isSelected ? 'nu-hitarea-fill' : 'nu-hitarea-stroke'}
+          className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           transform={`translate(${x}, ${y})`}
           points={path}
         />
@@ -71,4 +73,9 @@ export class NuStarShape extends TLStarShape<NuStarShapeProps> {
       />
     )
   })
+
+  validateProps = (props: Partial<NuStarShapeProps & TLShapeProps>) => {
+    if (props.sides !== undefined) props.sides = Math.max(props.sides, 3)
+    return withClampedStyles(props)
+  }
 }

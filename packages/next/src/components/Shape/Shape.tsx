@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
 import { Container } from '~components'
-import type { TLShape } from '~nu-lib'
+import type { TLShape } from '~lib'
 import { useShapeEvents } from '~hooks/useShapeEvents'
 
 interface ShapeProps {
@@ -10,6 +10,7 @@ interface ShapeProps {
   isHovered?: boolean
   isSelected?: boolean
   isBinding?: boolean
+  isErasing?: boolean
   isEditing?: boolean
   meta: any
 }
@@ -20,6 +21,7 @@ export const Shape = observer(function Shape({
   isHovered = false,
   isSelected = false,
   isBinding = false,
+  isErasing = false,
   isEditing = false,
   meta,
 }: ShapeProps) {
@@ -35,6 +37,7 @@ export const Shape = observer(function Shape({
         isBinding={isBinding}
         isHovered={isHovered}
         isSelected={isSelected}
+        isErasing={isErasing}
         events={events}
       />
     </Container>

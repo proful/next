@@ -73,7 +73,7 @@ const defaultTheme: TLTheme = {
   selectFill: 'rgba(65, 132, 244, 0.05)',
   background: 'rgb(248, 249, 250)',
   foreground: 'rgb(51, 51, 51)',
-  grid: 'rgba(144, 144, 144, 1)',
+  grid: 'rgba(144, 144, 144, .9)',
 }
 
 const tlcss = css`
@@ -110,25 +110,25 @@ const tlcss = css`
       U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
 
-  .nu-container {
-    --nu-zoom: 1;
-    --nu-scale: calc(1 / var(--nu-zoom));
-    --nu-padding: calc(64px * var(--nu-scale));
-    --nu-shadow-color: 0deg 0% 0%;
-    --nu-shadow-elevation-low: 0px 0.4px 0.5px hsl(var(--nu-shadow-color) / 0.04),
-      0px 0.6px 0.8px -0.7px hsl(var(--nu-shadow-color) / 0.06),
-      0.1px 1.2px 1.5px -1.4px hsl(var(--nu-shadow-color) / 0.08);
-    --nu-shadow-elevation-medium: 0px 0.4px 0.5px hsl(var(--nu-shadow-color) / 0.04),
-      0.1px 1.3px 1.7px -0.5px hsl(var(--nu-shadow-color) / 0.06),
-      0.1px 2.8px 3.6px -1px hsl(var(--nu-shadow-color) / 0.07),
-      0.3px 6.1px 7.8px -1.4px hsl(var(--nu-shadow-color) / 0.09);
-    --nu-shadow-elevation-high: 0px 0.4px 0.5px hsl(var(--nu-shadow-color) / 0.04),
-      0.1px 2.3px 3px -0.2px hsl(var(--nu-shadow-color) / 0.05),
-      0.2px 4.1px 5.3px -0.5px hsl(var(--nu-shadow-color) / 0.06),
-      0.4px 6.6px 8.5px -0.7px hsl(var(--nu-shadow-color) / 0.07),
-      0.6px 10.3px 13.2px -1px hsl(var(--nu-shadow-color) / 0.08),
-      0.9px 16px 20.6px -1.2px hsl(var(--nu-shadow-color) / 0.09),
-      1.3px 24.3px 31.2px -1.4px hsl(var(--nu-shadow-color) / 0.1);
+  .tl-container {
+    --tl-zoom: 1;
+    --tl-scale: calc(1 / var(--tl-zoom));
+    --tl-padding: calc(64px * var(--tl-scale));
+    --tl-shadow-color: 0deg 0% 0%;
+    --tl-shadow-elevation-low: 0px 0.4px 0.5px hsl(var(--tl-shadow-color) / 0.04),
+      0px 0.6px 0.8px -0.7px hsl(var(--tl-shadow-color) / 0.06),
+      0.1px 1.2px 1.5px -1.4px hsl(var(--tl-shadow-color) / 0.08);
+    --tl-shadow-elevation-medium: 0px 0.4px 0.5px hsl(var(--tl-shadow-color) / 0.04),
+      0.1px 1.3px 1.7px -0.5px hsl(var(--tl-shadow-color) / 0.06),
+      0.1px 2.8px 3.6px -1px hsl(var(--tl-shadow-color) / 0.07),
+      0.3px 6.1px 7.8px -1.4px hsl(var(--tl-shadow-color) / 0.09);
+    --tl-shadow-elevation-high: 0px 0.4px 0.5px hsl(var(--tl-shadow-color) / 0.04),
+      0.1px 2.3px 3px -0.2px hsl(var(--tl-shadow-color) / 0.05),
+      0.2px 4.1px 5.3px -0.5px hsl(var(--tl-shadow-color) / 0.06),
+      0.4px 6.6px 8.5px -0.7px hsl(var(--tl-shadow-color) / 0.07),
+      0.6px 10.3px 13.2px -1px hsl(var(--tl-shadow-color) / 0.08),
+      0.9px 16px 20.6px -1.2px hsl(var(--tl-shadow-color) / 0.09),
+      1.3px 24.3px 31.2px -1.4px hsl(var(--tl-shadow-color) / 0.1);
 
     position: relative;
     top: 0px;
@@ -143,14 +143,14 @@ const tlcss = css`
     z-index: 100;
     touch-action: none;
     overscroll-behavior: none;
-    background-color: var(--nu-background);
+    background-color: var(--tl-background);
   }
 
-  .nu-container * {
+  .tl-container * {
     box-sizing: border-box;
   }
 
-  .nu-overlay {
+  .tl-overlay {
     background: none;
     fill: transparent;
     position: absolute;
@@ -160,7 +160,7 @@ const tlcss = css`
     pointer-events: none;
   }
 
-  .nu-grid {
+  .tl-grid {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -169,17 +169,17 @@ const tlcss = css`
     user-select: none;
   }
 
-  .nu-snap-line {
-    stroke: var(--nu-accent);
-    stroke-width: calc(1px * var(--nu-scale));
+  .tl-snap-line {
+    stroke: var(--tl-accent);
+    stroke-width: calc(1px * var(--tl-scale));
   }
 
-  .nu-snap-point {
-    stroke: var(--nu-accent);
-    stroke-width: calc(1px * var(--nu-scale));
+  .tl-snap-point {
+    stroke: var(--tl-accent);
+    stroke-width: calc(1px * var(--tl-scale));
   }
 
-  .nu-canvas {
+  .tl-canvas {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -188,7 +188,7 @@ const tlcss = css`
     overflow: clip;
   }
 
-  .nu-layer {
+  .tl-layer {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -197,7 +197,7 @@ const tlcss = css`
     contain: layout style size;
   }
 
-  .nu-absolute {
+  .tl-absolute {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -205,7 +205,7 @@ const tlcss = css`
     contain: layout style size;
   }
 
-  .nu-positioned {
+  .tl-positioned {
     position: absolute;
     transform-origin: center center;
     pointer-events: none;
@@ -215,7 +215,7 @@ const tlcss = css`
     contain: layout style size;
   }
 
-  .nu-positioned-svg {
+  .tl-positioned-svg {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -223,70 +223,70 @@ const tlcss = css`
     pointer-events: none;
   }
 
-  .nu-positioned-div {
+  .tl-positioned-div {
     position: relative;
     width: 100%;
     height: 100%;
-    padding: var(--nu-padding);
+    padding: var(--tl-padding);
     contain: layout style size;
   }
 
-  .nu-positioned-inner {
+  .tl-positioned-inner {
     position: relative;
     width: 100%;
     height: 100%;
   }
 
-  .nu-counter-scaled {
-    transform: scale(var(--nu-scale));
+  .tl-counter-scaled {
+    transform: scale(var(--tl-scale));
   }
 
-  .nu-dashed {
-    stroke-dasharray: calc(2px * var(--nu-scale)), calc(2px * var(--nu-scale));
+  .tl-dashed {
+    stroke-dasharray: calc(2px * var(--tl-scale)), calc(2px * var(--tl-scale));
   }
 
-  .nu-transparent {
+  .tl-transparent {
     fill: transparent;
     stroke: transparent;
   }
 
-  .nu-cursor-ns {
+  .tl-cursor-ns {
     cursor: ns-resize;
   }
 
-  .nu-cursor-ew {
+  .tl-cursor-ew {
     cursor: ew-resize;
   }
 
-  .nu-cursor-nesw {
+  .tl-cursor-nesw {
     cursor: nesw-resize;
   }
 
-  .nu-cursor-nwse {
+  .tl-cursor-nwse {
     cursor: nwse-resize;
   }
 
-  .nu-corner-handle {
-    stroke: var(--nu-selectStroke);
-    fill: var(--nu-background);
-    stroke-width: calc(1.5px * var(--nu-scale));
+  .tl-corner-handle {
+    stroke: var(--tl-selectStroke);
+    fill: var(--tl-background);
+    stroke-width: calc(1.5px * var(--tl-scale));
   }
 
-  .nu-rotate-handle {
-    stroke: var(--nu-selectStroke);
-    fill: var(--nu-background);
-    stroke-width: calc(1.5px * var(--nu-scale));
+  .tl-rotate-handle {
+    stroke: var(--tl-selectStroke);
+    fill: var(--tl-background);
+    stroke-width: calc(1.5px * var(--tl-scale));
     cursor: grab;
   }
 
-  .nu-binding {
-    fill: var(--nu-selectFill);
-    stroke: var(--nu-selectStroke);
-    stroke-width: calc(1px * var(--nu-scale));
+  .tl-binding {
+    fill: var(--tl-selectFill);
+    stroke: var(--tl-selectStroke);
+    stroke-width: calc(1px * var(--tl-scale));
     pointer-events: none;
   }
 
-  .nu-user {
+  .tl-user {
     left: -4px;
     top: -4px;
     height: 8px;
@@ -295,157 +295,157 @@ const tlcss = css`
     pointer-events: none;
   }
 
-  .nu-indicator {
+  .tl-indicator {
     fill: transparent;
-    stroke-width: calc(1.5px * var(--nu-scale));
+    stroke-width: calc(1.5px * var(--tl-scale));
     pointer-events: none;
   }
 
-  .nu-indicator-container {
+  .tl-indicator-container {
     transform-origin: 0 0;
     fill: transparent;
-    stroke-width: calc(1.5px * var(--nu-scale));
+    stroke-width: calc(1.5px * var(--tl-scale));
     pointer-events: none;
   }
 
-  .nu-user-indicator-bounds {
+  .tl-user-indicator-bounds {
     border-style: solid;
-    border-width: calc(1px * var(--nu-scale));
+    border-width: calc(1px * var(--tl-scale));
   }
 
-  .nu-selected {
-    stroke: var(--nu-selectStroke);
+  .tl-selected {
+    stroke: var(--tl-selectStroke);
   }
 
-  .nu-hovered {
-    stroke: var(--nu-selectStroke);
+  .tl-hovered {
+    stroke: var(--tl-selectStroke);
   }
 
-  .nu-clone-target {
+  .tl-clone-target {
     pointer-events: all;
   }
 
-  .nu-clone-target:hover .nu-clone-button {
+  .tl-clone-target:hover .tl-clone-button {
     opacity: 1;
   }
 
-  .nu-clone-button-target {
+  .tl-clone-button-target {
     cursor: pointer;
     pointer-events: all;
   }
 
-  .nu-clone-button-target:hover .nu-clone-button {
-    fill: var(--nu-selectStroke);
+  .tl-clone-button-target:hover .tl-clone-button {
+    fill: var(--tl-selectStroke);
   }
 
-  .nu-clone-button {
+  .tl-clone-button {
     opacity: 0;
-    r: calc(8px * var(--nu-scale));
-    stroke-width: calc(1.5px * var(--nu-scale));
-    stroke: var(--nu-selectStroke);
-    fill: var(--nu-background);
+    r: calc(8px * var(--tl-scale));
+    stroke-width: calc(1.5px * var(--tl-scale));
+    stroke: var(--tl-selectStroke);
+    fill: var(--tl-background);
   }
 
-  .nu-bounds {
+  .tl-bounds {
     pointer-events: none;
     contain: layout style size;
   }
 
-  .nu-bounds-bg {
+  .tl-bounds-bg {
     stroke: none;
-    fill: var(--nu-selectFill);
+    fill: var(--tl-selectFill);
     pointer-events: all;
     contain: layout style size;
   }
 
-  .nu-bounds-fg {
+  .tl-bounds-fg {
     fill: transparent;
-    stroke: var(--nu-selectStroke);
-    stroke-width: calc(1.5px * var(--nu-scale));
+    stroke: var(--tl-selectStroke);
+    stroke-width: calc(1.5px * var(--tl-scale));
   }
 
-  .nu-brush {
-    fill: var(--nu-brushFill);
-    stroke: var(--nu-brushStroke);
-    stroke-width: calc(1px * var(--nu-scale));
+  .tl-brush {
+    fill: var(--tl-brushFill);
+    stroke: var(--tl-brushStroke);
+    stroke-width: calc(1px * var(--tl-scale));
     pointer-events: none;
   }
 
-  .nu-dot {
-    fill: var(--nu-background);
-    stroke: var(--nu-foreground);
+  .tl-dot {
+    fill: var(--tl-background);
+    stroke: var(--tl-foreground);
     stroke-width: 2px;
   }
 
-  .nu-handle {
+  .tl-handle {
     pointer-events: all;
   }
 
-  .nu-handle:hover .nu-handle-bg {
-    fill: var(--nu-selectFill);
+  .tl-handle:hover .tl-handle-bg {
+    fill: var(--tl-selectFill);
   }
 
-  .nu-handle:hover .nu-handle-bg > * {
-    stroke: var(--nu-selectFill);
+  .tl-handle:hover .tl-handle-bg > * {
+    stroke: var(--tl-selectFill);
   }
 
-  .nu-handle:active .nu-handle-bg {
-    fill: var(--nu-selectFill);
+  .tl-handle:active .tl-handle-bg {
+    fill: var(--tl-selectFill);
   }
 
-  .nu-handle:active .nu-handle-bg > * {
-    stroke: var(--nu-selectFill);
+  .tl-handle:active .tl-handle-bg > * {
+    stroke: var(--tl-selectFill);
   }
 
-  .nu-handle {
-    fill: var(--nu-background);
-    stroke: var(--nu-selectStroke);
+  .tl-handle {
+    fill: var(--tl-background);
+    stroke: var(--tl-selectStroke);
     stroke-width: 1.5px;
   }
 
-  .nu-handle-bg {
+  .tl-handle-bg {
     fill: transparent;
     stroke: none;
     pointer-events: all;
-    r: calc(16px / max(1, var(--nu-zoom)));
+    r: calc(16px / max(1, var(--tl-zoom)));
   }
 
-  .nu-binding-indicator {
-    stroke-width: calc(3px * var(--nu-scale));
-    fill: var(--nu-selectFill);
-    stroke: var(--nu-selectStroke);
+  .tl-binding-indicator {
+    stroke-width: calc(3px * var(--tl-scale));
+    fill: var(--tl-selectFill);
+    stroke: var(--tl-selectStroke);
   }
 
-  .nu-centered {
+  .tl-centered {
     display: grid;
     place-content: center;
     place-items: center;
   }
 
-  .nu-centered > * {
+  .tl-centered > * {
     grid-column: 1;
     grid-row: 1;
   }
 
-  .nu-centered-g {
-    transform: translate(var(--nu-padding), var(--nu-padding));
+  .tl-centered-g {
+    transform: translate(var(--tl-padding), var(--tl-padding));
   }
 
-  .nu-current-parent > *[data-shy='true'] {
+  .tl-current-parent > *[data-shy='true'] {
     opacity: 1;
   }
 
-  .nu-binding {
+  .tl-binding {
     fill: none;
-    stroke: var(--nu-selectStroke);
-    stroke-width: calc(2px * var(--nu-scale));
+    stroke: var(--tl-selectStroke);
+    stroke-width: calc(2px * var(--tl-scale));
   }
 
-  .nu-grid-dot {
-    fill: var(--nu-grid);
+  .tl-grid-dot {
+    fill: var(--tl-grid);
   }
 
-  .nu-counter-scaled-positioned {
+  .tl-counter-scaled-positioned {
     position: absolute;
     top: 0;
     left: 0;
@@ -455,7 +455,7 @@ const tlcss = css`
     will-change: transform;
   }
 
-  .nu-fade-in {
+  .tl-fade-in {
     opacity: 1;
     transition-timing-function: ease-in-out;
     transition-property: opacity;
@@ -463,7 +463,7 @@ const tlcss = css`
     transition-delay: 0;
   }
 
-  .nu-fade-out {
+  .tl-fade-out {
     opacity: 0;
     transition-timing-function: ease-out;
     transition-property: opacity;
@@ -471,17 +471,17 @@ const tlcss = css`
     transition-delay: 0;
   }
 
-  .nu-counter-scaled-positioned > .nu-positioned-div {
+  .tl-counter-scaled-positioned > .tl-positioned-div {
     user-select: none;
     padding: 64px;
   }
 
-  .nu-context-bar > * {
+  .tl-context-bar > * {
     grid-column: 1;
     grid-row: 1;
   }
 
-  .nu-bounds-detail {
+  .tl-bounds-detail {
     padding: 2px 3px;
     border-radius: 1px;
     white-space: nowrap;
@@ -489,22 +489,35 @@ const tlcss = css`
     text-align: center;
     font-size: 12px;
     font-weight: 500;
-    background-color: var(--nu-selectStroke);
-    color: var(--nu-background);
+    background-color: var(--tl-selectStroke);
+    color: var(--tl-background);
   }
 
-  .nu-hitarea-stroke {
+  .tl-hitarea-stroke {
     fill: none;
     stroke: transparent;
     pointer-events: stroke;
-    stroke-width: calc(24px * var(--nu-scale));
+    stroke-width: calc(24px * var(--tl-scale));
   }
 
-  .nu-hitarea-fill {
+  .tl-hitarea-fill {
     fill: transparent;
     stroke: transparent;
     pointer-events: all;
-    stroke-width: calc(24px * var(--nu-scale));
+    stroke-width: calc(24px * var(--tl-scale));
+  }
+
+  .tl-grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .tl-grid-dot {
+    fill: var(--tl-grid);
   }
 `
 
@@ -517,6 +530,6 @@ export function useStylesheet(theme?: Partial<TLTheme>, selector?: string) {
     [theme]
   )
 
-  useTheme('nu', tltheme, selector)
-  useStyle('nu-canvas', tlcss)
+  useTheme('tl', tltheme, selector)
+  useStyle('tl-canvas', tlcss)
 }
