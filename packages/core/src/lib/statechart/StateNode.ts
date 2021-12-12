@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RootStateNode } from './RootStateNode'
-import { BaseStateNode } from './BasestateNode'
+import { BaseStateNode } from './BaseStateNode'
 
 export class StateNode<
   R extends RootStateNode,
