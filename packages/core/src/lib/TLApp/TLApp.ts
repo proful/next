@@ -14,7 +14,7 @@ import {
   TLSerializedShape,
   TLToolClass,
   TLShortcut,
-} from '../index'
+} from '../../index'
 import type {
   TLBounds,
   TLKeyboardHandler,
@@ -28,9 +28,9 @@ import type {
   TLPointerEvent,
   TLOnTransition,
 } from '~types'
-import { TLHistory } from './TLHistory'
-import { TLSettings } from './TLSettings'
-import { TLRootState } from './TLState'
+import { TLHistory } from '../TLHistory'
+import { TLSettings } from '../TLSettings'
+import { TLRootState } from '../TLState'
 
 export interface TLSerializedApp {
   currentPageId: string
