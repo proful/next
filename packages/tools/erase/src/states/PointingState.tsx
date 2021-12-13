@@ -1,12 +1,13 @@
 import { Vec } from '@tldraw/vec'
-import { TLApp, TLShape, TLToolState, TLPointerHandler } from '@tldraw/core'
+import { TLApp, TLShape, TLEventMap, TLToolState, TLStateEvents } from '@tldraw/core'
 import type { TLEraseTool } from '../TLEraseTool'
 
 export class PointingState<
   S extends TLShape,
-  R extends TLApp<S>,
-  P extends TLEraseTool<S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLEraseTool<S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'pointing'
 
   onEnter = () => {
@@ -17,7 +18,7 @@ export class PointingState<
     )
   }
 
-  onPointerMove: TLPointerHandler<S> = () => {
+  onPointerMove: TLStateEvents<S, K>['onPointerDown'] = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
       this.tool.transition('erasing')
@@ -26,7 +27,7 @@ export class PointingState<
     }
   }
 
-  onPointerUp: TLPointerHandler<S> = () => {
+  onPointerUp: TLStateEvents<S, K>['onPointerUp'] = () => {
     const shapesToDelete = [...this.app.erasingShapes]
     this.app.setErasingShapes([])
     this.app.deleteShapes(shapesToDelete)

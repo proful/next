@@ -1,12 +1,13 @@
 import { IdleState, PointingState, CreatingState } from './states'
-import { TLShapeProps, TLTool, TLApp, TLShape } from '@tldraw/core'
+import { TLShapeProps, TLTool, TLApp, TLShape, TLEventMap } from '@tldraw/core'
 import type { TLDrawShapeProps, TLDrawShape } from '@tldraw/draw-shape'
 
 export abstract class TLDrawTool<
   T extends TLDrawShape = TLDrawShape,
   S extends TLShape = TLShape,
-  R extends TLApp<S> = TLApp<S>
-> extends TLTool<S, R> {
+  K extends TLEventMap = TLEventMap,
+  R extends TLApp<S, K> = TLApp<S, K>
+> extends TLTool<S, K, R> {
   static id = 'draw'
 
   static states = [IdleState, PointingState, CreatingState]

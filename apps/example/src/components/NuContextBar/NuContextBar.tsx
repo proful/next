@@ -1,5 +1,10 @@
 import * as React from 'react'
-import { BoundsUtils, HTMLContainer, TLContextBarComponent, useApp } from '@tldraw/core'
+import {
+  HTMLContainer,
+  TLContextBarComponent,
+  useApp,
+  getContextBarTranslation,
+} from '@tldraw/react'
 import { observer } from 'mobx-react-lite'
 import type { NuStarShape, NuPolygonShape, Shape } from '~lib/shapes'
 import { NuNumberInput } from '~components/inputs/NuNumberInput'
@@ -51,7 +56,7 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
     const elm = rContextBar.current
     if (!elm) return
     const size = rSize.current
-    const [x, y] = BoundsUtils.getContextBarTranslation(size, offset)
+    const [x, y] = getContextBarTranslation(size, offset)
     elm.style.setProperty('transform', `translateX(${x}px) translateY(${y}px)`)
   }, [scaledBounds, offset])
 

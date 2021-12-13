@@ -1,21 +1,15 @@
-import {
-  TLShape,
-  TLApp,
-  TLToolState,
-  TLPinchHandler,
-  TLPointerHandler,
-  TLShortcut,
-} from '@tldraw/core'
+import { TLShape, TLApp, TLToolState, TLShortcut, TLEventMap, TLStateEvents } from '@tldraw/core'
 import type { TLEraseTool } from '../TLEraseTool'
 
 export class IdleState<
   S extends TLShape,
-  R extends TLApp<S>,
-  P extends TLEraseTool<S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLEraseTool<S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'idle'
 
-  static shortcuts: TLShortcut<TLShape, TLApp>[] = [
+  static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
     {
       keys: ['mod+a'],
       fn: (app) => {
@@ -25,12 +19,12 @@ export class IdleState<
     },
   ]
 
-  onPointerDown: TLPointerHandler<S> = (info, e) => {
+  onPointerDown: TLStateEvents<S, K>['onPointerDown'] = (info, e) => {
     if (info.order > 0) return
     this.tool.transition('pointing')
   }
 
-  onPinchStart: TLPinchHandler<S> = (...args) => {
+  onPinchStart: TLStateEvents<S, K>['onPinchStart'] = (...args) => {
     this.app.transition('select', { returnTo: 'draw' })
     this.app.onPinchStart?.(...args)
   }

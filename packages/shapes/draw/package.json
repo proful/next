@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@tldraw/core": "2.0.0-alpha.1",
+    "@tldraw/react": "2.0.0-alpha.1",
     "@tldraw/vec": "2.0.0-alpha.1",
     "@tldraw/intersect": "2.0.0-alpha.1",
     "mobx": "^6.3.8"

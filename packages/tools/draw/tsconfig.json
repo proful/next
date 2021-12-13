@@ -5,16 +5,13 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
     "outDir": "./dist/types",
-    "rootDir": "src",
-    "baseUrl": ".",
-    "paths": {
-      "~*": ["./src/*"]
-    }
+    "rootDir": "src"
   },
   "references": [
     { "path": "../../core" },
     { "path": "../../utils/vec" },
-    { "path": "../../utils/intersect" }
+    { "path": "../../utils/intersect" },
+    { "path": "../../shapes/draw" }
   ],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],

@@ -1,7 +1,8 @@
 import { TLEraseTool } from '@tldraw/erase-tool'
-import type { Shape, NuApp } from '~lib'
+import type { TLReactEventMap } from '@tldraw/react'
+import type { Shape } from '~lib'
 
-export class NuEraseTool extends TLEraseTool<Shape, NuApp> {
+export class NuEraseTool extends TLEraseTool<Shape, TLReactEventMap> {
   static id = 'erase'
   static shortcut = ['e']
 }

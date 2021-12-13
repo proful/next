@@ -48,7 +48,7 @@ async function main() {
         console.log(
           `✔ ${pkg.name}: Built package. ${(esmSize / 1000).toFixed(2)}kb (${(
             result.length / 1000
-          ).toFixed(2)}kb minified)`
+          ).toFixed(2)}kb gzipped)`
         )
       })
     })

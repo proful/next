@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
-import { SVGContainer, TLComponentProps, TLCustomProps } from '@tldraw/core'
+import type { TLCustomProps } from '@tldraw/core'
+import { SVGContainer, TLComponentProps } from '@tldraw/react'
 import { TLDotShape, TLDotShapeProps } from '@tldraw/dot-shape'
 import { observer } from 'mobx-react-lite'
 import { makeObservable, observable } from 'mobx'

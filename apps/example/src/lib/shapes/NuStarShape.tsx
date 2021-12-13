@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
-import {
-  SVGContainer,
-  TLIndicatorProps,
-  TLComponentProps,
-  TLShapeProps,
-  assignOwnProps,
-} from '@tldraw/core'
+import { TLShapeProps, assignOwnProps } from '@tldraw/core'
+import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 import { TLStarShape, TLStarShapeProps } from '@tldraw/star-shape'
 import { observer } from 'mobx-react-lite'
 import { makeObservable, observable } from 'mobx'

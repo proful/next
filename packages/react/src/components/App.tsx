@@ -7,6 +7,7 @@ import { useApp } from '~hooks'
 import type {
   AnyObject,
   TLApp,
+  TLEventMap,
   TLSerializedApp,
   TLSubscriptionCallback,
   TLTheme,
@@ -31,7 +32,7 @@ export interface TLAppPropsWithoutApp<S extends TLReactShape, R extends TLApp<S>
   extends TLCommonAppProps<S, R> {
   model?: TLSerializedApp
   shapeClasses?: TLReactShapeClass<S>[]
-  toolClasses?: TLToolClass<S, TLApp<S>>[]
+  toolClasses?: TLToolClass<S, TLEventMap, TLApp<S>>[]
   children?: React.ReactNode
 }
 

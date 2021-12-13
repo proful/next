@@ -1,20 +1,14 @@
-import {
-  TLApp,
-  TLShape,
-  TLToolState,
-  TLPointerHandler,
-  uniqueId,
-  TLWheelHandler,
-} from '@tldraw/core'
+import { TLApp, TLShape, TLToolState, uniqueId, TLEventMap, TLStateEvents } from '@tldraw/core'
 import type { TLDotShape } from '@tldraw/dot-shape'
 import type { TLDotTool } from '../TLDotTool'
 
 export class CreatingState<
   S extends TLShape,
   T extends S & TLDotShape,
-  R extends TLApp<S>,
-  P extends TLDotTool<T, S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLDotTool<T, S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'creating'
 
   creatingShape?: S
@@ -32,7 +26,7 @@ export class CreatingState<
     this.app.select(shape)
   }
 
-  onPointerMove: TLPointerHandler<S> = () => {
+  onPointerMove: TLStateEvents<S, K>['onPointerMove'] = () => {
     if (!this.creatingShape) throw Error('Expected a creating shape.')
     const { currentPoint } = this.app.inputs
     this.creatingShape.update({
@@ -40,7 +34,7 @@ export class CreatingState<
     })
   }
 
-  onPointerUp: TLPointerHandler<S> = () => {
+  onPointerUp: TLStateEvents<S, K>['onPointerUp'] = () => {
     this.tool.transition('idle')
     if (this.creatingShape) {
       this.app.select(this.creatingShape)
@@ -50,7 +44,7 @@ export class CreatingState<
     }
   }
 
-  onWheel: TLEvents<S>['wheel'] = (info, gesture, e) => {
+  onWheel: TLStateEvents<S, K>['onWheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }
 }

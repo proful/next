@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
-import {
-  assignOwnProps,
-  SVGContainer,
-  SvgPathUtils,
-  TLComponentProps,
-  TLIndicatorProps,
-  TLShapeProps,
-} from '@tldraw/core'
+import { assignOwnProps, SvgPathUtils, TLCustomProps, TLShapeProps } from '@tldraw/core'
+import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 import { TLDrawShapeProps, TLDrawShape } from '@tldraw/draw-shape'
 import { observer } from 'mobx-react-lite'
 import { observable, computed, makeObservable } from 'mobx'
@@ -16,7 +10,7 @@ import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 export interface NuHighlighterShapeProps extends TLDrawShapeProps, NuStyleProps {}
 
 export class NuHighlighterShape extends TLDrawShape<NuHighlighterShapeProps> {
-  constructor(props = {} as TLShapeProps & Partial<NuHighlighterShapeProps>) {
+  constructor(props = {} as TLCustomProps<NuHighlighterShapeProps>) {
     super(props)
     assignOwnProps(this, props)
     makeObservable(this)

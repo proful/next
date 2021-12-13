@@ -5,7 +5,6 @@ import {
   TLShape,
   BoundsUtils,
   TLBounds,
-  TLIndicatorProps,
   TLResizeInfo,
   PointUtils,
   TLCustomProps,
@@ -16,7 +15,7 @@ import {
   intersectLineSegmentPolyline,
   intersectPolylineBounds,
 } from '@tldraw/intersect'
-import { SVGContainer, TLComponentProps } from '@tldraw/react'
+import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 
 export interface TLDrawShapeProps {
   points: number[][]

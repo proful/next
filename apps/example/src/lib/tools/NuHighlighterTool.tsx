@@ -1,7 +1,8 @@
 import { TLDrawTool } from '@tldraw/draw-tool'
-import { NuHighlighterShape, Shape, NuApp } from '~lib'
+import type { TLReactEventMap } from '@tldraw/react'
+import { NuHighlighterShape, Shape } from '~lib'
 
-export class NuHighlighterTool extends TLDrawTool<NuHighlighterShape, Shape, NuApp> {
+export class NuHighlighterTool extends TLDrawTool<NuHighlighterShape, Shape, TLReactEventMap> {
   static id = 'highlighter'
   static shortcut = ['h']
   shapeClass = NuHighlighterShape

@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
-import {
-  App as TLDrawApp,
-  TLApp,
-  TLComponents,
-  TLSerializedApp,
-  TLSubscriptionCallbacks,
-} from '@tldraw/core'
+import type { TLApp, TLSerializedApp, TLSubscriptionCallbacks } from '@tldraw/core'
+import { App as TLDrawApp, TLComponents } from '@tldraw/react'
 import {
   NuBoxShape,
   NuEllipseShape,

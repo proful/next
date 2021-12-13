@@ -1,15 +1,8 @@
 import * as React from 'react'
 import { makeObservable, observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
-import {
-  TLShape,
-  BoundsUtils,
-  TLBounds,
-  TLIndicatorProps,
-  TLResizeInfo,
-  TLCustomProps,
-} from '@tldraw/core'
-import { SVGContainer, TLComponentProps } from '@tldraw/react'
+import { TLShape, BoundsUtils, TLBounds, TLResizeInfo, TLCustomProps } from '@tldraw/core'
+import { SVGContainer, TLIndicatorProps, TLComponentProps } from '@tldraw/react'
 
 export interface TLBoxShapeProps {
   size: number[]

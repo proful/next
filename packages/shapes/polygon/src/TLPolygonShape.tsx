@@ -5,13 +5,12 @@ import {
   BoundsUtils,
   TLBounds,
   TLShapeProps,
-  TLIndicatorProps,
   TLResizeInfo,
   PointUtils,
   TLCustomProps,
   PolygonUtils,
 } from '@tldraw/core'
-import { SVGContainer, TLComponentProps } from '@tldraw/react'
+import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 import { Vec } from '@tldraw/vec'
 import { intersectLineSegmentPolyline, intersectPolygonBounds } from '@tldraw/intersect'
 import { TLBoxShape, TLBoxShapeProps } from '@tldraw/box-shape'

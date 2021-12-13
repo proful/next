@@ -1,4 +1,4 @@
-import { TLToolState, TLShape, TLApp, TLPointerHandler, uniqueId } from '@tldraw/core'
+import { TLToolState, TLShape, TLApp, uniqueId, TLEventMap, TLStateEvents } from '@tldraw/core'
 import type { TLDrawShape } from '@tldraw/draw-shape'
 import Vec from '@tldraw/vec'
 import type { TLDrawTool } from '../TLDrawTool'
@@ -6,12 +6,13 @@ import type { TLDrawTool } from '../TLDrawTool'
 export class PointingState<
   S extends TLShape,
   T extends S & TLDrawShape,
-  R extends TLApp<S>,
-  P extends TLDrawTool<T, S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLDrawTool<T, S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'pointing'
 
-  onPointerMove: TLPointerHandler<S> = () => {
+  onPointerMove: TLStateEvents<S, K>['onPointerMove'] = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
       this.tool.transition('creating')
@@ -19,7 +20,7 @@ export class PointingState<
     }
   }
 
-  onPointerUp: TLPointerHandler<S> = () => {
+  onPointerUp: TLStateEvents<S, K>['onPointerUp'] = () => {
     const { shapeClass } = this.tool
 
     const { originPoint } = this.app.inputs

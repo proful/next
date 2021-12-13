@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useApp } from '@tldraw/core'
+import { useApp } from '@tldraw/react'
 import {
   CursorArrowIcon,
   CircleIcon,

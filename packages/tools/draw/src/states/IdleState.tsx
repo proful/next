@@ -1,23 +1,17 @@
-import {
-  TLToolState,
-  TLShape,
-  TLApp,
-  TLPinchHandler,
-  TLPointerHandler,
-  TLShortcut,
-} from '@tldraw/core'
+import { TLToolState, TLShape, TLApp, TLShortcut, TLEventMap, TLStateEvents } from '@tldraw/core'
 import type { TLDrawShape } from '@tldraw/draw-shape'
 import type { TLDrawTool } from '../TLDrawTool'
 
 export class IdleState<
   S extends TLShape,
   T extends S & TLDrawShape,
-  R extends TLApp<S>,
-  P extends TLDrawTool<T, S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLDrawTool<T, S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'idle'
 
-  static shortcuts: TLShortcut<TLShape, TLApp>[] = [
+  static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
     {
       keys: ['mod+a'],
       fn: (app) => {
@@ -27,12 +21,12 @@ export class IdleState<
     },
   ]
 
-  onPointerDown: TLPointerHandler<S> = (info, e) => {
+  onPointerDown: TLStateEvents<S, K>['onPointerDown'] = (info, e) => {
     if (info.order > 0) return
     this.tool.transition('pointing')
   }
 
-  onPinchStart: TLPinchHandler<S> = (...args) => {
+  onPinchStart: TLStateEvents<S, K>['onPinchStart'] = (...args) => {
     this.app.transition('select', { returnTo: 'draw' })
     this.app._events.onPinchStart?.(...args)
   }

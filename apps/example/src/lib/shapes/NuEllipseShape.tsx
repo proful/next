@@ -2,15 +2,14 @@
 import * as React from 'react'
 import {
   TLBounds,
-  SVGContainer,
-  TLIndicatorProps,
-  TLComponentProps,
   PointUtils,
   BoundsUtils,
   TLResizeInfo,
   TLShapeProps,
   assignOwnProps,
+  TLCustomProps,
 } from '@tldraw/core'
+import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 import { TLBoxShape } from '@tldraw/box-shape'
 import { observer } from 'mobx-react-lite'
 import { observable, makeObservable } from 'mobx'
@@ -22,7 +21,7 @@ export interface NuEllipseShapeProps extends NuStyleProps {
 }
 
 export class NuEllipseShape extends TLBoxShape<NuEllipseShapeProps> {
-  constructor(props = {} as TLShapeProps & Partial<NuEllipseShapeProps>) {
+  constructor(props = {} as TLCustomProps<NuEllipseShapeProps>) {
     super(props)
     assignOwnProps(this, props)
     makeObservable(this)

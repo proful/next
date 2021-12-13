@@ -1,15 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import { getStroke } from 'perfect-freehand'
-import {
-  assignOwnProps,
-  SVGContainer,
-  SvgPathUtils,
-  TLComponentProps,
-  TLCustomProps,
-  TLIndicatorProps,
-  TLShapeProps,
-} from '@tldraw/core'
+import { assignOwnProps, SvgPathUtils, TLCustomProps, TLShapeProps } from '@tldraw/core'
+import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 import { TLDrawShape, TLDrawShapeProps } from '@tldraw/draw-shape'
 import { observer } from 'mobx-react-lite'
 import { observable, computed, makeObservable } from 'mobx'

@@ -4,18 +4,19 @@ import {
   TLShape,
   TLApp,
   TLToolState,
-  TLPointerHandler,
   uniqueId,
-  TLWheelHandler,
   BoundsUtils,
+  TLEventMap,
+  TLStateEvents,
 } from '@tldraw/core'
 
 export class CreatingState<
   S extends TLShape,
   T extends S & TLBoxShape,
-  R extends TLApp<S>,
-  P extends TLBoxTool<T, S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLBoxTool<T, S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'creating'
 
   creatingShape?: T
@@ -34,7 +35,7 @@ export class CreatingState<
     this.app.select(shape)
   }
 
-  onPointerMove: TLPointerHandler<S> = () => {
+  onPointerMove: TLStateEvents<S, K>['onPointerMove'] = () => {
     if (!this.creatingShape) throw Error('Expected a creating shape.')
     const { currentPoint, originPoint } = this.app.inputs
     const bounds = BoundsUtils.getBoundsFromPoints([currentPoint, originPoint])
@@ -44,7 +45,7 @@ export class CreatingState<
     })
   }
 
-  onPointerUp: TLPointerHandler<S> = () => {
+  onPointerUp: TLStateEvents<S, K>['onPointerUp'] = () => {
     this.tool.transition('idle')
     if (this.creatingShape) {
       this.app.select(this.creatingShape)
@@ -54,7 +55,7 @@ export class CreatingState<
     }
   }
 
-  onWheel: TLEvents<S>['wheel'] = (info, gesture, e) => {
+  onWheel: TLStateEvents<S, K>['onWheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }
 }
