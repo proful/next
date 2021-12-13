@@ -5,9 +5,52 @@ import {
   intersectPolygonBounds,
 } from '@tldraw/intersect'
 import { action, computed, makeObservable, observable } from 'mobx'
-import type { TLShapeProps, TLBounds, TLSerializedShape, TLHandle, TLResizeInfo } from '~types'
+import type {
+  TLBounds,
+  TLHandle,
+  AnyObject,
+  TLBoundsCorner,
+  TLBoundsEdge,
+  TLEventMap,
+} from '~types'
 import { BoundsUtils, PointUtils, assignOwnProps } from '~utils'
 import { deepCopy } from '~utils/DataUtils'
+
+export type TLSerializedShape<P = AnyObject> = TLShapeProps & {
+  type: string
+  nonce?: number
+} & P
+
+export interface TLShapeClass<S extends TLShape = TLShape> {
+  new (props: any): S
+  id: string
+}
+
+export interface TLShapeProps {
+  id: string
+  parentId: string
+  point: number[]
+  rotation?: number
+  name?: string
+  children?: string[]
+  handles?: Record<string, TLHandle>
+  isGhost?: boolean
+  isHidden?: boolean
+  isLocked?: boolean
+  isGenerated?: boolean
+  isAspectRatioLocked?: boolean
+}
+
+export interface TLResizeInfo<P = any> {
+  type: TLBoundsEdge | TLBoundsCorner
+  scaleX: number
+  scaleY: number
+  transformOrigin: number[]
+  initialBounds: TLBounds
+  initialProps: TLShapeProps & P
+}
+
+export type TLCustomProps<P extends AnyObject = any> = TLShapeProps & Partial<P>
 
 export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   constructor(props: TLShapeProps & Partial<P>) {
@@ -61,10 +104,6 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   @observable isLocked?: boolean
   @observable isGenerated?: boolean
   @observable isAspectRatioLocked?: boolean
-
-  // abstract Component: (props: TLComponentProps<M>) => JSX.Element | null
-
-  // abstract Indicator: (props: TLIndicatorProps<M>) => JSX.Element | null
 
   abstract getBounds: () => TLBounds
 

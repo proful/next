@@ -1,12 +1,13 @@
 import { TLApp, TLBush, TLSelectTool, TLToolState, TLShape } from '~lib'
 import { BoundsUtils } from '~utils'
-import type { TLEvents } from '~types'
+import type { TLEventMap, TLEvents } from '~types'
 
 export class BrushingState<
   S extends TLShape,
-  R extends TLApp<S>,
-  P extends TLSelectTool<S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLSelectTool<S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'brushing'
 
   private initialSelectedIds: string[] = []

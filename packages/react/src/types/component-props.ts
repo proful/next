@@ -1,32 +1,7 @@
 /* -------------------- App Props ------------------- */
 
-import type { TLBinding, TLBounds, TLTheme, TLOffset } from '@tldraw/core'
+import type { TLBounds, TLOffset } from '@tldraw/core'
 import type { TLReactShape } from '~lib'
-
-/* ------------------ Canvas Props ------------------ */
-
-export interface TLCanvasProps<S extends TLReactShape> {
-  id?: string
-  bindings?: TLBinding[]
-  brush?: TLBounds
-  shapes?: S[]
-  theme?: TLTheme
-  hoveredShape?: S
-  editingShape?: S
-  bindingShape?: S
-  selectedBounds?: TLBounds
-  selectedShapes?: S[]
-  erasingShapes?: S[]
-  gridSize?: number
-  showGrid?: boolean
-  showBounds?: boolean
-  showResizeHandles?: boolean
-  showRotateHandle?: boolean
-  showContextBar?: boolean
-  showBoundsDetail?: boolean
-  showBoundsRotation?: boolean
-  children?: React.ReactNode
-}
 
 /* ------------------- Components ------------------- */
 

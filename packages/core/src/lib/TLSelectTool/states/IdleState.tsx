@@ -1,15 +1,16 @@
 import { TLShape, TLApp, TLSelectTool, TLToolState } from '~lib'
-import { TLEvents, TLShortcut, TLTargetType } from '~types'
+import { TLEventMap, TLEvents, TLShortcut, TLTargetType } from '~types'
 import { PointUtils } from '~utils'
 
 export class IdleState<
   S extends TLShape,
-  R extends TLApp<S>,
-  P extends TLSelectTool<S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLSelectTool<S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'idle'
 
-  static shortcuts: TLShortcut<TLShape, TLApp>[] = [
+  static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
     {
       keys: ['backspace'],
       fn: (app) => app.delete(),

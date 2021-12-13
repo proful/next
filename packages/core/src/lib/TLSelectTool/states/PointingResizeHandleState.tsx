@@ -1,12 +1,13 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLEvents, TLBoundsHandle } from '~types'
+import type { TLEvents, TLBoundsHandle, TLEventMap } from '~types'
 
 export class PointingResizeHandleState<
   S extends TLShape,
-  R extends TLApp<S>,
-  P extends TLSelectTool<S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLSelectTool<S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'pointingResizeHandle'
 
   pointedHandle?: TLBoundsHandle

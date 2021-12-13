@@ -1,14 +1,15 @@
 import { TLApp, TLPage, TLSerializedApp, TLShape } from '~lib'
+import type { TLEventMap } from '~types'
 import { KeyUtils } from '~utils'
 
-export class TLHistory<S extends TLShape> {
-  constructor(app: TLApp<S>) {
+export class TLHistory<S extends TLShape, K extends TLEventMap> {
+  constructor(app: TLApp<S, K>) {
     KeyUtils.registerShortcut('command+z,ctrl+z', () => this.undo())
     KeyUtils.registerShortcut('command+shift+z,ctrl+shift+z', () => this.redo())
     this.app = app
   }
 
-  app: TLApp<S>
+  app: TLApp<S, K>
   stack: TLSerializedApp[] = []
   pointer = 0
   isPaused = true
@@ -86,7 +87,7 @@ export class TLHistory<S extends TLShape> {
     this.app.setErasingShapes([])
 
     const pagesMap = new Map(this.app.pages.map((page) => [page.id, page]))
-    const pagesToAdd: TLPage<S>[] = []
+    const pagesToAdd: TLPage<S, K>[] = []
 
     for (const serializedPage of pages) {
       const page = pagesMap.get(serializedPage.id)

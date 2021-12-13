@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { TLApp, TLShape, TLRootState, TLState } from '~lib'
+import type { TLEventMap } from './TLEventMap'
 
 export enum TLBoundsEdge {
   Top = 'top_edge',
@@ -127,35 +128,42 @@ export type TLSubscriptionEventInfo<T extends TLSubscriptionEventName> = Extract
 
 export type TLSubscriptionCallback<
   S extends TLShape = TLShape,
-  R extends TLApp<S> = TLApp<S>,
+  K extends TLEventMap = TLEventMap,
+  R extends TLApp<S, K> = TLApp<S, K>,
   E extends TLSubscriptionEventName = TLSubscriptionEventName
 > = (app: R, info: TLSubscriptionEventInfo<E>) => void
 
 export type TLSubscription<
   S extends TLShape = TLShape,
-  R extends TLApp<S> = TLApp<S>,
+  K extends TLEventMap = TLEventMap,
+  R extends TLApp<S, K> = TLApp<S, K>,
   E extends TLSubscriptionEventName = TLSubscriptionEventName
 > = {
   event: E
-  callback: TLSubscriptionCallback<S, R, E>
+  callback: TLSubscriptionCallback<S, K, R, E>
 }
 
-export type TLSubscribe<S extends TLShape = TLShape, R extends TLApp<S> = TLApp<S>> = {
-  <E extends TLSubscriptionEventName>(subscription: TLSubscription<S, R, E>): () => void
+export type TLSubscribe<
+  S extends TLShape = TLShape,
+  K extends TLEventMap = TLEventMap,
+  R extends TLApp<S, K> = TLApp<S, K>
+> = {
+  <E extends TLSubscriptionEventName>(subscription: TLSubscription<S, K, R, E>): () => void
   <E extends TLSubscriptionEventName>(
     event: E,
-    callback: TLSubscriptionCallback<S, R, E>
+    callback: TLSubscriptionCallback<S, K, R, E>
   ): () => void
 }
 
 export interface TLSubscriptionCallbacks<
   S extends TLShape = TLShape,
-  R extends TLApp<S> = TLApp<S>
+  K extends TLEventMap = TLEventMap,
+  R extends TLApp<S, K> = TLApp<S, K>
 > {
-  onMount: TLSubscriptionCallback<S, R, 'mount'>
-  onPersist: TLSubscriptionCallback<S, R, 'persist'>
-  onSave: TLSubscriptionCallback<S, R, 'save'>
-  onSaveAs: TLSubscriptionCallback<S, R, 'saveAs'>
+  onMount: TLSubscriptionCallback<S, K, R, 'mount'>
+  onPersist: TLSubscriptionCallback<S, K, R, 'persist'>
+  onSave: TLSubscriptionCallback<S, K, R, 'save'>
+  onSaveAs: TLSubscriptionCallback<S, K, R, 'saveAs'>
 }
 
 /* ----------------- Event Handlers ----------------- */
@@ -175,17 +183,6 @@ export type TLEventInfo<S extends TLShape> =
       order: number
     }
 
-/* --------------- Keyboard Shortcuts --------------- */
-
-export type TLShortcut<
-  S extends TLShape = TLShape,
-  R extends TLRootState<S> = TLRootState<S>,
-  T extends R | TLState<S, R, any> = any
-> = {
-  keys: string | string[]
-  fn: (root: R, state: T) => void
-}
-
 /* ----------------- Type Assertion ----------------- */
 
 export function isStringArray(arr: string[] | any[]): asserts arr is string[] {
@@ -197,59 +194,3 @@ export function isStringArray(arr: string[] | any[]): asserts arr is string[] {
 /* ---------------------- Misc ---------------------- */
 
 export type AnyObject = { [key: string]: any }
-
-/* ---------------------- Shape --------------------- */
-
-export interface TLShapeProps {
-  id: string
-  parentId: string
-  point: number[]
-  rotation?: number
-  name?: string
-  children?: string[]
-  handles?: Record<string, TLHandle>
-  isGhost?: boolean
-  isHidden?: boolean
-  isLocked?: boolean
-  isGenerated?: boolean
-  isAspectRatioLocked?: boolean
-}
-
-export type TLSerializedShape<P = AnyObject> = TLShapeProps & {
-  type: string
-  nonce?: number
-} & P
-
-export interface TLShapeClass<S extends TLShape = TLShape> {
-  new (props: any): S
-  id: string
-}
-
-export interface TLCommonProps<M = unknown> {
-  meta: M
-  isEditing: boolean
-  isBinding: boolean
-  isHovered: boolean
-  isSelected: boolean
-  isErasing: boolean
-}
-
-export interface TLIndicatorProps<M = unknown> extends TLCommonProps<M> {
-  meta: M
-}
-
-export interface TLResizeInfo<P = any> {
-  type: TLBoundsEdge | TLBoundsCorner
-  scaleX: number
-  scaleY: number
-  transformOrigin: number[]
-  initialBounds: TLBounds
-  initialProps: TLShapeProps & P
-}
-
-export type TLCustomProps<P extends AnyObject = any> = TLShapeProps & Partial<P>
-
-export type WebkitGesture = PointerEvent & {
-  scale: number
-  rotation: number
-}

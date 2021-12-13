@@ -1,4 +1,5 @@
 import type { TLApp, TLShape } from '~lib'
+import type { TLEventMap } from '~types'
 import { TLTool } from '../TLTool'
 import {
   IdleState,
@@ -18,8 +19,9 @@ import {
 
 export class TLSelectTool<
   S extends TLShape = TLShape,
-  R extends TLApp<S> = TLApp<S>
-> extends TLTool<S, R> {
+  K extends TLEventMap = TLEventMap,
+  R extends TLApp<S, K> = TLApp<S, K>
+> extends TLTool<S, K, R> {
   static id = 'select'
 
   static initial = 'idle'

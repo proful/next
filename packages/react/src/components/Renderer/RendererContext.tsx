@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
-import type { TLInputs, TLViewport } from '@tldraw/core'
+import type { TLEventHandlers, TLInputs, TLViewport } from '@tldraw/core'
 import {
   BoundsBackground as _BoundsBackground,
   BoundsForeground as _BoundsForeground,
@@ -13,14 +13,14 @@ import { autorun } from 'mobx'
 import { getRendererContext } from '~hooks'
 import { EMPTY_OBJECT } from '~constants'
 import type { TLReactShape } from '~lib'
-import type { TLEventHandlers } from '~types/state-events'
 import type { TLComponents } from '~types/component-props'
+import type { TLReactEventMap } from '~types'
 
 export interface TLRendererContextProps<S extends TLReactShape = TLReactShape> {
   id?: string
   viewport: TLViewport
-  inputs: TLInputs
-  callbacks?: Partial<TLEventHandlers<S>>
+  inputs: TLInputs<TLReactEventMap>
+  callbacks?: Partial<TLEventHandlers<S, TLReactEventMap>>
   components?: Partial<TLComponents<S>>
   meta?: any
   children?: React.ReactNode
@@ -29,8 +29,8 @@ export interface TLRendererContextProps<S extends TLReactShape = TLReactShape> {
 export interface TLRendererContext<S extends TLReactShape = TLReactShape> {
   id: string
   viewport: TLViewport
-  inputs: TLInputs
-  callbacks: Partial<TLEventHandlers<S>>
+  inputs: TLInputs<TLReactEventMap>
+  callbacks: Partial<TLEventHandlers<S, TLReactEventMap>>
   components: Partial<TLComponents<S>>
   meta: any
 }

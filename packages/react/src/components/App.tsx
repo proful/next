@@ -13,6 +13,7 @@ import type {
   TLToolClass,
 } from '@tldraw/core'
 import type { TLComponents } from '~types/component-props'
+import type { TLReactEventMap } from '~types'
 
 export interface TLCommonAppProps<S extends TLReactShape, R extends TLApp<S> = TLApp<S>> {
   id?: string
@@ -20,10 +21,10 @@ export interface TLCommonAppProps<S extends TLReactShape, R extends TLApp<S> = T
   theme?: Partial<TLTheme>
   components?: TLComponents<S>
   children?: React.ReactNode
-  onMount?: TLSubscriptionCallback<S, R, 'mount'>
-  onPersist?: TLSubscriptionCallback<S, R, 'persist'>
-  onSave?: TLSubscriptionCallback<S, R, 'save'>
-  onSaveAs?: TLSubscriptionCallback<S, R, 'saveAs'>
+  onMount?: TLSubscriptionCallback<S, TLReactEventMap, R, 'mount'>
+  onPersist?: TLSubscriptionCallback<S, TLReactEventMap, R, 'persist'>
+  onSave?: TLSubscriptionCallback<S, TLReactEventMap, R, 'save'>
+  onSaveAs?: TLSubscriptionCallback<S, TLReactEventMap, R, 'saveAs'>
 }
 
 export interface TLAppPropsWithoutApp<S extends TLReactShape, R extends TLApp<S> = TLApp<S>>

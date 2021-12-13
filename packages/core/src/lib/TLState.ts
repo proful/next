@@ -1,28 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { action, makeObservable, observable } from 'mobx'
-import type {
-  TLOnTransition,
-  TLEventHandlers,
-  TLOnEnter,
-  TLOnExit,
-  TLShortcut,
-  TLEvents,
-  TLStateEventHandlers,
-  AnyObject,
-} from '~types'
+import type { TLEventHandlers, TLShortcut, TLEvents, TLStateEvents, AnyObject } from '~types'
 import type { TLShape } from '~lib'
 import { KeyUtils } from '~utils'
+import type { TLEventMap } from '~types/TLEventMap'
 
 export interface TLStateClass<
   S extends TLShape,
-  R extends TLRootState<S> = TLRootState<S>,
-  P extends R | TLState<S, R, any> = any
+  K extends TLEventMap,
+  R extends TLRootState<S, K> = TLRootState<S, K>,
+  P extends R | TLState<S, K, R, any> = any
 > {
-  new (parent: P, root: R): TLState<S, R>
+  new (parent: P, root: R): TLState<S, K, R>
   id: string
 }
 
-export abstract class TLRootState<S extends TLShape> implements Partial<TLEventHandlers<S>> {
+export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
+  implements Partial<TLEventHandlers<S, K>>
+{
   constructor() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -43,7 +38,7 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
 
   private _id: string
   private _initial?: string
-  private _states: TLStateClass<S, any, any>[]
+  private _states: TLStateClass<S, K, any, any>[]
   private _isActive = false
 
   protected _disposables: (() => void)[] = []
@@ -69,25 +64,25 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
     return this._isActive
   }
 
-  get ascendants(): TLRootState<S>[] {
+  get ascendants(): TLRootState<S, K>[] {
     return [this]
   }
 
-  get descendants(): (TLState<S, this, any> | this)[] {
+  get descendants(): (TLState<S, K, this, any> | this)[] {
     return Array.from(this.children.values()).flatMap((state) => [state, ...state.descendants])
   }
 
   /* ------------------ Child States ------------------ */
 
-  children = new Map<string, TLState<S, any, any>>([])
+  children = new Map<string, TLState<S, K, any, any>>([])
 
-  registerStates = (...stateClasses: TLStateClass<S, any>[]): void => {
+  registerStates = (...stateClasses: TLStateClass<S, K, any>[]): void => {
     stateClasses.forEach((StateClass) =>
       this.children.set(StateClass.id, new StateClass(this, this))
     )
   }
 
-  deregisterStates = (...states: TLStateClass<S, any>[]): void => {
+  deregisterStates = (...states: TLStateClass<S, K, any>[]): void => {
     states.forEach((StateClass) => {
       this.children.get(StateClass.id)?.dispose()
       this.children.delete(StateClass.id)
@@ -128,10 +123,10 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
   /* ----------------- Internal Events ---------------- */
 
   private forwardEvent = <
-    K extends keyof TLStateEventHandlers<S>,
-    A extends Parameters<TLStateEventHandlers<S>[K]>
+    E extends keyof TLStateEvents<S, K>,
+    A extends Parameters<TLStateEvents<S, K>[E]>
   >(
-    eventName: keyof TLStateEventHandlers<S>,
+    eventName: keyof TLStateEvents<S, K>,
     ...args: A
   ) => {
     if (this.currentState?._events?.[eventName]) {
@@ -141,7 +136,7 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
     }
   }
 
-  _events: TLStateEventHandlers<S> = {
+  _events: TLStateEvents<S, K> = {
     /**
      * Handle the change from inactive to active.
      *
@@ -169,7 +164,7 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
      */
     onExit: (info) => {
       this._isActive = false
-      this.currentState?.onExit?.({ fromId: 'parent' })
+      this.currentState?.onExit?.({ toId: 'parent' })
       this.onExit?.(info)
     },
 
@@ -253,7 +248,7 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
      * @param event The DOM event.
      */
     onKeyDown: (info, event) => {
-      this._events.handleModifierKey(info, event)
+      this._events.onModifierKey(info, event)
       this.onKeyDown?.(info, event)
       this.forwardEvent('onKeyDown', info, event)
     },
@@ -266,7 +261,7 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
      * @param event The DOM event.
      */
     onKeyUp: (info, event) => {
-      this._events.handleModifierKey(info, event)
+      this._events.onModifierKey(info, event)
       this.onKeyUp?.(info, event)
       this.forwardEvent('onKeyUp', info, event)
     },
@@ -317,13 +312,13 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
      * @param info The event info from TLInputs.
      * @param event The DOM event.
      */
-    handleModifierKey: (info, event) => {
+    onModifierKey: (info, event) => {
       switch (event.key) {
         case 'Shift':
         case 'Alt':
         case 'Ctrl':
         case 'Meta': {
-          this._events.onPointerMove(info, event)
+          this._events.onPointerMove(info, event as unknown as K['pointer'])
           break
         }
       }
@@ -334,42 +329,43 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
 
   static id: string
 
-  static shortcuts?: TLShortcut<any, any>[]
+  static shortcuts?: TLShortcut<any, any, any>[]
 
-  onEnter?: TLOnEnter<any>
+  onEnter?: TLStateEvents<S, K>['onEnter']
 
-  onExit?: TLOnExit<any>
+  onExit?: TLStateEvents<S, K>['onExit']
 
-  onTransition?: TLOnTransition<any>
+  onTransition?: TLStateEvents<S, K>['onTransition']
 
-  onWheel?: TLEvents<S>['wheel']
+  onWheel?: TLEvents<S, K>['wheel']
 
-  onPointerDown?: TLEvents<S>['pointer']
+  onPointerDown?: TLEvents<S, K>['pointer']
 
-  onPointerUp?: TLEvents<S>['pointer']
+  onPointerUp?: TLEvents<S, K>['pointer']
 
-  onPointerMove?: TLEvents<S>['pointer']
+  onPointerMove?: TLEvents<S, K>['pointer']
 
-  onPointerEnter?: TLEvents<S>['pointer']
+  onPointerEnter?: TLEvents<S, K>['pointer']
 
-  onPointerLeave?: TLEvents<S>['pointer']
+  onPointerLeave?: TLEvents<S, K>['pointer']
 
-  onKeyDown?: TLEvents<S>['keyboard']
+  onKeyDown?: TLEvents<S, K>['keyboard']
 
-  onKeyUp?: TLEvents<S>['keyboard']
+  onKeyUp?: TLEvents<S, K>['keyboard']
 
-  onPinchStart?: TLEvents<S>['pinch']
+  onPinchStart?: TLEvents<S, K>['pinch']
 
-  onPinch?: TLEvents<S>['pinch']
+  onPinch?: TLEvents<S, K>['pinch']
 
-  onPinchEnd?: TLEvents<S>['pinch']
+  onPinchEnd?: TLEvents<S, K>['pinch']
 }
 
 export abstract class TLState<
   S extends TLShape,
-  R extends TLRootState<S>,
-  P extends R | TLState<S, any> = any
-> extends TLRootState<S> {
+  K extends TLEventMap,
+  R extends TLRootState<S, K>,
+  P extends R | TLState<S, K, R, any> = any
+> extends TLRootState<S, K> {
   constructor(parent: P, root: R) {
     super()
     this._parent = parent
@@ -396,7 +392,7 @@ export abstract class TLState<
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const shortcuts = this.constructor['shortcuts'] as TLShortcut<S>[]
+    const shortcuts = this.constructor['shortcuts'] as TLShortcut<S, K>[]
     this._shortcuts = shortcuts
 
     makeObservable(this)
@@ -419,7 +415,7 @@ export abstract class TLState<
 
   protected _root: R
   protected _parent: P
-  private _shortcuts: TLShortcut<S>[] = []
+  private _shortcuts: TLShortcut<S, K>[] = []
 
   get root() {
     return this._root
@@ -429,21 +425,21 @@ export abstract class TLState<
     return this._parent
   }
 
-  get ascendants(): (P | TLState<S, R>)[] {
+  get ascendants(): (P | TLState<S, K, R, any>)[] {
     if (!this.parent) return [this]
     if (!('ascendants' in this.parent)) return [this.parent, this]
     return [...this.parent.ascendants, this]
   }
 
-  children = new Map<string, TLState<S, R, any>>([])
+  children = new Map<string, TLState<S, K, R, any>>([])
 
-  registerStates = (...stateClasses: TLStateClass<S, R, any>[]): void => {
+  registerStates = (...stateClasses: TLStateClass<S, K, R, any>[]): void => {
     stateClasses.forEach((StateClass) =>
       this.children.set(StateClass.id, new StateClass(this, this._root))
     )
   }
 
-  deregisterStates = (...states: TLStateClass<S, R, any>[]): void => {
+  deregisterStates = (...states: TLStateClass<S, K, R, any>[]): void => {
     states.forEach((StateClass) => {
       this.children.get(StateClass.id)?.dispose()
       this.children.delete(StateClass.id)

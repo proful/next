@@ -2,11 +2,9 @@ import * as React from 'react'
 import { computed, makeObservable, observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import {
-  SVGContainer,
   TLShape,
   BoundsUtils,
   TLBounds,
-  TLComponentProps,
   TLIndicatorProps,
   TLResizeInfo,
   PointUtils,
@@ -18,6 +16,7 @@ import {
   intersectLineSegmentPolyline,
   intersectPolylineBounds,
 } from '@tldraw/intersect'
+import { SVGContainer, TLComponentProps } from '@tldraw/react'
 
 export interface TLDrawShapeProps {
   points: number[][]

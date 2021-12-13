@@ -1,13 +1,14 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLBounds, TLEvents } from '~types'
+import type { TLBounds, TLEventMap, TLEvents } from '~types'
 import { BoundsUtils, GeomUtils } from '~utils'
 
 export class RotatingState<
   S extends TLShape,
-  R extends TLApp<S>,
-  P extends TLSelectTool<S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLSelectTool<S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'rotating'
 
   snapshot: Record<

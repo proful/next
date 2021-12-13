@@ -1,13 +1,14 @@
 import { Vec } from '@tldraw/vec'
-import { TLApp, TLShape, TLSelectTool, TLToolState } from '~lib'
-import { TLBounds, TLBoundsCorner, TLBoundsEdge, TLEvents, TLSerializedShape } from '~types'
+import { TLApp, TLShape, TLSelectTool, TLToolState, TLSerializedShape } from '~lib'
+import { TLBounds, TLBoundsCorner, TLBoundsEdge, TLEventMap, TLEvents } from '~types'
 import { BoundsUtils } from '~utils'
 
 export class ResizingState<
   S extends TLShape,
-  R extends TLApp<S>,
-  P extends TLSelectTool<S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLSelectTool<S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'resizing'
 
   isSingle = false

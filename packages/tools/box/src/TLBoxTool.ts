@@ -1,5 +1,5 @@
 import { IdleState, PointingState, CreatingState } from './states'
-import { TLTool, TLToolState, TLShortcut, TLApp, TLShape, TLCustomProps } from '@tldraw/core'
+import { TLTool, TLShortcut, TLApp, TLShape, TLCustomProps, TLEventMap } from '@tldraw/core'
 import type { TLBoxShape, TLBoxShapeProps } from '@tldraw/box-shape'
 
 // shape tools need to have two generics: a union of all shapes in
@@ -12,15 +12,16 @@ export interface TLBoxShapeClass<T extends TLBoxShape = TLBoxShape> {
 export abstract class TLBoxTool<
   T extends TLBoxShape = TLBoxShape,
   S extends TLShape = TLShape,
-  R extends TLApp<S> = TLApp<S>
-> extends TLTool<S, R> {
+  K extends TLEventMap = TLEventMap,
+  R extends TLApp<S, K> = TLApp<S, K>
+> extends TLTool<S, K, R> {
   static id = 'box'
 
   static states = [IdleState, PointingState, CreatingState]
 
   static initial = 'idle'
 
-  static shortcuts: TLShortcut<TLShape, TLApp>[] = [
+  static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
     {
       keys: ['mod+a'],
       fn: (app) => {

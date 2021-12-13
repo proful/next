@@ -1,8 +1,7 @@
 import { action, makeObservable, observable } from 'mobx'
-import type React from 'react'
-import type { WebkitGesture } from '~types'
+import type { TLEventMap } from '~types'
 
-export class TLInputs {
+export class TLInputs<K extends TLEventMap> {
   constructor() {
     makeObservable(this)
   }
@@ -25,15 +24,7 @@ export class TLInputs {
   @observable state: 'pointing' | 'pinching' | 'idle' = 'idle'
 
   private updateModifiers(
-    event:
-      | PointerEvent
-      | React.PointerEvent
-      | KeyboardEvent
-      | React.KeyboardEvent
-      | WheelEvent
-      | React.WheelEvent
-      | TouchEvent
-      | WebkitGesture
+    event: K['gesture'] | K['pointer'] | K['keyboard'] | K['wheel'] | K['touch']
   ) {
     if ('clientX' in event) {
       this.previousScreenPoint = this.currentScreenPoint
@@ -45,14 +36,14 @@ export class TLInputs {
     this.altKey = event.altKey
   }
 
-  @action onWheel = (pagePoint: number[], event: React.WheelEvent | WheelEvent) => {
+  @action onWheel = (pagePoint: number[], event: K['wheel']) => {
     // if (this.state === 'pinching') return
     this.updateModifiers(event)
     this.previousPoint = this.currentPoint
     this.currentPoint = pagePoint
   }
 
-  @action onPointerDown = (pagePoint: number[], event: PointerEvent | React.PointerEvent) => {
+  @action onPointerDown = (pagePoint: number[], event: K['pointer']) => {
     // if (this.pointerIds.size > 0) return
     this.pointerIds.add(event.pointerId)
     this.updateModifiers(event)
@@ -63,7 +54,7 @@ export class TLInputs {
 
   @action onPointerMove = (
     pagePoint: number[],
-    event: PointerEvent | TouchEvent | React.PointerEvent | WheelEvent
+    event: K['gesture'] | K['pointer'] | K['keyboard'] | K['wheel'] | K['touch']
   ) => {
     if (this.state === 'pinching') return
     // if ('pointerId' in event && !this.pointerIds.has(event.pointerId)) return
@@ -72,14 +63,14 @@ export class TLInputs {
     this.currentPoint = pagePoint
   }
 
-  @action onPointerUp = (pagePoint: number[], event: PointerEvent | React.PointerEvent) => {
+  @action onPointerUp = (pagePoint: number[], event: K['pointer']) => {
     // if (!this.pointerIds.has(event.pointerId)) return
     this.pointerIds.clear()
     this.updateModifiers(event)
     this.state = 'idle'
   }
 
-  @action onKeyDown = (event: KeyboardEvent | React.KeyboardEvent) => {
+  @action onKeyDown = (event: K['keyboard']) => {
     this.updateModifiers(event)
     switch (event.key) {
       case ' ': {
@@ -89,7 +80,7 @@ export class TLInputs {
     }
   }
 
-  @action onKeyUp = (event: KeyboardEvent | React.KeyboardEvent) => {
+  @action onKeyUp = (event: K['keyboard']) => {
     this.updateModifiers(event)
     switch (event.key) {
       case ' ': {
@@ -101,7 +92,7 @@ export class TLInputs {
 
   @action onPinchStart = (
     pagePoint: number[],
-    event: WheelEvent | PointerEvent | TouchEvent | WebkitGesture | KeyboardEvent
+    event: K['gesture'] | K['pointer'] | K['keyboard'] | K['wheel'] | K['touch']
   ) => {
     this.updateModifiers(event)
     this.state = 'pinching'
@@ -109,7 +100,7 @@ export class TLInputs {
 
   @action onPinch = (
     pagePoint: number[],
-    event: WheelEvent | PointerEvent | TouchEvent | WebkitGesture | KeyboardEvent
+    event: K['gesture'] | K['pointer'] | K['keyboard'] | K['wheel'] | K['touch']
   ) => {
     if (this.state !== 'pinching') return
     this.updateModifiers(event)
@@ -117,7 +108,7 @@ export class TLInputs {
 
   @action onPinchEnd = (
     pagePoint: number[],
-    event: WheelEvent | PointerEvent | TouchEvent | WebkitGesture | KeyboardEvent
+    event: K['gesture'] | K['pointer'] | K['keyboard'] | K['wheel'] | K['touch']
   ) => {
     if (this.state !== 'pinching') return
     this.updateModifiers(event)

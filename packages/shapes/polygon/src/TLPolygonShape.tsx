@@ -2,17 +2,16 @@ import * as React from 'react'
 import { computed, makeObservable, observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import {
-  SVGContainer,
   BoundsUtils,
   TLBounds,
   TLShapeProps,
-  TLComponentProps,
   TLIndicatorProps,
   TLResizeInfo,
   PointUtils,
   TLCustomProps,
   PolygonUtils,
 } from '@tldraw/core'
+import { SVGContainer, TLComponentProps } from '@tldraw/react'
 import { Vec } from '@tldraw/vec'
 import { intersectLineSegmentPolyline, intersectPolygonBounds } from '@tldraw/intersect'
 import { TLBoxShape, TLBoxShapeProps } from '@tldraw/box-shape'

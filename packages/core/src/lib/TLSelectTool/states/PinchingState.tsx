@@ -1,21 +1,23 @@
 import { Vec } from '@tldraw/vec'
 import type { FullGestureState, WebKitGestureEvent } from '@use-gesture/core/types'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLEventInfo, TLEvents } from '~types'
+import type { TLEventInfo, TLEventMap, TLEvents } from '~types'
 
-type GestureInfo<S extends TLShape = TLShape> = {
-  info: TLEventInfo<S>
-  gesture: Omit<FullGestureState<'pinch'>, 'event'> & {
-    event: WheelEvent | PointerEvent | TouchEvent | WebKitGestureEvent
-  }
-  event: WheelEvent | PointerEvent | TouchEvent | WebKitGestureEvent
+type GestureInfo<
+  S extends TLShape,
+  K extends TLEventMap,
+  E extends TLEventInfo<S> = TLEventInfo<S>
+> = {
+  info: E & { delta: number[]; point: number[]; offset: number[] }
+  event: K['wheel'] | K['pointer'] | K['touch'] | K['keyboard'] | K['gesture']
 }
 
 export class PinchingState<
   S extends TLShape,
-  R extends TLApp<S>,
-  P extends TLSelectTool<S, R>
-> extends TLToolState<S, R, P> {
+  K extends TLEventMap,
+  R extends TLApp<S, K>,
+  P extends TLSelectTool<S, K, R>
+> extends TLToolState<S, K, R, P> {
   static id = 'pinching'
 
   origin: number[] = [0, 0]
@@ -29,9 +31,9 @@ export class PinchingState<
     this.app.setCamera(Vec.toFixed(Vec.add(nextPoint, Vec.sub(p1, p0))), zoom)
   }
 
-  onEnter = (info: GestureInfo<any>) => {
-    this.prevDelta = info.gesture.delta
-    this.origin = info.gesture.origin
+  onEnter = (info: GestureInfo<S, K>) => {
+    this.prevDelta = info.info.delta
+    this.origin = info.info.point
   }
 
   onPinch: TLEvents<S>['pinch'] = (info, event) => {

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { action, observable, makeObservable, computed, observe } from 'mobx'
-import type { TLBinding, TLSerializedShape } from '~types'
+import type { TLBinding, TLEventMap } from '~types'
 import type { TLApp, TLShape } from '~lib'
+import type { TLSerializedShape } from './TLShape'
 
 export interface TLSerializedPage {
   id: string
@@ -18,8 +19,8 @@ export interface TLPageProps<S> {
   bindings: TLBinding[]
 }
 
-export class TLPage<S extends TLShape = TLShape> {
-  constructor(app: TLApp<S>, props = {} as TLPageProps<S>) {
+export class TLPage<S extends TLShape = TLShape, E extends TLEventMap = TLEventMap> {
+  constructor(app: TLApp<S, E>, props = {} as TLPageProps<S>) {
     const { id, name, shapes = [], bindings = [] } = props
     this.id = id
     this.name = name
@@ -29,7 +30,7 @@ export class TLPage<S extends TLShape = TLShape> {
     makeObservable(this)
   }
 
-  app: TLApp<S>
+  app: TLApp<S, E>
 
   @observable id: string
 

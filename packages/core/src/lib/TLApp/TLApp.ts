@@ -11,20 +11,19 @@ import {
   TLShape,
   TLSerializedPage,
   TLToolClass,
+  TLShapeClass,
+  TLSerializedShape,
 } from '~lib'
 import type {
   TLBounds,
   TLEvents,
-  TLEventHandlers,
   TLSubscription,
   TLSubscriptionEventInfo,
   TLSubscriptionEventName,
   TLSubscriptionCallback,
-  TLOnTransition,
-  TLPointerEvent,
-  TLShapeClass,
-  TLSerializedShape,
   TLShortcut,
+  TLEventMap,
+  TLStateEvents,
 } from '~types'
 import { TLHistory } from '../TLHistory'
 import { TLSettings } from '../TLSettings'
@@ -36,11 +35,14 @@ export interface TLSerializedApp {
   pages: TLSerializedPage[]
 }
 
-export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
+export class TLApp<
+  S extends TLShape = TLShape,
+  K extends TLEventMap = TLEventMap
+> extends TLRootState<S, K> {
   constructor(
     serializedApp?: TLSerializedApp,
     shapeClasses?: TLShapeClass<S>[],
-    tools?: TLToolClass<S>[]
+    tools?: TLToolClass<S, K>[]
   ) {
     super()
 
@@ -58,7 +60,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
     if (tools) this.registerStates(...tools)
     if (serializedApp) this.history.deserialize(serializedApp)
 
-    const ownShortcuts: TLShortcut<S>[] = [
+    const ownShortcuts: TLShortcut<S, K>[] = [
       { keys: 'mod+shift+g', fn: () => this.toggleGrid() },
       { keys: 'shift+0', fn: () => this.resetZoom() },
       { keys: 'mod+-', fn: () => this.zoomToSelection() },
@@ -82,7 +84,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const shortcuts = (this.constructor['shortcuts'] || []) as TLShortcut<S>[]
+    const shortcuts = (this.constructor['shortcuts'] || []) as TLShortcut<S, K>[]
     this._disposables.push(
       ...[...ownShortcuts, ...shortcuts].map(({ keys, fn }) => {
         return KeyUtils.registerShortcut(keys, () => {
@@ -98,11 +100,11 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   static id = 'app'
 
-  static states: TLToolClass[] = [TLSelectTool]
+  static states: TLToolClass<any, any>[] = [TLSelectTool]
 
   static initial = 'select'
 
-  inputs = new TLInputs()
+  inputs = new TLInputs<K>()
 
   viewport = new TLViewport()
 
@@ -112,7 +114,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   // this needs to be at the bottom
 
-  history = new TLHistory<S>(this)
+  history = new TLHistory<S, K>(this)
 
   persist = this.history.persist
 
@@ -251,16 +253,16 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   /* ---------------------- Pages --------------------- */
 
-  @observable pages: TLPage<S>[] = [
+  @observable pages: TLPage<S, K>[] = [
     new TLPage(this, { id: 'page', name: 'page', shapes: [], bindings: [] }),
   ]
 
-  @action addPages(...pages: TLPage<S>[]): void {
+  @action addPages(...pages: TLPage<S, K>[]): void {
     this.pages.push(...pages)
     this.persist()
   }
 
-  @action removePages(...pages: TLPage<S>[]): void {
+  @action removePages(...pages: TLPage<S, K>[]): void {
     this.pages = this.pages.filter((page) => !pages.includes(page))
     this.persist()
   }
@@ -269,12 +271,12 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   @observable currentPageId = 'page'
 
-  @action setCurrentPage(page: string | TLPage<S>) {
+  @action setCurrentPage(page: string | TLPage<S, K>) {
     this.currentPageId = typeof page === 'string' ? page : page.id
     return this
   }
 
-  @computed get currentPage(): TLPage<S> {
+  @computed get currentPage(): TLPage<S, K> {
     const page = this.pages.find((page) => page.id === this.currentPageId)
     if (!page) throw Error(`Could not find a page named ${this.currentPageId}.`)
     return page
@@ -406,16 +408,16 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   /* --------------------- Events --------------------- */
 
-  private subscriptions = new Set<TLSubscription<S, this, TLSubscriptionEventName>>([])
+  private subscriptions = new Set<TLSubscription<S, K, any, TLSubscriptionEventName>>([])
 
-  readonly unsubscribe = (subscription: TLSubscription<S, this, TLSubscriptionEventName>) => {
+  readonly unsubscribe = (subscription: TLSubscription<S, K, any, TLSubscriptionEventName>) => {
     this.subscriptions.delete(subscription)
     return this
   }
 
   subscribe = <E extends TLSubscriptionEventName>(
     event: E | TLSubscription<S>,
-    callback?: TLSubscriptionCallback<S, this, E>
+    callback?: TLSubscriptionCallback<S, K, this, E>
   ) => {
     if (typeof event === 'object') {
       this.subscriptions.add(event)
@@ -439,57 +441,57 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   /* ----------------- Event Handlers ----------------- */
 
-  readonly onWheel: TLEvents<S>['wheel'] = (info, e) => {
+  readonly onTransition: TLStateEvents<S, K>['onTransition'] = () => {
+    this.setToolLock(false)
+  }
+
+  readonly onWheel: TLEvents<S, K>['wheel'] = (info, e) => {
     this.viewport.panCamera(info.delta)
     this.inputs.onWheel([...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5], e)
   }
 
-  readonly onPointerDown: TLEventHandlers<S>['onPointerDown'] = (info, e) => {
+  readonly onPointerDown: TLEvents<S, K>['pointer'] = (info, e) => {
     if ('clientX' in e) {
       this.inputs.onPointerDown(
         [...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5],
-        e as TLPointerEvent<Element>
+        e as K['pointer']
       )
     }
   }
 
-  readonly onPointerUp: TLEvents<S>['pointer'] = (info, e) => {
+  readonly onPointerUp: TLEvents<S, K>['pointer'] = (info, e) => {
     if ('clientX' in e) {
       this.inputs.onPointerUp(
         [...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5],
-        e as TLPointerEvent<Element>
+        e as K['pointer']
       )
     }
   }
 
-  readonly onPointerMove: TLEvents<S>['pointer'] = (info, e) => {
+  readonly onPointerMove: TLEvents<S, K>['pointer'] = (info, e) => {
     if ('clientX' in e) {
       this.inputs.onPointerMove([...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5], e)
     }
   }
 
-  readonly onKeyDown: TLEvents<S>['keyboard'] = (info, e) => {
+  readonly onKeyDown: TLEvents<S, K>['keyboard'] = (info, e) => {
     this.inputs.onKeyDown(e)
   }
 
-  readonly onKeyUp: TLEvents<S>['keyboard'] = (info, e) => {
+  readonly onKeyUp: TLEvents<S, K>['keyboard'] = (info, e) => {
     this.inputs.onKeyUp(e)
   }
 
-  readonly onPinchStart: TLEvents<S>['pinch'] = (info, e) => {
+  readonly onPinchStart: TLEvents<S, K>['pinch'] = (info, e) => {
     this.inputs.onPinchStart([...this.viewport.getPagePoint(info.point), 0.5], e)
   }
 
-  readonly onPinch: TLEvents<S>['pinch'] = (info, e) => {
+  readonly onPinch: TLEvents<S, K>['pinch'] = (info, e) => {
     this.inputs.onPinch([...this.viewport.getPagePoint(info.point), 0.5], e)
   }
 
-  readonly onPinchEnd: TLEvents<S>['pinch'] = (info, e) => {
+  readonly onPinchEnd: TLEvents<S, K>['pinch'] = (info, e) => {
     this.inputs.onPinchEnd([...this.viewport.getPagePoint(info.point), 0.5], e)
-  }
-
-  readonly onTransition: TLOnTransition<any> = () => {
-    this.setToolLock(false)
   }
 
   /* ------------------- Public API ------------------- */
@@ -499,7 +501,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
    *
    * @param page The new current page or page id.
    */
-  changePage = (page: string | TLPage<S>): this => {
+  changePage = (page: string | TLPage<S, K>): this => {
     return this.setCurrentPage(page)
   }
 
