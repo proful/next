@@ -6,10 +6,7 @@
     "useDefineForClassFields": true,
     "outDir": "./dist/types",
     "rootDir": "src",
-    "baseUrl": ".",
-    "paths": {
-      "~*": ["./src/*"]
-    }
+    "baseUrl": "."
   },
   "references": [
     { "path": "../../core" },

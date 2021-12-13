@@ -5,11 +5,7 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
     "outDir": "./dist/types",
-    "rootDir": "src",
-    "baseUrl": ".",
-    "paths": {
-      "~*": ["./src/*"]
-    }
+    "rootDir": "src"
   },
   "references": [
     { "path": "../../core" },
