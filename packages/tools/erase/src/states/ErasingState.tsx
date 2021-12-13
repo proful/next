@@ -35,7 +35,7 @@ export class ErasingState<
     this.tool.transition('idle')
   }
 
-  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
+  onWheel: TLEvents<S>['wheel'] = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 }

@@ -1,14 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLShape, TLSelectTool, TLToolState } from '~lib'
-import {
-  TLBounds,
-  TLBoundsCorner,
-  TLBoundsEdge,
-  TLKeyboardHandler,
-  TLPointerHandler,
-  TLWheelHandler,
-  TLSerializedShape,
-} from '~types'
+import { TLBounds, TLBoundsCorner, TLBoundsEdge, TLEvents, TLSerializedShape } from '~types'
 import { BoundsUtils } from '~utils'
 
 export class ResizingState<
@@ -81,11 +73,11 @@ export class ResizingState<
     this.app.history.resume()
   }
 
-  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
+  onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler<S> = () => {
+  onPointerMove: TLEvents<S>['pointer'] = () => {
     const {
       inputs: { shiftKey, originPoint, currentPoint },
     } = this.app
@@ -133,13 +125,13 @@ export class ResizingState<
     })
   }
 
-  onPointerUp: TLPointerHandler<S> = () => {
+  onPointerUp: TLEvents<S>['pointer'] = () => {
     this.app.history.resume()
     this.app.persist()
     this.tool.transition('idle')
   }
 
-  onKeyDown: TLKeyboardHandler<S> = (info, e) => {
+  onKeyDown: TLEvents<S>['keyboard'] = (info, e) => {
     switch (e.key) {
       case 'Escape': {
         this.app.selectedShapes.forEach((shape) => {

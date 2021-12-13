@@ -5,15 +5,7 @@ import {
   intersectPolygonBounds,
 } from '@tldraw/intersect'
 import { action, computed, makeObservable, observable } from 'mobx'
-import type {
-  TLShapeProps,
-  TLBounds,
-  TLSerializedShape,
-  TLComponentProps,
-  TLIndicatorProps,
-  TLHandle,
-  TLResizeInfo,
-} from '~types'
+import type { TLShapeProps, TLBounds, TLSerializedShape, TLHandle, TLResizeInfo } from '~types'
 import { BoundsUtils, PointUtils, assignOwnProps } from '~utils'
 import { deepCopy } from '~utils/DataUtils'
 
@@ -70,9 +62,9 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   @observable isGenerated?: boolean
   @observable isAspectRatioLocked?: boolean
 
-  abstract Component: (props: TLComponentProps<M>) => JSX.Element | null
+  // abstract Component: (props: TLComponentProps<M>) => JSX.Element | null
 
-  abstract Indicator: (props: TLIndicatorProps<M>) => JSX.Element | null
+  // abstract Indicator: (props: TLIndicatorProps<M>) => JSX.Element | null
 
   abstract getBounds: () => TLBounds
 

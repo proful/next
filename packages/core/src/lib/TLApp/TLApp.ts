@@ -10,23 +10,21 @@ import {
   TLViewport,
   TLShape,
   TLSerializedPage,
-  TLShapeClass,
-  TLSerializedShape,
   TLToolClass,
-  TLShortcut,
-} from '../../index'
+} from '~lib'
 import type {
   TLBounds,
-  TLKeyboardHandler,
-  TLPointerHandler,
+  TLEvents,
+  TLEventHandlers,
   TLSubscription,
-  TLWheelHandler,
   TLSubscriptionEventInfo,
   TLSubscriptionEventName,
   TLSubscriptionCallback,
-  TLPinchHandler,
-  TLPointerEvent,
   TLOnTransition,
+  TLPointerEvent,
+  TLShapeClass,
+  TLSerializedShape,
+  TLShortcut,
 } from '~types'
 import { TLHistory } from '../TLHistory'
 import { TLSettings } from '../TLSettings'
@@ -441,12 +439,12 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
 
   /* ----------------- Event Handlers ----------------- */
 
-  readonly onWheel: TLWheelHandler<S> = (info, gesture, e) => {
-    this.viewport.panCamera(gesture.delta)
+  readonly onWheel: TLEvents<S>['wheel'] = (info, e) => {
+    this.viewport.panCamera(info.delta)
     this.inputs.onWheel([...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5], e)
   }
 
-  readonly onPointerDown: TLPointerHandler<S> = (info, e) => {
+  readonly onPointerDown: TLEventHandlers<S>['onPointerDown'] = (info, e) => {
     if ('clientX' in e) {
       this.inputs.onPointerDown(
         [...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5],
@@ -455,7 +453,7 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
     }
   }
 
-  readonly onPointerUp: TLPointerHandler<S> = (info, e) => {
+  readonly onPointerUp: TLEvents<S>['pointer'] = (info, e) => {
     if ('clientX' in e) {
       this.inputs.onPointerUp(
         [...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5],
@@ -464,30 +462,30 @@ export class TLApp<S extends TLShape = TLShape> extends TLRootState<S> {
     }
   }
 
-  readonly onPointerMove: TLPointerHandler<S> = (info, e) => {
+  readonly onPointerMove: TLEvents<S>['pointer'] = (info, e) => {
     if ('clientX' in e) {
       this.inputs.onPointerMove([...this.viewport.getPagePoint([e.clientX, e.clientY]), 0.5], e)
     }
   }
 
-  readonly onKeyDown: TLKeyboardHandler<S> = (info, e) => {
+  readonly onKeyDown: TLEvents<S>['keyboard'] = (info, e) => {
     this.inputs.onKeyDown(e)
   }
 
-  readonly onKeyUp: TLKeyboardHandler<S> = (info, e) => {
+  readonly onKeyUp: TLEvents<S>['keyboard'] = (info, e) => {
     this.inputs.onKeyUp(e)
   }
 
-  readonly onPinchStart: TLPinchHandler<S> = (info, gesture, e) => {
-    this.inputs.onPinchStart([...this.viewport.getPagePoint(gesture.origin), 0.5], e)
+  readonly onPinchStart: TLEvents<S>['pinch'] = (info, e) => {
+    this.inputs.onPinchStart([...this.viewport.getPagePoint(info.point), 0.5], e)
   }
 
-  readonly onPinch: TLPinchHandler<S> = (info, gesture, e) => {
-    this.inputs.onPinch([...this.viewport.getPagePoint(gesture.origin), 0.5], e)
+  readonly onPinch: TLEvents<S>['pinch'] = (info, e) => {
+    this.inputs.onPinch([...this.viewport.getPagePoint(info.point), 0.5], e)
   }
 
-  readonly onPinchEnd: TLPinchHandler<S> = (info, gesture, e) => {
-    this.inputs.onPinchEnd([...this.viewport.getPagePoint(gesture.origin), 0.5], e)
+  readonly onPinchEnd: TLEvents<S>['pinch'] = (info, e) => {
+    this.inputs.onPinchEnd([...this.viewport.getPagePoint(info.point), 0.5], e)
   }
 
   readonly onTransition: TLOnTransition<any> = () => {

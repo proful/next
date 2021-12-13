@@ -1,5 +1,5 @@
 import { TLShape, TLApp, TLSelectTool, TLToolState } from '~lib'
-import { TLPinchHandler, TLPointerHandler, TLShortcut, TLTargetType } from '~types'
+import { TLEvents, TLShortcut, TLTargetType } from '~types'
 import { PointUtils } from '~utils'
 
 export class IdleState<
@@ -24,7 +24,7 @@ export class IdleState<
     this.app.hover(undefined)
   }
 
-  onPointerEnter: TLPointerHandler<S> = (info) => {
+  onPointerEnter: TLEvents<S>['pointer'] = (info) => {
     if (info.order > 0) return
 
     if (info.type === TLTargetType.Shape) {
@@ -32,7 +32,7 @@ export class IdleState<
     }
   }
 
-  onPointerDown: TLPointerHandler<S> = (info, event) => {
+  onPointerDown: TLEvents<S>['pointer'] = (info, event) => {
     const {
       selectedShapes,
       inputs: { ctrlKey },
@@ -84,7 +84,7 @@ export class IdleState<
     }
   }
 
-  onPointerLeave: TLPointerHandler<S> = (info) => {
+  onPointerLeave: TLEvents<S>['pointer'] = (info) => {
     if (info.order > 0) return
 
     if (info.type === TLTargetType.Shape) {
@@ -94,7 +94,7 @@ export class IdleState<
     }
   }
 
-  onPinchStart: TLPinchHandler<S> = (info, gesture, event) => {
-    this.tool.transition('pinching', { info, gesture, event })
+  onPinchStart: TLEvents<S>['pinch'] = (info, event) => {
+    this.tool.transition('pinching', { info, event })
   }
 }

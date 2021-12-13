@@ -1,5 +1,4 @@
 import { TLApp, TLPage, TLSerializedApp, TLShape } from '~lib'
-import type { TLBinding } from '~types'
 import { KeyUtils } from '~utils'
 
 export class TLHistory<S extends TLShape> {

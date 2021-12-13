@@ -1,6 +1,6 @@
-import type { WebKitGestureEvent } from '@use-gesture/core/types'
 import { action, makeObservable, observable } from 'mobx'
 import type React from 'react'
+import type { WebkitGesture } from '~types'
 
 export class TLInputs {
   constructor() {
@@ -33,7 +33,7 @@ export class TLInputs {
       | WheelEvent
       | React.WheelEvent
       | TouchEvent
-      | WebKitGestureEvent
+      | WebkitGesture
   ) {
     if ('clientX' in event) {
       this.previousScreenPoint = this.currentScreenPoint
@@ -101,7 +101,7 @@ export class TLInputs {
 
   @action onPinchStart = (
     pagePoint: number[],
-    event: WheelEvent | PointerEvent | TouchEvent | WebKitGestureEvent
+    event: WheelEvent | PointerEvent | TouchEvent | WebkitGesture | KeyboardEvent
   ) => {
     this.updateModifiers(event)
     this.state = 'pinching'
@@ -109,7 +109,7 @@ export class TLInputs {
 
   @action onPinch = (
     pagePoint: number[],
-    event: WheelEvent | PointerEvent | TouchEvent | WebKitGestureEvent
+    event: WheelEvent | PointerEvent | TouchEvent | WebkitGesture | KeyboardEvent
   ) => {
     if (this.state !== 'pinching') return
     this.updateModifiers(event)
@@ -117,7 +117,7 @@ export class TLInputs {
 
   @action onPinchEnd = (
     pagePoint: number[],
-    event: WheelEvent | PointerEvent | TouchEvent | WebKitGestureEvent
+    event: WheelEvent | PointerEvent | TouchEvent | WebkitGesture | KeyboardEvent
   ) => {
     if (this.state !== 'pinching') return
     this.updateModifiers(event)

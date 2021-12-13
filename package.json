@@ -11,6 +11,7 @@
   "license": "MIT",
   "workspaces": [
     "packages/core",
+    "packages/react",
     "packages/utils/*",
     "packages/shapes/*",
     "packages/tools/*",

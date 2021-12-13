@@ -13,7 +13,7 @@ async function main() {
     })
   }
 
-  const deps = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)]
+  const deps = [...Object.keys(pkg.dependencies)]
 
   try {
     esbuild.buildSync({

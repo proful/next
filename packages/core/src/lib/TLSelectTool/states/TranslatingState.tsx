@@ -1,6 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLKeyboardHandler, TLPointerHandler, TLWheelHandler } from '~types'
+import type { TLEvents } from '~types'
 import { uniqueId } from '~utils'
 
 export class TranslatingState<
@@ -116,21 +116,21 @@ export class TranslatingState<
     this.initialClonePoints = {}
   }
 
-  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
+  onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler<S> = () => {
+  onPointerMove: TLEvents<S>['pointer'] = () => {
     this.moveSelectedShapesToPointer()
   }
 
-  onPointerUp: TLPointerHandler<S> = () => {
+  onPointerUp: TLEvents<S>['pointer'] = () => {
     this.app.history.resume()
     this.app.persist()
     this.tool.transition('idle')
   }
 
-  onKeyDown: TLKeyboardHandler<S> = (info, e) => {
+  onKeyDown: TLEvents<S>['keyboard'] = (info, e) => {
     switch (e.key) {
       case 'Alt': {
         this.startCloning()
@@ -146,7 +146,7 @@ export class TranslatingState<
     }
   }
 
-  onKeyUp: TLKeyboardHandler<S> = (info, e) => {
+  onKeyUp: TLEvents<S>['keyboard'] = (info, e) => {
     switch (e.key) {
       case 'Alt': {
         if (!this.isCloning) throw Error('Expected to be cloning.')

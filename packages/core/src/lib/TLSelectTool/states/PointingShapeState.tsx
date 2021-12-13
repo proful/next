@@ -1,6 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLShape, TLSelectTool, TLToolState } from '~lib'
-import type { TLPinchHandler, TLPointerHandler, TLWheelHandler } from '~types'
+import type { TLEvents } from '~types'
 
 export class PointingShapeState<
   S extends TLShape,
@@ -22,22 +22,22 @@ export class PointingShapeState<
     }
   }
 
-  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
+  onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler<S> = () => {
+  onPointerMove: TLEvents<S>['pointer'] = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
       this.tool.transition('translating')
     }
   }
 
-  onPointerUp: TLPointerHandler<S> = () => {
+  onPointerUp: TLEvents<S>['pointer'] = () => {
     this.tool.transition('idle')
   }
 
-  onPinchStart: TLPinchHandler<S> = (info, gesture, event) => {
-    this.tool.transition('pinching', { info, gesture, event })
+  onPinchStart: TLEvents<S>['pinch'] = (info, event) => {
+    this.tool.transition('pinching', { info, event })
   }
 }

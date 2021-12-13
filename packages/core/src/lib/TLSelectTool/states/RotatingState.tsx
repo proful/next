@@ -1,6 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLBounds, TLKeyboardHandler, TLPointerHandler, TLWheelHandler } from '~types'
+import type { TLBounds, TLEvents } from '~types'
 import { BoundsUtils, GeomUtils } from '~utils'
 
 export class RotatingState<
@@ -44,11 +44,11 @@ export class RotatingState<
     this.snapshot = {}
   }
 
-  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
+  onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler<S> = () => {
+  onPointerMove: TLEvents<S>['pointer'] = () => {
     const {
       selectedShapes,
       inputs: { shiftKey, currentPoint },
@@ -103,13 +103,13 @@ export class RotatingState<
     })
   }
 
-  onPointerUp: TLPointerHandler<S> = () => {
+  onPointerUp: TLEvents<S>['pointer'] = () => {
     this.app.history.resume()
     this.app.persist()
     this.tool.transition('idle')
   }
 
-  onKeyDown: TLKeyboardHandler<S> = (info, e) => {
+  onKeyDown: TLEvents<S>['keyboard'] = (info, e) => {
     switch (e.key) {
       case 'Escape': {
         this.app.selectedShapes.forEach((shape) => {

@@ -50,7 +50,7 @@ export class CreatingState<
     }
   }
 
-  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
+  onWheel: TLEvents<S>['wheel'] = (info, gesture, e) => {
     this.onPointerMove(info, e)
   }
 }

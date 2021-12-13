@@ -3,18 +3,15 @@ import { action, makeObservable, observable } from 'mobx'
 import type {
   TLOnTransition,
   TLEventHandlers,
-  TLKeyboardHandler,
   TLOnEnter,
   TLOnExit,
-  TLPinchHandler,
-  TLPointerHandler,
   TLShortcut,
-  TLWheelHandler,
-  TLStateEvents,
+  TLEvents,
+  TLStateEventHandlers,
   AnyObject,
 } from '~types'
 import type { TLShape } from '~lib'
-import { KeyUtils, throttle } from '~utils'
+import { KeyUtils } from '~utils'
 
 export interface TLStateClass<
   S extends TLShape,
@@ -131,10 +128,10 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
   /* ----------------- Internal Events ---------------- */
 
   private forwardEvent = <
-    K extends keyof TLStateEvents<S>,
-    A extends Parameters<TLStateEvents<S>[K]>
+    K extends keyof TLStateEventHandlers<S>,
+    A extends Parameters<TLStateEventHandlers<S>[K]>
   >(
-    eventName: keyof TLStateEvents<S>,
+    eventName: keyof TLStateEventHandlers<S>,
     ...args: A
   ) => {
     if (this.currentState?._events?.[eventName]) {
@@ -144,7 +141,7 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
     }
   }
 
-  _events: TLStateEvents<S> = {
+  _events: TLStateEventHandlers<S> = {
     /**
      * Handle the change from inactive to active.
      *
@@ -183,9 +180,9 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
      * @param info The event info from TLInputs.
      * @param event The DOM event.
      */
-    onWheel: (info, gesture, event) => {
-      this.onWheel?.(info, gesture, event)
-      this.forwardEvent('onWheel', info, gesture, event)
+    onWheel: (info, event) => {
+      this.onWheel?.(info, event)
+      this.forwardEvent('onWheel', info, event)
     },
 
     /**
@@ -282,9 +279,9 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
      * @param gesture The gesture info from useGesture.
      * @param event The DOM event.
      */
-    onPinchStart: (info, gesture, event) => {
-      this.onPinchStart?.(info, gesture, event)
-      this.forwardEvent('onPinchStart', info, gesture, event)
+    onPinchStart: (info, event) => {
+      this.onPinchStart?.(info, event)
+      this.forwardEvent('onPinchStart', info, event)
     },
 
     /**
@@ -295,9 +292,9 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
      * @param gesture The gesture info from useGesture.
      * @param event The DOM event.
      */
-    onPinch: (info, gesture, event) => {
-      this.onPinch?.(info, gesture, event)
-      this.forwardEvent('onPinch', info, gesture, event)
+    onPinch: (info, event) => {
+      this.onPinch?.(info, event)
+      this.forwardEvent('onPinch', info, event)
     },
 
     /**
@@ -308,9 +305,9 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
      * @param gesture The gesture info from useGesture.
      * @param event The DOM event.
      */
-    onPinchEnd: (info, gesture, event) => {
-      this.onPinchEnd?.(info, gesture, event)
-      this.forwardEvent('onPinchEnd', info, gesture, event)
+    onPinchEnd: (info, event) => {
+      this.onPinchEnd?.(info, event)
+      this.forwardEvent('onPinchEnd', info, event)
     },
 
     /**
@@ -345,27 +342,27 @@ export abstract class TLRootState<S extends TLShape> implements Partial<TLEventH
 
   onTransition?: TLOnTransition<any>
 
-  onWheel?: TLWheelHandler<S>
+  onWheel?: TLEvents<S>['wheel']
 
-  onPointerDown?: TLPointerHandler<S>
+  onPointerDown?: TLEvents<S>['pointer']
 
-  onPointerUp?: TLPointerHandler<S>
+  onPointerUp?: TLEvents<S>['pointer']
 
-  onPointerMove?: TLPointerHandler<S>
+  onPointerMove?: TLEvents<S>['pointer']
 
-  onPointerEnter?: TLPointerHandler<S>
+  onPointerEnter?: TLEvents<S>['pointer']
 
-  onPointerLeave?: TLPointerHandler<S>
+  onPointerLeave?: TLEvents<S>['pointer']
 
-  onKeyDown?: TLKeyboardHandler<S>
+  onKeyDown?: TLEvents<S>['keyboard']
 
-  onKeyUp?: TLKeyboardHandler<S>
+  onKeyUp?: TLEvents<S>['keyboard']
 
-  onPinchStart?: TLPinchHandler<S>
+  onPinchStart?: TLEvents<S>['pinch']
 
-  onPinch?: TLPinchHandler<S>
+  onPinch?: TLEvents<S>['pinch']
 
-  onPinchEnd?: TLPinchHandler<S>
+  onPinchEnd?: TLEvents<S>['pinch']
 }
 
 export abstract class TLState<

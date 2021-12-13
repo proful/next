@@ -1,6 +1,6 @@
 import { TLApp, TLBush, TLSelectTool, TLToolState, TLShape } from '~lib'
 import { BoundsUtils } from '~utils'
-import type { TLKeyboardHandler, TLPointerHandler, TLWheelHandler } from '~types'
+import type { TLEvents } from '~types'
 
 export class BrushingState<
   S extends TLShape,
@@ -26,11 +26,11 @@ export class BrushingState<
     this.tree.clear()
   }
 
-  onWheel: TLWheelHandler<S> = (info, gesture, e) => {
+  onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }
 
-  onPointerMove: TLPointerHandler<S> = () => {
+  onPointerMove: TLEvents<S>['pointer'] = () => {
     const {
       inputs: { shiftKey, ctrlKey, originPoint, currentPoint },
     } = this.app
@@ -61,12 +61,12 @@ export class BrushingState<
     }
   }
 
-  onPointerUp: TLPointerHandler<S> = () => {
+  onPointerUp: TLEvents<S>['pointer'] = () => {
     this.app.clearBrush()
     this.tool.transition('idle')
   }
 
-  handleModifierKey: TLKeyboardHandler<S> = (info, e) => {
+  handleModifierKey: TLEvents<S>['keyboard'] = (info, e) => {
     switch (e.key) {
       case 'Escape': {
         this.app.clearBrush()
