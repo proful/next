@@ -8,6 +8,7 @@ import {
   BoundsDetail as _BoundsDetail,
   Grid as _Grid,
   Brush as _Brush,
+  Handle as _Handle,
 } from '~components'
 import { autorun } from 'mobx'
 import { getRendererContext } from '~hooks'
@@ -45,7 +46,8 @@ export const RendererContext = observer(function App<S extends TLReactShape>({
   children,
 }: TLRendererContextProps<S>): JSX.Element {
   const [currentContext, setCurrentContext] = React.useState<TLRendererContext<S>>(() => {
-    const { Brush, Grid, ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } = components
+    const { Brush, Handle, Grid, ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } =
+      components
 
     return {
       id,
@@ -59,13 +61,15 @@ export const RendererContext = observer(function App<S extends TLReactShape>({
         BoundsDetail: BoundsDetail === null ? undefined : _BoundsDetail,
         Brush: Brush === null ? undefined : _Brush,
         Grid: Grid === null ? undefined : _Grid,
+        Handle: Handle === null ? undefined : _Handle,
         ContextBar,
       },
     }
   })
 
   React.useEffect(() => {
-    const { Brush, Grid, ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } = components
+    const { Brush, Handle, Grid, ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } =
+      components
 
     autorun(() => {
       setCurrentContext({
@@ -80,6 +84,7 @@ export const RendererContext = observer(function App<S extends TLReactShape>({
           BoundsDetail: BoundsDetail === null ? undefined : _BoundsDetail,
           Brush: Brush === null ? undefined : _Brush,
           Grid: Grid === null ? undefined : _Grid,
+          Handle: Handle === null ? undefined : _Handle,
           ContextBar,
         },
       })

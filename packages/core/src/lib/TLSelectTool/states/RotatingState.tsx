@@ -78,7 +78,7 @@ export class RotatingState<
       const relativeCenter = Vec.sub(initialShape.center, initialShape.point)
       const rotatedCenter = Vec.rotWith(initialShape.center, initialCommonCenter, angleDelta)
 
-      if (shape.handles) {
+      if ('handles' in shape) {
         // Don't rotate shapes with handles; instead, rotate the handles
         // Object.values(shape.handles).forEach((handle) => {
         //   handle.point = Vec.rotWith(

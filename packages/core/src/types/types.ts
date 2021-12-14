@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { TLApp, TLShape, TLRootState, TLState } from '~lib'
+import type { TLApp, TLShape } from '~lib'
 import type { TLEventMap } from './TLEventMap'
+import type { TLHandle } from './TLHandle'
 
 export enum TLBoundsEdge {
   Top = 'top_edge',
@@ -58,12 +59,6 @@ export interface TLTheme {
   background?: string
   foreground?: string
   grid?: string
-}
-
-export interface TLHandle {
-  id: string
-  index: number
-  point: number[]
 }
 
 export interface TLBounds {
@@ -173,11 +168,13 @@ export enum TLTargetType {
   Canvas = 'canvas',
   Shape = 'shape',
   Bounds = 'bounds',
+  Handle = 'handle',
 }
 
-export type TLEventInfo<S extends TLShape> =
+export type TLEventInfo<S extends TLShape, H extends TLHandle = TLHandle> =
   | { type: TLTargetType.Canvas; target: 'canvas'; order: number }
   | { type: TLTargetType.Shape; target: S; order: number }
+  | { type: TLTargetType.Handle; target: S; handle: H; index: number; order: number }
   | {
       type: TLTargetType.Bounds
       target: TLBoundsHandle

@@ -18,6 +18,8 @@ import {
   NuHighlighterShape,
   NuDotShape,
   NuStarShape,
+  NuLineShape,
+  NuPolylineShape,
   Shape,
 } from '~lib/shapes'
 import {
@@ -48,6 +50,8 @@ function App(): JSX.Element {
     NuHighlighterShape,
     NuDotShape,
     NuStarShape,
+    NuPolylineShape,
+    NuLineShape,
   ])
 
   const [toolClasses] = React.useState<TLReactToolClass<Shape>[]>(() => [
@@ -63,25 +67,39 @@ function App(): JSX.Element {
 
   const [model] = React.useState<TLSerializedApp>({
     currentPageId: 'page1',
-    selectedIds: ['dot1'],
+    selectedIds: ['box1'],
     pages: [
       {
         name: 'Page',
         id: 'page1',
         shapes: [
+          {
+            id: 'box1',
+            type: 'box',
+            parentId: 'page1',
+            point: [100, 400],
+            size: [100, 100],
+          },
+          {
+            id: 'polyline1',
+            type: 'polyline',
+            parentId: 'page1',
+            point: [100, 100],
+            handles: [{ point: [0, 0] }, { point: [30, 70] }, { point: [100, 100] }],
+          },
+          {
+            id: 'line1',
+            type: 'line',
+            parentId: 'page1',
+            point: [300, 100],
+            handles: [{ point: [0, 0] }, { point: [30, 70] }],
+          },
           // {
           //   id: 'dot1',
           //   type: 'dot',
           //   parentId: 'page1',
           //   point: [500, 300],
           //   radius: 3,
-          // },
-          // {
-          //   id: 'box1',
-          //   type: 'box',
-          //   parentId: 'page1',
-          //   point: [100, 400],
-          //   size: [100, 100],
           // },
           // {
           //   id: 'ellipse1',

@@ -116,13 +116,6 @@ export class ResizingState<
         scaleY,
         transformOrigin,
       })
-
-      // if (this.isSingle) {
-      //   const offset = Vec.sub(shape.center, this.initialCommonCenter)
-      //   shape.update({
-      //     point: Vec.sub(shape.point, offset),
-      //   })
-      // }
     })
   }
 

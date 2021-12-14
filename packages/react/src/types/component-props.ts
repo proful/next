@@ -1,6 +1,6 @@
 /* -------------------- App Props ------------------- */
 
-import type { TLBounds, TLOffset } from '@tldraw/core'
+import type { TLBounds, TLHandle, TLOffset } from '@tldraw/core'
 import type { TLReactShape } from '~lib'
 
 /* ------------------- Components ------------------- */
@@ -47,6 +47,20 @@ export interface TLBrushProps {
 
 export type TLBrushComponent = (props: TLBrushProps) => JSX.Element | null
 
+export interface TLHandleComponentProps<
+  S extends TLReactShape = TLReactShape,
+  H extends TLHandle = TLHandle
+> {
+  shape: S
+  handle: H
+  index: number
+}
+
+export type TLHandleComponent<
+  S extends TLReactShape = TLReactShape,
+  H extends TLHandle = TLHandle
+> = (props: TLHandleComponentProps<S, H>) => JSX.Element | null
+
 export interface TLGridProps {
   size: number
 }
@@ -57,6 +71,7 @@ export type TLReactComponents<S extends TLReactShape = TLReactShape> = {
   BoundsBackground?: TLBoundsComponent<S> | null
   BoundsForeground?: TLBoundsComponent<S> | null
   BoundsDetail?: TLBoundsDetailComponent<S> | null
+  Handle?: TLHandleComponent<S> | null
   ContextBar?: TLContextBarComponent<S> | null
   Brush?: TLBrushComponent | null
   Grid?: TLGridComponent | null

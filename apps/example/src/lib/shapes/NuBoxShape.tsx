@@ -4,7 +4,7 @@ import type { TLCustomProps } from '@tldraw/core'
 import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 import { TLBoxShape, TLBoxShapeProps } from '@tldraw/box-shape'
 import { observer } from 'mobx-react-lite'
-import { autorun, makeObservable, observable } from 'mobx'
+import { makeObservable, observable } from 'mobx'
 import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 export interface NuBoxShapeProps extends TLBoxShapeProps, NuStyleProps {

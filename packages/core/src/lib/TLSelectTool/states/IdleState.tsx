@@ -74,6 +74,10 @@ export class IdleState<
         }
         break
       }
+      case TLTargetType.Handle: {
+        this.tool.transition('pointingHandle', info)
+        break
+      }
       case TLTargetType.Canvas: {
         this.tool.transition('pointingCanvas')
         break

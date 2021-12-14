@@ -2,10 +2,11 @@ import type { TLApp } from '@tldraw/core'
 import * as React from 'react'
 import type { TLAppPropsWithoutApp, TLAppPropsWithApp } from '~components'
 import type { TLReactShape } from '~lib'
+import type { TLReactApp } from '~types'
 
-declare const window: Window & { tln: TLApp<any> }
+declare const window: Window & { tln: TLReactApp<any> }
 
-export function useSetup<S extends TLReactShape, R extends TLApp<S>>(
+export function useSetup<S extends TLReactShape, R extends TLReactApp<S>>(
   app: R,
   props: TLAppPropsWithApp<S> | TLAppPropsWithoutApp<S>
 ) {

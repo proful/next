@@ -12,7 +12,7 @@
     { "path": "../../core" },
     { "path": "../../utils/vec" },
     { "path": "../../utils/intersect" },
-    { "path": "../../shapes/box" }
+    { "path": "../../shapes/polyline" }
   ],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],

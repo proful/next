@@ -5,14 +5,8 @@ import {
   intersectPolygonBounds,
 } from '@tldraw/intersect'
 import { action, computed, makeObservable, observable } from 'mobx'
-import type {
-  TLBounds,
-  TLHandle,
-  AnyObject,
-  TLBoundsCorner,
-  TLBoundsEdge,
-  TLEventMap,
-} from '~types'
+import type { TLBounds, AnyObject, TLBoundsCorner, TLBoundsEdge } from '~types'
+import type { TLHandle } from '~types/TLHandle'
 import { BoundsUtils, PointUtils, assignOwnProps } from '~utils'
 import { deepCopy } from '~utils/DataUtils'
 
@@ -33,7 +27,6 @@ export interface TLShapeProps {
   rotation?: number
   name?: string
   children?: string[]
-  handles?: Record<string, TLHandle>
   isGhost?: boolean
   isHidden?: boolean
   isLocked?: boolean
@@ -71,7 +64,6 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
     'name',
     'rotation',
     'children',
-    'handles',
     'isGhost',
     'isHidden',
     'isLocked',
@@ -98,7 +90,6 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   @observable name?: string = 'Shape'
   @observable rotation?: number
   @observable children?: string[]
-  @observable handles?: Record<string, TLHandle>
   @observable isGhost?: boolean
   @observable isHidden?: boolean
   @observable isLocked?: boolean

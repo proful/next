@@ -10,6 +10,7 @@ import {
   Container,
   BoundsDetailContainer,
   ContextBarContainer,
+  SVGContainer,
 } from '~components'
 import {
   useCanvasEvents,
@@ -19,7 +20,7 @@ import {
   useRendererContext,
   usePreventNavigation,
 } from '~hooks'
-import type { TLBinding, TLBounds, TLTheme } from '@tldraw/core'
+import type { TLBinding, TLBounds, TLHandle, TLTheme } from '@tldraw/core'
 import { EMPTY_OBJECT } from '~constants'
 import type { TLReactShape } from '~lib'
 
@@ -38,6 +39,7 @@ export interface TLCanvasProps<S extends TLReactShape> {
   gridSize?: number
   showGrid?: boolean
   showBounds?: boolean
+  showHandles?: boolean
   showResizeHandles?: boolean
   showRotateHandle?: boolean
   showContextBar?: boolean
@@ -57,6 +59,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   selectedShapes,
   erasingShapes,
   showBounds = true,
+  showHandles = true,
   showBoundsRotation = false,
   showResizeHandles = true,
   showRotateHandle = true,
@@ -89,6 +92,12 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   const events = useCanvasEvents()
 
   const { zoom } = viewport.camera
+
+  const handleShape =
+    selectedShapes?.length === 1 &&
+    (selectedShapes[0] as S & { handles: TLHandle[] }).handles !== undefined
+      ? (selectedShapes[0] as S & { handles: TLHandle[] })
+      : undefined
 
   return (
     <div ref={rContainer} className="tl-container">
@@ -134,9 +143,9 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
             <Indicator key={'hovered_indicator_' + hoveredShape.id} shape={hoveredShape} />
           )}
           {brush && components.Brush && <components.Brush bounds={brush} />}
-          {selectedBounds && (
+          {selectedShapes && selectedBounds && (
             <>
-              {selectedShapes && showBounds && components.BoundsForeground && (
+              {showBounds && components.BoundsForeground && (
                 <Container bounds={selectedBounds} zIndex={10002}>
                   <components.BoundsForeground
                     zoom={zoom}
@@ -145,6 +154,20 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                     showResizeHandles={showResizeHandles}
                     showRotateHandle={showRotateHandle}
                   />
+                </Container>
+              )}
+              {showHandles && handleShape && components.Handle && (
+                <Container bounds={selectedBounds} zIndex={10003}>
+                  <SVGContainer>
+                    {handleShape.handles!.map((handle, i) =>
+                      React.createElement(components.Handle!, {
+                        key: `${handle.id}_handle_${i}`,
+                        shape: handleShape,
+                        handle,
+                        index: i,
+                      })
+                    )}
+                  </SVGContainer>
                 </Container>
               )}
               {selectedShapes && components.BoundsDetail && (

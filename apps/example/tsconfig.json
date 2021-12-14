@@ -18,6 +18,8 @@
     { "path": "../../packages/shapes/dot" },
     { "path": "../../packages/shapes/draw" },
     { "path": "../../packages/shapes/polygon" },
+    { "path": "../../packages/shapes/polyline" },
+    { "path": "../../packages/shapes/line" },
     { "path": "../../packages/shapes/star" },
     { "path": "../../packages/tools/box" },
     { "path": "../../packages/tools/dot" },

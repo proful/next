@@ -403,9 +403,9 @@ export abstract class TLState<
 
     this._disposables.push(
       ...this._shortcuts.map(({ keys, fn }) => {
-        return KeyUtils.registerShortcut(keys, () => {
+        return KeyUtils.registerShortcut(keys, (event) => {
           if (!this.isActive) return
-          fn(this.root, this)
+          fn(this.root, this, event)
         })
       })
     )

@@ -11,8 +11,7 @@
   "references": [
     { "path": "../../core" },
     { "path": "../../utils/vec" },
-    { "path": "../../utils/intersect" },
-    { "path": "../../shapes/box" }
+    { "path": "../../utils/intersect" }
   ],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],

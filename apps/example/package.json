@@ -21,6 +21,8 @@
     "@tldraw/box-shape": "2.0.0-alpha.1",
     "@tldraw/dot-shape": "2.0.0-alpha.1",
     "@tldraw/polygon-shape": "2.0.0-alpha.1",
+    "@tldraw/polyline-shape": "2.0.0-alpha.1",
+    "@tldraw/line-shape": "2.0.0-alpha.1",
     "@tldraw/star-shape": "2.0.0-alpha.1",
     "@tldraw/box-tool": "2.0.0-alpha.1",
     "@tldraw/dot-tool": "2.0.0-alpha.1",

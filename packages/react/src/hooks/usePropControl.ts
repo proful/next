@@ -1,11 +1,11 @@
-import type { TLApp } from '@tldraw/core'
 import * as React from 'react'
 import type { TLAppPropsWithApp, TLAppPropsWithoutApp } from '~components'
 import type { TLReactShape } from '~lib'
+import type { TLReactApp } from '~types'
 
-export function usePropControl<S extends TLReactShape, R extends TLApp<S> = TLApp<S>>(
+export function usePropControl<S extends TLReactShape, R extends TLReactApp<S> = TLReactApp<S>>(
   app: R,
-  props: TLAppPropsWithoutApp<S> | TLAppPropsWithApp<S, R>
+  props: TLAppPropsWithoutApp<S> | TLAppPropsWithApp<S>
 ) {
   React.useEffect(() => {
     if (!('model' in props)) return

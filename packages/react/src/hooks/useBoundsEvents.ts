@@ -15,14 +15,14 @@ export function useBoundsEvents(handle: TLBoundsHandle) {
 
     const onPointerDown: TLReactCustomEvents['pointer'] = (e) => {
       const { order = 0 } = e
-      if (order) e.currentTarget.setPointerCapture(e.pointerId)
+      if (order) e.currentTarget?.setPointerCapture(e.pointerId)
       callbacks.onPointerDown?.({ type: TLTargetType.Bounds, target: handle, order }, e)
       e.order = order + 1
     }
 
     const onPointerUp: TLReactCustomEvents['pointer'] = (e) => {
       const { order = 0 } = e
-      if (order) e.currentTarget.releasePointerCapture(e.pointerId)
+      if (order) e.currentTarget?.releasePointerCapture(e.pointerId)
       callbacks.onPointerUp?.({ type: TLTargetType.Bounds, target: handle, order }, e)
       e.order = order + 1
     }
