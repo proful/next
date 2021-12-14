@@ -4,38 +4,33 @@ import { observer } from 'mobx-react-lite'
 import type { TLReactShape, TLReactShapeClass } from '~lib'
 import { AppContext, Renderer } from '~components'
 import { useApp } from '~hooks'
-import type {
-  AnyObject,
-  TLApp,
-  TLSerializedApp,
-  TLSubscriptionCallback,
-  TLTheme,
-  TLToolClass,
-} from '@tldraw/core'
-import type { TLComponents } from '~types/component-props'
-import type { TLReactEventMap } from '~types'
+import type { AnyObject, TLSerializedApp, TLCallback, TLTheme, TLToolClass } from '@tldraw/core'
+import type { TLReactComponents } from '~types/component-props'
+import type { TLReactApp, TLReactEventMap } from '~types'
 
-export interface TLCommonAppProps<S extends TLReactShape, R extends TLApp<S> = TLApp<S>> {
+export interface TLCommonAppProps<S extends TLReactShape, R extends TLReactApp<S> = TLReactApp<S>> {
   id?: string
   meta?: AnyObject
   theme?: Partial<TLTheme>
-  components?: TLComponents<S>
+  components?: TLReactComponents<S>
   children?: React.ReactNode
-  onMount?: TLSubscriptionCallback<S, TLReactEventMap, R, 'mount'>
-  onPersist?: TLSubscriptionCallback<S, TLReactEventMap, R, 'persist'>
-  onSave?: TLSubscriptionCallback<S, TLReactEventMap, R, 'save'>
-  onSaveAs?: TLSubscriptionCallback<S, TLReactEventMap, R, 'saveAs'>
+  onMount?: TLCallback<S, TLReactEventMap, R, 'mount'>
+  onPersist?: TLCallback<S, TLReactEventMap, R, 'persist'>
+  onSave?: TLCallback<S, TLReactEventMap, R, 'save'>
+  onSaveAs?: TLCallback<S, TLReactEventMap, R, 'saveAs'>
 }
 
-export interface TLAppPropsWithoutApp<S extends TLReactShape, R extends TLApp<S> = TLApp<S>>
-  extends TLCommonAppProps<S, R> {
+export interface TLAppPropsWithoutApp<
+  S extends TLReactShape,
+  R extends TLReactApp<S> = TLReactApp<S>
+> extends TLCommonAppProps<S, R> {
   model?: TLSerializedApp
   shapeClasses?: TLReactShapeClass<S>[]
-  toolClasses?: TLToolClass<S, TLReactEventMap, TLApp<S, TLReactEventMap>>[]
+  toolClasses?: TLToolClass<S, TLReactEventMap, TLReactApp<S>>[]
   children?: React.ReactNode
 }
 
-export interface TLAppPropsWithApp<S extends TLReactShape, R extends TLApp<S> = TLApp<S>>
+export interface TLAppPropsWithApp<S extends TLReactShape, R extends TLReactApp<S> = TLReactApp<S>>
   extends TLCommonAppProps<S, R> {
   app: R
   children?: React.ReactNode

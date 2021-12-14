@@ -53,7 +53,7 @@ export interface TLGridProps {
 
 export type TLGridComponent = (props: TLGridProps) => JSX.Element | null
 
-export type TLComponents<S extends TLReactShape = TLReactShape> = {
+export type TLReactComponents<S extends TLReactShape = TLReactShape> = {
   BoundsBackground?: TLBoundsComponent<S> | null
   BoundsForeground?: TLBoundsComponent<S> | null
   BoundsDetail?: TLBoundsDetailComponent<S> | null

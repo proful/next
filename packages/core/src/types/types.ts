@@ -126,7 +126,7 @@ export type TLSubscriptionEventInfo<T extends TLSubscriptionEventName> = Extract
   { event: T }
 >['info']
 
-export type TLSubscriptionCallback<
+export type TLCallback<
   S extends TLShape = TLShape,
   K extends TLEventMap = TLEventMap,
   R extends TLApp<S, K> = TLApp<S, K>,
@@ -140,7 +140,7 @@ export type TLSubscription<
   E extends TLSubscriptionEventName = TLSubscriptionEventName
 > = {
   event: E
-  callback: TLSubscriptionCallback<S, K, R, E>
+  callback: TLCallback<S, K, R, E>
 }
 
 export type TLSubscribe<
@@ -149,21 +149,18 @@ export type TLSubscribe<
   R extends TLApp<S, K> = TLApp<S, K>
 > = {
   <E extends TLSubscriptionEventName>(subscription: TLSubscription<S, K, R, E>): () => void
-  <E extends TLSubscriptionEventName>(
-    event: E,
-    callback: TLSubscriptionCallback<S, K, R, E>
-  ): () => void
+  <E extends TLSubscriptionEventName>(event: E, callback: TLCallback<S, K, R, E>): () => void
 }
 
-export interface TLSubscriptionCallbacks<
+export interface TLCallbacks<
   S extends TLShape = TLShape,
   K extends TLEventMap = TLEventMap,
   R extends TLApp<S, K> = TLApp<S, K>
 > {
-  onMount: TLSubscriptionCallback<S, K, R, 'mount'>
-  onPersist: TLSubscriptionCallback<S, K, R, 'persist'>
-  onSave: TLSubscriptionCallback<S, K, R, 'save'>
-  onSaveAs: TLSubscriptionCallback<S, K, R, 'saveAs'>
+  onMount: TLCallback<S, K, R, 'mount'>
+  onPersist: TLCallback<S, K, R, 'persist'>
+  onSave: TLCallback<S, K, R, 'save'>
+  onSaveAs: TLCallback<S, K, R, 'saveAs'>
 }
 
 /* ----------------- Event Handlers ----------------- */

@@ -13,7 +13,7 @@ import { autorun } from 'mobx'
 import { getRendererContext } from '~hooks'
 import { EMPTY_OBJECT } from '~constants'
 import type { TLReactShape } from '~lib'
-import type { TLComponents } from '~types/component-props'
+import type { TLReactComponents } from '~types/component-props'
 import type { TLReactEventMap } from '~types'
 
 export interface TLRendererContextProps<S extends TLReactShape = TLReactShape> {
@@ -21,7 +21,7 @@ export interface TLRendererContextProps<S extends TLReactShape = TLReactShape> {
   viewport: TLViewport
   inputs: TLInputs<TLReactEventMap>
   callbacks?: Partial<TLEventHandlers<S, TLReactEventMap>>
-  components?: Partial<TLComponents<S>>
+  components?: Partial<TLReactComponents<S>>
   meta?: any
   children?: React.ReactNode
 }
@@ -31,7 +31,7 @@ export interface TLRendererContext<S extends TLReactShape = TLReactShape> {
   viewport: TLViewport
   inputs: TLInputs<TLReactEventMap>
   callbacks: Partial<TLEventHandlers<S, TLReactEventMap>>
-  components: Partial<TLComponents<S>>
+  components: Partial<TLReactComponents<S>>
   meta: any
 }
 

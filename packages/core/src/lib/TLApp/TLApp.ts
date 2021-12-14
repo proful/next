@@ -20,7 +20,7 @@ import type {
   TLSubscription,
   TLSubscriptionEventInfo,
   TLSubscriptionEventName,
-  TLSubscriptionCallback,
+  TLCallback,
   TLShortcut,
   TLEventMap,
   TLStateEvents,
@@ -417,7 +417,7 @@ export class TLApp<
 
   subscribe = <E extends TLSubscriptionEventName>(
     event: E | TLSubscription<S>,
-    callback?: TLSubscriptionCallback<S, K, this, E>
+    callback?: TLCallback<S, K, this, E>
   ) => {
     if (typeof event === 'object') {
       this.subscriptions.add(event)

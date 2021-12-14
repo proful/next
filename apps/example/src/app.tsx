@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
-import type { TLApp, TLSerializedApp, TLSubscriptionCallbacks, TLToolClass } from '@tldraw/core'
-import { App as TLDrawApp, TLComponents, TLReactEventMap } from '@tldraw/react'
+import type { TLSerializedApp } from '@tldraw/core'
+import {
+  App as TLDrawApp,
+  TLReactApp,
+  TLReactComponents,
+  TLReactShapeClass,
+  TLReactToolClass,
+  TLReactCallbacks,
+} from '@tldraw/react'
 import {
   NuBoxShape,
   NuEllipseShape,
@@ -26,14 +33,14 @@ import {
 import { AppUI } from '~components/AppUI'
 import { NuContextBar } from '~components/NuContextBar/NuContextBar'
 
-const components: TLComponents<Shape> = {
+const components: TLReactComponents<Shape> = {
   ContextBar: NuContextBar,
 }
 
 function App(): JSX.Element {
-  const [app, setApp] = React.useState<TLApp<Shape>>()
+  const [app, setApp] = React.useState<TLReactApp<Shape>>()
 
-  const [shapeClasses] = React.useState(() => [
+  const [shapeClasses] = React.useState<TLReactShapeClass<Shape>[]>(() => [
     NuBoxShape,
     NuEllipseShape,
     NuPolygonShape,
@@ -43,7 +50,7 @@ function App(): JSX.Element {
     NuStarShape,
   ])
 
-  const [toolClasses] = React.useState(() => [
+  const [toolClasses] = React.useState<TLReactToolClass<Shape>[]>(() => [
     NuBoxTool,
     NuEllipseTool,
     NuPolygonTool,
@@ -159,12 +166,12 @@ function App(): JSX.Element {
     ],
   })
 
-  const onMount = React.useCallback<TLSubscriptionCallbacks<Shape>['onMount']>((app) => {
+  const onMount = React.useCallback<TLReactCallbacks<Shape>['onMount']>((app) => {
     setApp(app)
     // app.selectAll()
   }, [])
 
-  const onPersist = React.useCallback<TLSubscriptionCallbacks<Shape>['onPersist']>(() => {
+  const onPersist = React.useCallback<TLReactCallbacks<Shape>['onPersist']>(() => {
     // todo
   }, [])
 
