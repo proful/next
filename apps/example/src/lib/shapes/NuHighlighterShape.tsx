@@ -28,7 +28,7 @@ export class NuHighlighterShape extends TLDrawShape<NuHighlighterShapeProps> {
     return SvgPathUtils.getCurvedPathForPoints(points)
   }
 
-  Component = observer(({ events, isErasing }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing }: TLComponentProps) => {
     const { pointsPath, stroke, fill, strokeWidth, opacity } = this
 
     return (
@@ -47,7 +47,7 @@ export class NuHighlighterShape extends TLDrawShape<NuHighlighterShapeProps> {
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     const { pointsPath } = this
     return <path d={pointsPath} fill="none" />
   })

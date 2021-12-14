@@ -22,7 +22,7 @@ export class PointingBoundsBackgroundState<
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {
-    this.app.deselectAll()
+    this.app.setSelectedShapes([])
     this.tool.transition('idle')
   }
 

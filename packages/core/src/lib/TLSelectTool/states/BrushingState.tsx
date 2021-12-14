@@ -51,14 +51,16 @@ export class BrushingState<
     if (shiftKey) {
       if (hits.every((hit) => this.initialSelectedShapes.includes(hit))) {
         // Deselect hit shapes
-        this.app.select(...this.initialSelectedShapes.filter((hit) => !hits.includes(hit)))
+        this.app.setSelectedShapes(this.initialSelectedShapes.filter((hit) => !hits.includes(hit)))
       } else {
         // Select hit shapes + initial selected shapes
-        this.app.select(...Array.from(new Set([...this.initialSelectedShapes, ...hits]).values()))
+        this.app.setSelectedShapes(
+          Array.from(new Set([...this.initialSelectedShapes, ...hits]).values())
+        )
       }
     } else {
       // Select hit shapes
-      this.app.select(...hits)
+      this.app.setSelectedShapes(hits)
     }
   }
 
@@ -71,7 +73,7 @@ export class BrushingState<
     switch (e.key) {
       case 'Escape': {
         this.app.clearBrush()
-        this.app.select(...this.initialSelectedIds)
+        this.app.setSelectedShapes(this.initialSelectedIds)
         this.tool.transition('idle')
         break
       }

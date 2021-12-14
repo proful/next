@@ -81,7 +81,7 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
     }
 
     if (selectedIds !== this.app.selectedIds) {
-      this.app.select(...selectedIds)
+      this.app.setSelectedShapes(selectedIds)
     }
 
     this.app.setErasingShapes([])

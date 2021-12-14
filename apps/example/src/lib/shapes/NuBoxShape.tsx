@@ -4,7 +4,7 @@ import type { TLCustomProps } from '@tldraw/core'
 import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 import { TLBoxShape, TLBoxShapeProps } from '@tldraw/box-shape'
 import { observer } from 'mobx-react-lite'
-import { makeObservable, observable } from 'mobx'
+import { autorun, makeObservable, observable } from 'mobx'
 import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
 export interface NuBoxShapeProps extends TLBoxShapeProps, NuStyleProps {
@@ -26,7 +26,7 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
   @observable borderRadius = 0
   @observable opacity = 1
 
-  Component = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
     const {
       size: [w, h],
       stroke,
@@ -64,7 +64,7 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     const {
       size: [w, h],
       borderRadius,

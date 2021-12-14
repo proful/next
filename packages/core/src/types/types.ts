@@ -118,6 +118,10 @@ export type TLSubscriptionEvent =
       event: 'redo'
       info: null
     }
+  | {
+      event: 'load'
+      info: null
+    }
 
 export type TLSubscriptionEventName = TLSubscriptionEvent['event']
 

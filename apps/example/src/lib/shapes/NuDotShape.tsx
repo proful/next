@@ -23,7 +23,7 @@ export class NuDotShape extends TLDotShape<NuDotShapeProps> {
   @observable strokeWidth = 2
   @observable opacity = 1
 
-  Component = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
     const { radius, stroke, fill, strokeWidth, opacity } = this
 
     return (

@@ -13,23 +13,23 @@ export class IdleState<
   static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
     {
       keys: ['backspace'],
-      fn: (app) => app.delete(),
+      fn: (app) => app.api.deleteShapes(),
     },
     {
       keys: ['mod+a'],
-      fn: (app) => app.selectAll(),
+      fn: (app) => app.api.selectAll(),
     },
   ]
 
   onExit = () => {
-    this.app.hover(undefined)
+    this.app.setHoveredShape(undefined)
   }
 
   onPointerEnter: TLEvents<S>['pointer'] = (info) => {
     if (info.order > 0) return
 
     if (info.type === TLTargetType.Shape) {
-      this.app.hover(info.target.id)
+      this.app.setHoveredShape(info.target.id)
     }
   }
 
@@ -90,7 +90,7 @@ export class IdleState<
 
     if (info.type === TLTargetType.Shape) {
       if (this.app.hoveredId) {
-        this.app.hover(undefined)
+        this.app.setHoveredShape(undefined)
       }
     }
   }

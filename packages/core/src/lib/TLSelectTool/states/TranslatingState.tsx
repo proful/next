@@ -75,7 +75,7 @@ export class TranslatingState<
     this.app.currentPage.addShapes(...this.clones)
 
     // Select the clones
-    this.app.select(...Object.keys(this.initialClonePoints))
+    this.app.setSelectedShapes(Object.keys(this.initialClonePoints))
 
     // Move the clones to the pointer
     this.moveSelectedShapesToPointer()
@@ -161,7 +161,7 @@ export class TranslatingState<
         this.initialPoints = this.initialShapePoints
 
         // Select the original shapes again
-        this.app.select(...Object.keys(this.initialPoints))
+        this.app.setSelectedShapes(Object.keys(this.initialPoints))
 
         // Move the original shapes to the pointer
         this.moveSelectedShapesToPointer()

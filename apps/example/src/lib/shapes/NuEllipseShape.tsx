@@ -34,7 +34,7 @@ export class NuEllipseShape extends TLBoxShape<NuEllipseShapeProps> {
   @observable strokeWidth = 2
   @observable opacity = 1
 
-  Component = observer(({ isSelected, isErasing, events }: TLComponentProps) => {
+  ReactComponent = observer(({ isSelected, isErasing, events }: TLComponentProps) => {
     const {
       size: [w, h],
       stroke,
@@ -65,7 +65,7 @@ export class NuEllipseShape extends TLBoxShape<NuEllipseShapeProps> {
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     return (
       <ellipse
         cx={this.size[0] / 2}

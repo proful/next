@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { makeObservable, observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
-import { TLShape, BoundsUtils, TLBounds, TLResizeInfo, TLCustomProps } from '@tldraw/core'
+import { BoundsUtils, TLBounds, TLResizeInfo, TLCustomProps, TLShape } from '@tldraw/core'
 import { SVGContainer, TLIndicatorProps, TLComponentProps } from '@tldraw/react'
 
 export interface TLBoxShapeProps {
@@ -19,7 +19,7 @@ export class TLBoxShape<P extends TLBoxShapeProps = any> extends TLShape<P & TLB
 
   @observable size: number[] = [100, 100]
 
-  Component = observer(({ events, isErasing }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing }: TLComponentProps) => {
     const {
       size: [w, h],
     } = this
@@ -38,7 +38,7 @@ export class TLBoxShape<P extends TLBoxShapeProps = any> extends TLShape<P & TLB
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     return <rect width={this.size[0]} height={this.size[1]} fill="transparent" />
   })
 

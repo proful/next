@@ -34,7 +34,7 @@ export class TLDrawShape<P extends TLDrawShapeProps = any> extends TLShape<P> {
   @observable points: number[][] = []
   @observable isComplete = false
 
-  Component = observer(({ events, isErasing }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing }: TLComponentProps) => {
     const { points } = this
 
     return (
@@ -50,7 +50,7 @@ export class TLDrawShape<P extends TLDrawShapeProps = any> extends TLShape<P> {
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     const { points } = this
     return <polyline points={points.join()} fill="transparent" />
   })

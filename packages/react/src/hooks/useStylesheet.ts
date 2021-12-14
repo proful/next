@@ -519,6 +519,17 @@ const tlcss = css`
   .tl-grid-dot {
     fill: var(--tl-grid);
   }
+
+  .tl-html-canvas {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    zindex: 20000;
+    pointer-events: none;
+    border: 2px solid red;
+  }
 `
 
 export function useStylesheet(theme?: Partial<TLTheme>, selector?: string) {

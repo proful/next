@@ -14,16 +14,6 @@ export abstract class TLDotTool<
 
   static initial = 'idle'
 
-  static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
-    {
-      keys: ['mod+a'],
-      fn: (app) => {
-        app.transition('select')
-        app.selectAll()
-      },
-    },
-  ]
-
   abstract shapeClass: {
     new (props: TLShapeProps & Partial<TLDotShapeProps & unknown>): T
   }

@@ -35,7 +35,7 @@ export class NuPenShape extends TLDrawShape<NuPenShapeProps> {
     return SvgPathUtils.getCurvedPathForPolygon(stroke)
   }
 
-  Component = observer(({ events, isErasing }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing }: TLComponentProps) => {
     const { pointsPath, stroke, strokeWidth, opacity } = this
 
     return (
@@ -51,7 +51,7 @@ export class NuPenShape extends TLDrawShape<NuPenShapeProps> {
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     const { pointsPath } = this
     return <path d={pointsPath} />
   })

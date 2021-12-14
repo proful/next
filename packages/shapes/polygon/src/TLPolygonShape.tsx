@@ -34,7 +34,7 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
 
   static id = 'polygon'
 
-  Component = observer(({ events, isErasing }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing }: TLComponentProps) => {
     const {
       offset: [x, y],
     } = this
@@ -53,7 +53,7 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     const {
       offset: [x, y],
     } = this

@@ -29,6 +29,6 @@ export interface TLReactShapeClass<S extends TLReactShape = TLReactShape> {
 }
 
 export abstract class TLReactShape<P = any, M = any> extends TLShape<P, M> {
-  abstract Component: (props: TLComponentProps<M>) => JSX.Element | null
-  abstract Indicator: (props: TLIndicatorProps<M>) => JSX.Element | null
+  abstract ReactComponent: (props: TLComponentProps<M>) => JSX.Element | null
+  abstract ReactIndicator: (props: TLIndicatorProps<M>) => JSX.Element | null
 }

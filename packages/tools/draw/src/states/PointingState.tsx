@@ -16,7 +16,7 @@ export class PointingState<
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
       this.tool.transition('creating')
-      this.app.deselectAll()
+      this.app.setSelectedShapes([])
     }
   }
 

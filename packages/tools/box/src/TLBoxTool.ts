@@ -21,15 +21,5 @@ export abstract class TLBoxTool<
 
   static initial = 'idle'
 
-  static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
-    {
-      keys: ['mod+a'],
-      fn: (app) => {
-        app.transition('select')
-        app.selectAll()
-      },
-    },
-  ]
-
   abstract shapeClass: TLBoxShapeClass<T>
 }

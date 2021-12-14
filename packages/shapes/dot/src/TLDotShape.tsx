@@ -24,7 +24,7 @@ export class TLDotShape<P extends TLDotShapeProps = any> extends TLShape<P> {
   readonly hideRotateHandle = true
   readonly hideBoundsDetail = true
 
-  Component = observer(({ events, isErasing }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing }: TLComponentProps) => {
     const { radius } = this
 
     return (
@@ -41,7 +41,7 @@ export class TLDotShape<P extends TLDotShapeProps = any> extends TLShape<P> {
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     const { radius } = this
     return <circle cx={radius} cy={radius} r={radius} />
   })

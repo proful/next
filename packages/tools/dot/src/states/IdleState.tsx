@@ -11,16 +11,6 @@ export class IdleState<
 > extends TLToolState<S, K, R, P> {
   static id = 'idle'
 
-  static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
-    {
-      keys: ['mod+a'],
-      fn: (app) => {
-        app.transition('select')
-        app.selectAll()
-      },
-    },
-  ]
-
   onPointerDown: TLStateEvents<S, K>['onPointerDown'] = (info, e) => {
     if (info.order > 0) return
     this.tool.transition('pointing')

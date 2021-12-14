@@ -23,7 +23,7 @@ export class NuPolygonShape extends TLPolygonShape<NuPolygonShapeProps> {
 
   static id = 'polygon'
 
-  Component = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
     const {
       offset: [x, y],
       stroke,
@@ -50,7 +50,7 @@ export class NuPolygonShape extends TLPolygonShape<NuPolygonShapeProps> {
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     const {
       offset: [x, y],
       strokeWidth,

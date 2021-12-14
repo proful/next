@@ -1,4 +1,4 @@
-import { TLToolState, TLShape, TLApp, TLShortcut, TLEventMap, TLStateEvents } from '@tldraw/core'
+import { TLToolState, TLShape, TLApp, TLEventMap, TLStateEvents } from '@tldraw/core'
 import type { TLDrawShape } from '@tldraw/draw-shape'
 import type { TLDrawTool } from '../TLDrawTool'
 
@@ -10,16 +10,6 @@ export class IdleState<
   P extends TLDrawTool<T, S, K, R>
 > extends TLToolState<S, K, R, P> {
   static id = 'idle'
-
-  static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
-    {
-      keys: ['mod+a'],
-      fn: (app) => {
-        app.transition('select')
-        app.selectAll()
-      },
-    },
-  ]
 
   onPointerDown: TLStateEvents<S, K>['onPointerDown'] = (info, e) => {
     if (info.order > 0) return

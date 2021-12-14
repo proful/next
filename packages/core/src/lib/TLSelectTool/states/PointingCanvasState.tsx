@@ -12,7 +12,7 @@ export class PointingCanvasState<
 
   onEnter = () => {
     const { shiftKey } = this.app.inputs
-    if (!shiftKey) this.app.deselectAll()
+    if (!shiftKey) this.app.setSelectedShapes([])
   }
 
   onWheel: TLEvents<S>['wheel'] = (info, e) => {
@@ -28,7 +28,7 @@ export class PointingCanvasState<
 
   onPointerUp: TLEvents<S>['pointer'] = () => {
     if (!this.app.inputs.shiftKey) {
-      this.app.deselectAll()
+      this.app.setSelectedShapes([])
     }
     this.tool.transition('idle')
   }

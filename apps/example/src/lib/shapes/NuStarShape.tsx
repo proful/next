@@ -23,7 +23,7 @@ export class NuStarShape extends TLStarShape<NuStarShapeProps> {
 
   static id = 'star'
 
-  Component = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
     const {
       offset: [x, y],
       stroke,
@@ -54,7 +54,7 @@ export class NuStarShape extends TLStarShape<NuStarShapeProps> {
     )
   })
 
-  Indicator = observer((props: TLIndicatorProps) => {
+  ReactIndicator = observer((props: TLIndicatorProps) => {
     const {
       offset: [x, y],
       strokeWidth,

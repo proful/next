@@ -1,5 +1,5 @@
 import { IdleState, PointingState, ErasingState } from './states'
-import { TLTool, TLApp, TLShape, TLEventMap, TLStateEvents } from '@tldraw/core'
+import { TLTool, TLApp, TLShape, TLEventMap } from '@tldraw/core'
 
 export abstract class TLEraseTool<
   S extends TLShape = TLShape,
@@ -11,14 +11,4 @@ export abstract class TLEraseTool<
   static states = [IdleState, PointingState, ErasingState]
 
   static initial = 'idle'
-
-  onKeyDown: TLStateEvents<S, K>['onKeyDown'] = (_info, e) => {
-    switch (e.key) {
-      case 'Escape': {
-        this.app.setErasingShapes([])
-        this.transition('idle')
-        break
-      }
-    }
-  }
 }
