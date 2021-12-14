@@ -17,7 +17,7 @@ export class PointingShapeState<
     } = this.app
 
     if (shiftKey) {
-      this.app.setSelectedShapes([...selectedIds, info.target.id])
+      this.app.setSelectedShapes([...Array.from(selectedIds.values()), info.target.id])
     } else {
       this.app.setSelectedShapes([info.target.id])
     }

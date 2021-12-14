@@ -44,7 +44,7 @@ export class TranslatingState<
   private startCloning() {
     if (!this.didClone) {
       // Create the clones
-      this.clones = this.app.selectedShapes.map((shape) => {
+      this.clones = this.app.selectedShapesArray.map((shape) => {
         const ShapeClass = this.app.getShapeClass(shape.type)
         if (!ShapeClass) throw Error('Could not find that shape class.')
         return new ShapeClass({
@@ -90,10 +90,10 @@ export class TranslatingState<
     this.app.history.pause()
 
     // Set initial data
-    const { selectedShapes, inputs } = this.app
+    const { selectedShapesArray, inputs } = this.app
 
     this.initialShapePoints = Object.fromEntries(
-      selectedShapes.map(({ id, point }) => [id, point.slice()])
+      selectedShapesArray.map(({ id, point }) => [id, point.slice()])
     )
     this.initialPoints = this.initialShapePoints
 

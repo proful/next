@@ -46,8 +46,7 @@ export class TLApp<
     tools?: TLToolClass<S, K>[]
   ) {
     super()
-
-    this.api = new TLApi(this)
+    this.history.pause()
 
     if (this.states && this.states.length > 0) {
       this.registerStates(...this.states)
@@ -61,14 +60,51 @@ export class TLApp<
 
     if (shapeClasses) this.registerShapes(...shapeClasses)
     if (tools) this.registerStates(...tools)
+
+    this.history.resume()
+
     if (serializedApp) this.history.deserialize(serializedApp)
 
     const ownShortcuts: TLShortcut<S, K>[] = [
-      { keys: 'mod+shift+g', fn: () => this.api.toggleGrid() },
-      { keys: 'shift+0', fn: () => this.api.resetZoom() },
-      { keys: 'mod+-', fn: () => this.api.zoomToSelection() },
-      { keys: 'mod+-', fn: () => this.api.zoomOut() },
-      { keys: 'mod+=', fn: () => this.api.zoomIn() },
+      {
+        keys: 'mod+shift+g',
+        fn: () => this.api.toggleGrid(),
+      },
+      {
+        keys: 'shift+0',
+        fn: () => this.api.resetZoom(),
+      },
+      {
+        keys: 'mod+-',
+        fn: () => this.api.zoomToSelection(),
+      },
+      {
+        keys: 'mod+-',
+        fn: () => this.api.zoomOut(),
+      },
+      {
+        keys: 'mod+=',
+        fn: () => this.api.zoomIn(),
+      },
+      {
+        keys: 'mod+z',
+        fn: () => this.undo(),
+      },
+      {
+        keys: 'mod+shift+z',
+        fn: () => this.redo(),
+      },
+      {
+        keys: 'mod+a',
+        fn: () => {
+          const { selectedTool } = this
+          if (selectedTool.currentState.id !== 'idle') return
+          if (selectedTool.id !== 'select') {
+            this.selectTool('select')
+          }
+          this.api.selectAll()
+        },
+      },
       {
         keys: 'mod+s',
         fn: () => {
@@ -90,11 +126,13 @@ export class TLApp<
     const shortcuts = (this.constructor['shortcuts'] || []) as TLShortcut<S, K>[]
     this._disposables.push(
       ...[...ownShortcuts, ...shortcuts].map(({ keys, fn }) => {
-        return KeyUtils.registerShortcut(keys, () => {
-          fn(this, this)
+        return KeyUtils.registerShortcut(keys, (e) => {
+          fn(this, this, e)
         })
       })
     )
+
+    this.api = new TLApi(this)
 
     makeObservable(this)
 
@@ -179,7 +217,7 @@ export class TLApp<
   @computed get serialized(): TLSerializedApp {
     return {
       currentPageId: this.currentPageId,
-      selectedIds: this.selectedIds,
+      selectedIds: Array.from(this.selectedIds.values()),
       pages: this.pages.map((page) => page.serialized),
     }
   }
@@ -187,16 +225,16 @@ export class TLApp<
   @computed get showBounds() {
     return (
       this.currentState.id === 'select' &&
-      this.selectedShapes.length > 0 &&
-      !this.selectedShapes.every((shape) => shape.hideBounds)
+      this.selectedShapes.size > 0 &&
+      !this.selectedShapesArray.every((shape) => shape.hideBounds)
     )
   }
 
   @computed get showBoundsDetail() {
     return (
       this.currentState.id === 'select' &&
-      this.selectedShapes.length > 0 &&
-      !this.selectedShapes.every((shape) => shape.hideBoundsDetail)
+      this.selectedShapes.size > 0 &&
+      !this.selectedShapesArray.every((shape) => shape.hideBoundsDetail)
     )
   }
 
@@ -204,7 +242,7 @@ export class TLApp<
     const stateId = this.selectedTool.currentState.id
     return (
       this.currentState.id === 'select' &&
-      ((this.selectedShapes.length > 0 && stateId === 'rotating') ||
+      ((this.selectedShapes.size > 0 && stateId === 'rotating') ||
         stateId === 'pointingRotateHandle')
     )
   }
@@ -213,9 +251,9 @@ export class TLApp<
     const stateId = this.selectedTool.currentState.id
     return (
       this.currentState.id === 'select' &&
-      this.selectedShapes.length > 0 &&
+      this.selectedShapes.size > 0 &&
       stateId === 'idle' &&
-      !this.selectedShapes.every((shape) => shape.hideContextBar)
+      !this.selectedShapesArray.every((shape) => shape.hideContextBar)
     )
   }
 
@@ -223,9 +261,9 @@ export class TLApp<
     const stateId = this.selectedTool.currentState.id
     return (
       this.currentState.id === 'select' &&
-      this.selectedShapes.length > 0 &&
+      this.selectedShapes.size > 0 &&
       stateId === 'idle' &&
-      !this.selectedShapes.every((shape) => shape.hideRotateHandle)
+      !this.selectedShapesArray.every((shape) => shape.hideRotateHandle)
     )
   }
 
@@ -233,9 +271,9 @@ export class TLApp<
     const stateId = this.selectedTool.currentState.id
     return (
       this.currentState.id === 'select' &&
-      this.selectedShapes.length > 0 &&
+      this.selectedShapes.size > 0 &&
       stateId === 'idle' &&
-      !this.selectedShapes.every((shape) => shape.hideResizeHandles)
+      !this.selectedShapesArray.every((shape) => shape.hideResizeHandles)
     )
   }
 
@@ -338,7 +376,7 @@ export class TLApp<
     } else {
       ids = new Set((shapes as S[]).map((shape) => shape.id))
     }
-    this.selectedIds = this.selectedIds.filter((id) => !ids.has(id))
+    this.setSelectedShapes(this.selectedShapesArray.filter((shape) => !ids.has(shape.id)))
     this.currentPage.removeShapes(...shapes)
     this.persist()
     return this
@@ -360,44 +398,55 @@ export class TLApp<
 
   /* ----------------- Selected Shapes ---------------- */
 
-  @observable erasingIds: string[] = []
+  @observable erasingIds: Set<string> = new Set()
+  @observable erasingShapes: Set<S> = new Set()
 
-  @observable selectedIds: string[] = []
+  @computed get erasingShapesArray() {
+    return Array.from(this.erasingShapes.values())
+  }
 
-  @computed get erasingShapes(): S[] {
-    const { erasingIds } = this
-    return this.currentPage.shapes.filter((shape) => erasingIds.includes(shape.id))
+  @observable selectedIds: Set<string> = new Set()
+  @observable selectedShapes: Set<S> = new Set()
+
+  @computed get selectedShapesArray() {
+    const { selectedShapes, selectedTool } = this
+    const stateId = selectedTool.id
+    if (stateId !== 'select') return []
+    return Array.from(selectedShapes.values())
   }
 
   @action readonly setErasingShapes = (shapes: S[] | string[]): this => {
+    const { erasingIds, erasingShapes } = this
+    erasingIds.clear()
+    erasingShapes.clear()
     if (shapes[0] && typeof shapes[0] === 'string') {
-      this.erasingIds = shapes as string[]
+      shapes.forEach((s) => erasingIds.add(s as string))
     } else {
-      this.erasingIds = (shapes as S[]).map((shape) => shape.id)
+      shapes.forEach((s) => erasingIds.add((s as S).id))
     }
+    const newErasingShapes = this.currentPage.shapes.filter((shape) => erasingIds.has(shape.id))
+    newErasingShapes.forEach((s) => erasingShapes.add(s))
     return this
   }
 
-  @computed get selectedShapes(): S[] {
-    const { selectedIds, selectedTool } = this
-    const stateId = selectedTool.id
-    if (stateId !== 'select') return []
-    return this.currentPage.shapes.filter((shape) => selectedIds.includes(shape.id))
-  }
-
   @action readonly setSelectedShapes = (shapes: S[] | string[]): this => {
+    const { selectedIds, selectedShapes } = this
+    selectedIds.clear()
+    selectedShapes.clear()
     if (shapes[0] && typeof shapes[0] === 'string') {
-      this.selectedIds = shapes as string[]
+      shapes.forEach((s) => selectedIds.add(s as string))
     } else {
-      this.selectedIds = (shapes as S[]).map((shape) => shape.id)
+      shapes.forEach((s) => selectedIds.add((s as S).id))
     }
+    const newSelectedShapes = this.currentPage.shapes.filter((shape) => selectedIds.has(shape.id))
+    newSelectedShapes.forEach((s) => selectedShapes.add(s))
     return this
   }
 
   @computed get selectedBounds(): TLBounds | undefined {
-    return this.selectedShapes.length === 1
-      ? { ...this.selectedShapes[0].bounds, rotation: this.selectedShapes[0].rotation }
-      : BoundsUtils.getCommonBounds(this.selectedShapes.map((shape) => shape.rotatedBounds))
+    return this.selectedShapesArray.length === 1
+      ? { ...this.selectedShapesArray[0].bounds, rotation: this.selectedShapesArray[0].rotation }
+      : BoundsUtils.getCommonBounds(this.selectedShapesArray.map((shape) => shape.rotatedBounds))
   }
 
   /* ---------------------- Brush --------------------- */

@@ -30,23 +30,23 @@ export class ResizingState<
 
   onEnter = (info: { handle: TLBoundsCorner | TLBoundsEdge }) => {
     this.handle = info.handle
-    const { history, selectedShapes, selectedBounds } = this.app
+    const { history, selectedShapesArray, selectedBounds } = this.app
 
     if (!selectedBounds) throw Error('Expected a selected bounds.')
 
     history.pause()
 
     const initialInnerBounds = BoundsUtils.getBoundsFromPoints(
-      selectedShapes.map((shape) => BoundsUtils.getBoundsCenter(shape.bounds))
+      selectedShapesArray.map((shape) => BoundsUtils.getBoundsCenter(shape.bounds))
     )
 
-    this.isSingle = selectedShapes.length === 1
-    this.boundsRotation = this.isSingle ? selectedShapes[0].rotation ?? 0 : 0
+    this.isSingle = selectedShapesArray.length === 1
+    this.boundsRotation = this.isSingle ? selectedShapesArray[0].rotation ?? 0 : 0
     this.initialCommonBounds = { ...selectedBounds }
     this.initialCommonCenter = BoundsUtils.getBoundsCenter(this.initialCommonBounds)
 
     this.snapshots = Object.fromEntries(
-      selectedShapes.map((shape) => {
+      selectedShapesArray.map((shape) => {
         const { bounds } = shape
         const ic = BoundsUtils.getBoundsCenter(bounds)
 
@@ -64,7 +64,7 @@ export class ResizingState<
       })
     )
 
-    selectedShapes.forEach((shape) => shape.onResizeStart?.())
+    selectedShapesArray.forEach((shape) => shape.onResizeStart?.())
   }
 
   onExit = () => {

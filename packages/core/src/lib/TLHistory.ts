@@ -1,11 +1,8 @@
 import { TLApp, TLPage, TLSerializedApp, TLShape } from '~lib'
 import type { TLEventMap } from '~types'
-import { KeyUtils } from '~utils'
 
 export class TLHistory<S extends TLShape, K extends TLEventMap> {
   constructor(app: TLApp<S, K>) {
-    KeyUtils.registerShortcut('command+z,ctrl+z', () => this.undo())
-    KeyUtils.registerShortcut('command+shift+z,ctrl+shift+z', () => this.redo())
     this.app = app
   }
 
@@ -49,6 +46,7 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
 
   undo = () => {
     if (this.isPaused) return
+    if (this.app.selectedTool.currentState.id !== 'idle') return
     if (this.pointer > 0) {
       this.pointer--
       const snapshot = this.stack[this.pointer]
@@ -60,6 +58,7 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
 
   redo = () => {
     if (this.isPaused) return
+    if (this.app.selectedTool.currentState.id !== 'idle') return
     if (this.pointer < this.stack.length - 1) {
       this.pointer++
       const snapshot = this.stack[this.pointer]
@@ -75,16 +74,6 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
 
     // Pause the history, to prevent any loops
     this.pause()
-
-    if (currentPageId !== this.app.currentPageId) {
-      this.app.setCurrentPage(currentPageId)
-    }
-
-    if (selectedIds !== this.app.selectedIds) {
-      this.app.setSelectedShapes(selectedIds)
-    }
-
-    this.app.setErasingShapes([])
 
     const pagesMap = new Map(this.app.pages.map((page) => [page.id, page]))
     const pagesToAdd: TLPage<S, K>[] = []
@@ -144,6 +133,12 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
 
     // Add any new pages
     if (pagesToAdd.length > 0) this.app.addPages(...pagesToAdd)
+
+    this.app.setCurrentPage(currentPageId)
+
+    this.app.setSelectedShapes(selectedIds)
+
+    this.app.setErasingShapes([])
 
     // Resume the history if not originally paused
     if (!wasPaused) this.resume()

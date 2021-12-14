@@ -57,8 +57,7 @@ export class TLApi<S extends TLShape = TLShape, K extends TLEventMap = TLEventMa
    * @param shapes The shapes or shape ids to delete.
    */
   deleteShapes = (...shapes: S[] | string[]): this => {
-    if (shapes.length === 0) shapes = this.#app.selectedIds
-    this.#app.deleteShapes(shapes)
+    this.#app.deleteShapes(shapes.length ? shapes : this.#app.selectedShapesArray)
     return this
   }
 
@@ -82,7 +81,9 @@ export class TLApi<S extends TLShape = TLShape, K extends TLEventMap = TLEventMa
       typeof shapes[0] === 'string'
         ? (shapes as string[])
         : (shapes as S[]).map((shape) => shape.id)
-    this.#app.setSelectedShapes(this.#app.selectedIds.filter((id) => !ids.includes(id)))
+    this.#app.setSelectedShapes(
+      this.#app.selectedShapesArray.filter((shape) => !ids.includes(shape.id))
+    )
     return this
   }
 

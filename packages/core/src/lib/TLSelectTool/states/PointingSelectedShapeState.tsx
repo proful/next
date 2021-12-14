@@ -35,7 +35,7 @@ export class PointingSelectedShapeState<
     if (!this.pointedSelectedShape) throw Error('Expected a pointed selected shape')
     if (shiftKey) {
       const { selectedIds } = this.app
-      const next = [...selectedIds]
+      const next = Array.from(selectedIds.values())
       next.splice(next.indexOf(this.pointedSelectedShape.id), 1)
       this.app.setSelectedShapes(next)
     } else {

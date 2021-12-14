@@ -1,4 +1,4 @@
-import type { NuPolygonShape } from 'unused-app'
+import type { NuPolygonShape } from './NuPolygonShape'
 import type { NuBoxShape } from './NuBoxShape'
 import type { NuPenShape } from './NuPenShape'
 import type { NuEllipseShape } from './NuEllipseShape'

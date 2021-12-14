@@ -30,6 +30,8 @@ export class CreatingState<
 
     const { originPoint } = this.app.inputs
 
+    this.app.history.pause()
+
     const shape = new shapeClass({
       id: uniqueId(),
       parentId: this.app.currentPage.id,
@@ -78,6 +80,7 @@ export class CreatingState<
   onPointerUp: TLStateEvents<S, K>['onPointerUp'] = () => {
     if (!this.creatingShape) throw Error('Expected a creating shape.')
 
+    this.app.history.resume()
     this.creatingShape.update({
       isComplete: true,
       points: this.tool.simplify

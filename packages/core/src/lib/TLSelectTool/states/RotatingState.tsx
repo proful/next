@@ -24,7 +24,7 @@ export class RotatingState<
   initialAngle = 0
 
   onEnter = () => {
-    const { history, selectedShapes, selectedBounds } = this.app
+    const { history, selectedShapesArray, selectedBounds } = this.app
 
     if (!selectedBounds) throw Error('Expected selected bounds.')
 
@@ -33,7 +33,7 @@ export class RotatingState<
     this.initialCommonCenter = BoundsUtils.getBoundsCenter(selectedBounds)
     this.initialAngle = Vec.angle(this.initialCommonCenter, this.app.inputs.currentPoint)
     this.snapshot = Object.fromEntries(
-      selectedShapes.map((shape) => [
+      selectedShapesArray.map((shape) => [
         shape.id,
         { point: [...shape.point], center: [...shape.center], rotation: shape.rotation },
       ])

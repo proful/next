@@ -13,7 +13,7 @@ async function main() {
     tsconfig: './tsconfig.build.json',
     jsxFactory: 'React.createElement',
     jsxFragment: 'React.Fragment',
-    external: Object.keys(pkg.dependencies).concat(Object.keys(pkg.peerDependencies)),
+    external: Object.keys(pkg.dependencies),
     incremental: true,
     sourcemap: true,
     watch: {

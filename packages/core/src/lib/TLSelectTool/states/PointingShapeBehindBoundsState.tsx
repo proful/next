@@ -34,7 +34,7 @@ export class PointingShapeBehindBoundsState<
     } = this.app
 
     if (shiftKey) {
-      this.app.setSelectedShapes([...selectedIds, this.info.target.id])
+      this.app.setSelectedShapes([...Array.from(selectedIds.values()), this.info.target.id])
     } else {
       this.app.setSelectedShapes([this.info.target.id])
     }

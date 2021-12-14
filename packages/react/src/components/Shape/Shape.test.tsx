@@ -7,8 +7,8 @@ describe('Shape', () => {
   test('mounts component without crashing', () => {
     class ShapeClass extends TLReactShape {
       static id = 'box'
-      Component = () => <div>Hi</div>
-      Indicator = () => <text>Hi</text>
+      ReactComponent = () => <div>Hi</div>
+      ReactIndicator = () => <text>Hi</text>
       getBounds = () => ({
         minX: 0,
         minY: 0,

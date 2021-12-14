@@ -12,12 +12,8 @@ export class IdleState<
 
   static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
     {
-      keys: ['backspace'],
+      keys: ['delete', 'backspace'],
       fn: (app) => app.api.deleteShapes(),
-    },
-    {
-      keys: ['mod+a'],
-      fn: (app) => app.api.selectAll(),
     },
   ]
 
@@ -66,7 +62,7 @@ export class IdleState<
         break
       }
       case TLTargetType.Shape: {
-        if (selectedShapes.includes(info.target)) {
+        if (selectedShapes.has(info.target)) {
           this.tool.transition('pointingSelectedShape', { target: info.target })
         } else {
           const { selectedBounds, inputs } = this.app
