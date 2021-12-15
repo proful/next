@@ -11,6 +11,7 @@ import {
   PolygonUtils,
   TLHandle,
   TLShape,
+  TLShapeWithHandles,
 } from '@tldraw/core'
 import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 import { Vec } from '@tldraw/vec'
@@ -24,16 +25,17 @@ export interface TLPolylineShapeProps extends TLShapeProps {
   handles: TLHandle[]
 }
 
-export class TLPolylineShape<P extends TLPolylineShapeProps = any> extends TLShape<P> {
+export class TLPolylineShape<P extends TLPolylineShapeProps = any> extends TLShapeWithHandles<P> {
   constructor(props = {} as TLCustomProps<Partial<P>>) {
     super(props)
     this.init(props)
+    this.handles = props.handles || [{ point: [0, 0] }]
     makeObservable(this)
   }
 
   static id = 'polyline'
 
-  @observable handles: TLHandle[] = [{ point: [0, 0] }]
+  // handles: TLHandle[]
 
   ReactComponent = observer(({ events, isErasing }: TLComponentProps) => {
     const { points } = this

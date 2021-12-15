@@ -5,5 +5,5 @@ import { Shape, NuBoxShape } from '~lib'
 export class NuBoxTool extends TLBoxTool<NuBoxShape, Shape, TLReactEventMap> {
   static id = 'box'
   static shortcut = ['r']
-  shapeClass = NuBoxShape
+  Shape = NuBoxShape
 }

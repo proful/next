@@ -23,7 +23,7 @@ export interface TLComponentProps<M = unknown> extends TLCommonShapeProps<M> {
   }
 }
 
-export interface TLReactShapeClass<S extends TLReactShape = TLReactShape> {
+export interface TLReactShapeConstructor<S extends TLReactShape = TLReactShape> {
   new (props: any): S
   id: string
 }

@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
-import type { TLReactShape, TLReactShapeClass } from '~lib'
+import type { TLReactShape, TLReactShapeConstructor } from '~lib'
 import { AppContext, Renderer } from '~components'
 import { useApp } from '~hooks'
-import type { AnyObject, TLSerializedApp, TLCallback, TLTheme, TLToolClass } from '@tldraw/core'
+import type {
+  AnyObject,
+  TLSerializedApp,
+  TLCallback,
+  TLTheme,
+  TLToolConstructor,
+} from '@tldraw/core'
 import type { TLReactComponents } from '~types/component-props'
 import type { TLReactApp, TLReactEventMap } from '~types'
 
@@ -25,8 +31,8 @@ export interface TLAppPropsWithoutApp<
   R extends TLReactApp<S> = TLReactApp<S>
 > extends TLCommonAppProps<S, R> {
   model?: TLSerializedApp
-  shapeClasses?: TLReactShapeClass<S>[]
-  toolClasses?: TLToolClass<S, TLReactEventMap, TLReactApp<S>>[]
+  Shapes?: TLReactShapeConstructor<S>[]
+  Tools?: TLToolConstructor<S, TLReactEventMap, TLReactApp<S>>[]
   children?: React.ReactNode
 }
 

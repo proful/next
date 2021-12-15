@@ -14,8 +14,8 @@ export class CreatingState<
   creatingShape?: S
 
   onEnter = () => {
-    const { shapeClass } = this.tool
-    const shape = new shapeClass({
+    const { Shape } = this.tool
+    const shape = new Shape({
       id: uniqueId(),
       parentId: this.app.currentPage.id,
       point: this.app.inputs.currentPoint,

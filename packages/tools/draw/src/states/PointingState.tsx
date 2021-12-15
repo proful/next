@@ -21,11 +21,11 @@ export class PointingState<
   }
 
   onPointerUp: TLStateEvents<S, K>['onPointerUp'] = () => {
-    const { shapeClass } = this.tool
+    const { Shape } = this.tool
 
     const { originPoint } = this.app.inputs
 
-    const shape = new shapeClass({
+    const shape = new Shape({
       id: uniqueId(),
       parentId: this.app.currentPage.id,
       point: originPoint,

@@ -20,7 +20,7 @@ export abstract class TLDrawTool<
   /** The minimum distance between points when simplifying a line. */
   simplifyTolerance = 1
 
-  abstract shapeClass: {
+  abstract Shape: {
     new (props: TLShapeProps & Partial<TLDrawShapeProps & unknown>): T
   }
 }

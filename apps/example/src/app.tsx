@@ -6,9 +6,9 @@ import {
   App as TLDrawApp,
   TLReactApp,
   TLReactComponents,
-  TLReactShapeClass,
-  TLReactToolClass,
+  TLReactShapeConstructor,
   TLReactCallbacks,
+  TLReactToolConstructor,
 } from '@tldraw/react'
 import {
   NuBoxShape,
@@ -42,7 +42,7 @@ const components: TLReactComponents<Shape> = {
 function App(): JSX.Element {
   const [app, setApp] = React.useState<TLReactApp<Shape>>()
 
-  const [shapeClasses] = React.useState<TLReactShapeClass<Shape>[]>(() => [
+  const [Shapes] = React.useState<TLReactShapeConstructor<Shape>[]>(() => [
     NuBoxShape,
     NuEllipseShape,
     NuPolygonShape,
@@ -54,7 +54,7 @@ function App(): JSX.Element {
     NuLineShape,
   ])
 
-  const [toolClasses] = React.useState<TLReactToolClass<Shape>[]>(() => [
+  const [Tools] = React.useState<TLReactToolConstructor<Shape>[]>(() => [
     NuBoxTool,
     NuEllipseTool,
     NuPolygonTool,
@@ -67,7 +67,7 @@ function App(): JSX.Element {
 
   const [model] = React.useState<TLSerializedApp>({
     currentPageId: 'page1',
-    selectedIds: ['box1'],
+    selectedIds: ['line1', 'polyline1'],
     pages: [
       {
         name: 'Page',
@@ -199,9 +199,9 @@ function App(): JSX.Element {
         onMount={onMount}
         onPersist={onPersist}
         model={model}
-        shapeClasses={shapeClasses}
-        toolClasses={toolClasses}
         components={components}
+        Shapes={Shapes}
+        Tools={Tools}
       >
         <AppUI />
       </TLDrawApp>

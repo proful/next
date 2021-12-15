@@ -7,7 +7,7 @@ describe('A minimal test', () => {
     class DotTool extends TLDotTool<TLDotShape> {
       static id = 'dot'
       static shortcut = ['r']
-      shapeClass = TLDotShape
+      Shape = TLDotShape
     }
     const app = new TLApp()
     const shape = new DotTool(app, app)

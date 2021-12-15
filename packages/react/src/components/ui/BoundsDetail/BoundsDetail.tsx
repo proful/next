@@ -5,14 +5,18 @@ import { TAU } from '~constants'
 import { GeomUtils } from '@tldraw/core'
 import type { TLReactShape } from '~lib'
 import type { TLBoundsDetailProps } from '~types/component-props'
+import Vec from '@tldraw/vec'
 
 export const BoundsDetail = observer(function BoundsDetail<S extends TLReactShape>({
   bounds,
   detail,
+  shapes,
   scaledBounds,
 }: TLBoundsDetailProps<S>) {
   const { rotation = 0 } = bounds
   const isFlipped = Math.abs(rotation) > TAU
+
+  const isLine = shapes.length === 1 && shapes[0].type === 'line'
 
   return (
     <HTMLContainer centered>
@@ -26,7 +30,9 @@ export const BoundsDetail = observer(function BoundsDetail<S extends TLReactShap
           borderRadius: '1px',
         }}
       >
-        {detail === 'size'
+        {isLine
+          ? `${Vec.dist(shapes[0].handles![0].point, shapes[0].handles![1].point).toFixed()}`
+          : detail === 'size'
           ? `${bounds.width.toFixed()} × ${bounds.height.toFixed()}`
           : `∠${GeomUtils.radiansToDegrees(GeomUtils.clampRadians(rotation)).toFixed()}°`}
       </div>

@@ -15,7 +15,7 @@ export type TLSerializedShape<P = AnyObject> = TLShapeProps & {
   nonce?: number
 } & P
 
-export interface TLShapeClass<S extends TLShape = TLShape> {
+export interface TLShapeConstructor<S extends TLShape = TLShape> {
   new (props: any): S
   id: string
 }
@@ -26,7 +26,6 @@ export interface TLShapeProps {
   point: number[]
   rotation?: number
   name?: string
-  children?: string[]
   isGhost?: boolean
   isHidden?: boolean
   isLocked?: boolean
@@ -63,7 +62,6 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
     'point',
     'name',
     'rotation',
-    'children',
     'isGhost',
     'isHidden',
     'isLocked',
@@ -89,7 +87,6 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   @observable point: number[] = [0, 0]
   @observable name?: string = 'Shape'
   @observable rotation?: number
-  @observable children?: string[]
   @observable isGhost?: boolean
   @observable isHidden?: boolean
   @observable isLocked?: boolean
@@ -195,4 +192,48 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
     Object.assign(this, this.validateProps(props as Partial<TLShapeProps> & Partial<P>))
     return this
   }
+}
+
+export abstract class TLShapeWithHandles<
+  P extends { handles: TLHandle[] } = any,
+  M = any
+> extends TLShape<P, M> {
+  protected propsKeys = new Set<string>([
+    'type',
+    'nonce',
+    'parentId',
+    'point',
+    'name',
+    'rotation',
+    'handles',
+    'isGhost',
+    'isHidden',
+    'isLocked',
+    'isGenerated',
+    'isAspectRatioLocked',
+  ])
+
+  @observable handles: TLHandle[] = []
+}
+
+export abstract class TLShapeWithChildren<
+  P extends { children: TLShape[] } = any,
+  M = any
+> extends TLShape<P, M> {
+  protected propsKeys = new Set<string>([
+    'type',
+    'nonce',
+    'parentId',
+    'point',
+    'name',
+    'rotation',
+    'children',
+    'isGhost',
+    'isHidden',
+    'isLocked',
+    'isGenerated',
+    'isAspectRatioLocked',
+  ])
+
+  @observable children: TLShape[] = []
 }

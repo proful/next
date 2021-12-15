@@ -7,7 +7,7 @@ describe('A minimal test', () => {
     class DrawTool extends TLDrawTool<TLDrawShape> {
       static id = 'draw'
       static shortcut = ['d']
-      shapeClass = TLDrawShape
+      Shape = TLDrawShape
     }
     const app = new TLApp()
     const shape = new DrawTool(app, app)

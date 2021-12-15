@@ -5,6 +5,6 @@ import { NuPenShape, Shape } from '~lib'
 export class NuPenTool extends TLDrawTool<NuPenShape, Shape, TLReactEventMap> {
   static id = 'pen'
   static shortcut = ['d', 'p']
-  shapeClass = NuPenShape
+  Shape = NuPenShape
   simplify = false
 }

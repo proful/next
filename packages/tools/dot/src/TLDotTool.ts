@@ -14,7 +14,7 @@ export abstract class TLDotTool<
 
   static initial = 'idle'
 
-  abstract shapeClass: {
+  abstract Shape: {
     new (props: TLShapeProps & Partial<TLDotShapeProps & unknown>): T
   }
 }

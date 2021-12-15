@@ -5,5 +5,5 @@ import { NuPolygonShape, Shape } from '~lib'
 export class NuPolygonTool extends TLBoxTool<NuPolygonShape, Shape, TLReactEventMap> {
   static id = 'polygon'
   static shortcut = ['g']
-  shapeClass = NuPolygonShape
+  Shape = NuPolygonShape
 }

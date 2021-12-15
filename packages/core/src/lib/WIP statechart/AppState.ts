@@ -1,4 +1,4 @@
-import type { TLShape, TLShapeClass } from '../TLShape'
+import type { TLShape, TLShapeConstructor } from '../TLShape'
 import { AppNode } from './nodes/AppNode'
 import type { TLToolNodeConstructor } from './nodes/ToolNode'
 import type { TLShortcut, TLStateEvents } from './nodes/shared'
@@ -9,7 +9,7 @@ class FinalApp<S extends TLShape = TLShape> extends AppNode<S> {
     options = {} as {
       id?: string
       serializedApp?: TLSerializedApp
-      shapeClasses?: TLShapeClass<S>[]
+      Shapes?: TLShapeConstructor<S>[]
       tools?: TLToolNodeConstructor<S>[]
     }
   ) {

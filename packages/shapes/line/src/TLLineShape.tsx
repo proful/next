@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { makeObservable, override } from 'mobx'
+import { makeObservable, observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import type { TLShapeProps, TLCustomProps, TLHandle } from '@tldraw/core'
 import { TLPolylineShape, TLPolylineShapeProps } from '@tldraw/polyline-shape'
@@ -15,6 +15,8 @@ export class TLLineShape<P extends TLLineShapeProps = any> extends TLPolylineSha
     this.init(props)
     makeObservable(this)
   }
+
+  @observable handles = [{ point: [0, 0] }, { point: [1, 1] }]
 
   static id = 'line'
 

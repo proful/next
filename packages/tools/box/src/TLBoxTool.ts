@@ -21,5 +21,13 @@ export abstract class TLBoxTool<
 
   static initial = 'idle'
 
-  abstract shapeClass: TLBoxShapeClass<T>
+  abstract Shape: TLBoxShapeClass<T>
+
+  onEnter = () => {
+    this.app.cursors.push('cross')
+  }
+
+  onExit = () => {
+    this.app.cursors.pop()
+  }
 }

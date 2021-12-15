@@ -2,7 +2,7 @@ import type { TLApp, TLShape } from '~lib'
 import type { TLEventMap } from '~types'
 import { TLState } from './TLState'
 
-export interface TLToolClass<
+export interface TLToolConstructor<
   S extends TLShape = TLShape,
   K extends TLEventMap = TLEventMap,
   R extends TLApp<S, K> = TLApp<S, K>

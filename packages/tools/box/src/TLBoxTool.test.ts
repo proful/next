@@ -7,7 +7,7 @@ describe('A minimal test', () => {
     class BoxTool extends TLBoxTool<TLBoxShape> {
       static id = 'box'
       static shortcut = ['r']
-      shapeClass = TLBoxShape
+      Shape = TLBoxShape
     }
     const app = new TLApp()
     const shape = new BoxTool(app, app)

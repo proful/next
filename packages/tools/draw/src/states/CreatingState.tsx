@@ -26,13 +26,13 @@ export class CreatingState<
   private offset: number[] = [0, 0, 0.5]
 
   onEnter = () => {
-    const { shapeClass } = this.tool
+    const { Shape } = this.tool
 
     const { originPoint } = this.app.inputs
 
     this.app.history.pause()
 
-    const shape = new shapeClass({
+    const shape = new Shape({
       id: uniqueId(),
       parentId: this.app.currentPage.id,
       point: originPoint,
