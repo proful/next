@@ -103,10 +103,10 @@ export interface TLStateEvent<
     event: TLPointerEvent | KeyboardEvent | WheelEvent | React.KeyboardEvent
   ) => void
   keyboard: (info: E, context: C, event: React.KeyboardEvent) => void
-  onModifierKey: <E extends TLEventInfo<S>>(info: E, context: C, event: React.KeyboardEvent) => void
-  onEnter: <E = { fromId: string }>(info: E, context: C) => void
-  onExit: <E = { toId: string }>(info: E, context: C) => void
-  onTransition: <E = { toId: string; fromId: string }>(info: E, context: C) => void
+  onModifierKey: (info: TLEventInfo<S>, context: C, event: React.KeyboardEvent) => void
+  onEnter: (info: { fromId: string }, context: C) => void
+  onExit: (info: { toId: string }, context: C) => void
+  onTransition: (info: { toId: string; fromId: string }, context: C) => void
 }
 
 export type TLStateEvents<

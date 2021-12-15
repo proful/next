@@ -4,8 +4,8 @@ import type { TLReactEvents } from './TLReactEvents'
 
 export interface TLReactStateEvents<S extends TLReactShape = TLReactShape>
   extends TLReactEventHandlers<S> {
-  onEnter: (info: { fromId: string } & any) => void
-  onExit: (info: { toId: string } & any) => void
-  onTransition: (info: { toId: string; fromId: string } & any) => void
+  onEnter: <T>(info: { fromId: string } & T) => void
+  onExit: <T>(info: { toId: string } & T) => void
+  onTransition: <T>(info: { toId: string; fromId: string } & T) => void
   onModifierKey: TLReactEvents<S>['keyboard']
 }

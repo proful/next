@@ -1,5 +1,5 @@
 import { IdleState, PointingState, CreatingState } from './states'
-import { TLShapeProps, TLTool, TLApp, TLShape, TLEventMap } from '@tldraw/core'
+import { TLCursor, TLShapeProps, TLTool, TLApp, TLShape, TLEventMap } from '@tldraw/core'
 import type { TLDrawShapeProps, TLDrawShape } from '@tldraw/draw-shape'
 
 export abstract class TLDrawTool<
@@ -14,6 +14,8 @@ export abstract class TLDrawTool<
 
   static initial = 'idle'
 
+  cursor = TLCursor.Cross
+
   /** Whether to simplify the shape's points after creating. */
   simplify = true
 
@@ -22,13 +24,5 @@ export abstract class TLDrawTool<
 
   abstract Shape: {
     new (props: TLShapeProps & Partial<TLDrawShapeProps & unknown>): T
-  }
-
-  onEnter = () => {
-    this.app.cursors.push('cross')
-  }
-
-  onExit = () => {
-    this.app.cursors.pop()
   }
 }

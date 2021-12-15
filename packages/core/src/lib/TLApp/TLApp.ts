@@ -120,6 +120,16 @@ export class TLApp<
           this.notify('saveAs', null)
         },
       },
+      {
+        keys: 'escape',
+        fn: () => {
+          if (this.currentState.id !== 'select') {
+            if (this.currentState.currentState.id === 'idle') {
+              this.selectTool('select')
+            }
+          }
+        },
+      },
     ]
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -401,7 +411,7 @@ export class TLApp<
     return (
       this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
-      stateId === 'idle' &&
+      (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
       !this.selectedShapesArray.every((shape) => shape.hideContextBar)
     )
   }
@@ -411,7 +421,7 @@ export class TLApp<
     return (
       this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
-      stateId === 'idle' &&
+      (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
       !this.selectedShapesArray.every((shape) => shape.hideRotateHandle)
     )
   }
@@ -421,7 +431,7 @@ export class TLApp<
     return (
       this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
-      stateId === 'idle' &&
+      (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
       !this.selectedShapesArray.every((shape) => shape.hideResizeHandles)
     )
   }

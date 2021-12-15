@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react-lite'
 import { HTMLContainer } from '~components'
 import { TAU } from '~constants'
-import { GeomUtils } from '@tldraw/core'
+import { GeomUtils, TLShapeWithHandles } from '@tldraw/core'
 import type { TLReactShape } from '~lib'
 import type { TLBoundsDetailProps } from '~types/component-props'
 import Vec from '@tldraw/vec'
@@ -31,7 +31,10 @@ export const BoundsDetail = observer(function BoundsDetail<S extends TLReactShap
         }}
       >
         {isLine
-          ? `${Vec.dist(shapes[0].handles![0].point, shapes[0].handles![1].point).toFixed()}`
+          ? `${Vec.dist(
+              (shapes[0] as unknown as TLShapeWithHandles).handles[0].point,
+              (shapes[0] as unknown as TLShapeWithHandles).handles[1].point
+            ).toFixed()}`
           : detail === 'size'
           ? `${bounds.width.toFixed()} × ${bounds.height.toFixed()}`
           : `∠${GeomUtils.radiansToDegrees(GeomUtils.clampRadians(rotation)).toFixed()}°`}

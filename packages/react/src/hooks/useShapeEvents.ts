@@ -16,14 +16,14 @@ export function useShapeEvents<S extends TLReactShape>(shape: S) {
 
     const onPointerDown: TLReactCustomEvents['pointer'] = (e) => {
       const { order = 0 } = e
-      if (e.order === 0) e.currentTarget?.setPointerCapture(e.pointerId)
+      if (!order) e.currentTarget?.setPointerCapture(e.pointerId)
       callbacks.onPointerDown?.({ type: TLTargetType.Shape, target: shape, order }, e)
       e.order = order + 1
     }
 
     const onPointerUp: TLReactCustomEvents['pointer'] = (e) => {
       const { order = 0 } = e
-      if (e.order === 0) e.currentTarget?.releasePointerCapture(e.pointerId)
+      if (!order) e.currentTarget?.releasePointerCapture(e.pointerId)
       callbacks.onPointerUp?.({ type: TLTargetType.Shape, target: shape, order }, e)
       e.order = order + 1
     }

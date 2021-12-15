@@ -76,6 +76,7 @@ const InnerApp = observer(function InnerApp<S extends TLReactShape>(
       showBoundsDetail={app.showBoundsDetail}
       showContextBar={app.showContextBar}
       cursor={app.cursors.cursor}
+      cursorRotation={app.cursors.rotation}
       {...props}
     />
   )

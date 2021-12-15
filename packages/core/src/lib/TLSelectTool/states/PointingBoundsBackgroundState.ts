@@ -1,24 +1,15 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLEventMap, TLEvents } from '~types'
+import { TLCursor, TLEventMap, TLEvents } from '~types'
 
-export class PointingCanvasState<
+export class PointingBoundsBackgroundState<
   S extends TLShape,
   K extends TLEventMap,
   R extends TLApp<S, K>,
   P extends TLSelectTool<S, K, R>
 > extends TLToolState<S, K, R, P> {
-  static id = 'pointingCanvas'
-
-  onEnter = () => {
-    const { shiftKey } = this.app.inputs
-    this.app.cursors.push('cross')
-    if (!shiftKey) this.app.setSelectedShapes([])
-  }
-
-  onExit = () => {
-    this.app.cursors.pop()
-  }
+  static id = 'pointingBoundsBackground'
+  cursor = TLCursor.Move
 
   onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)
@@ -27,14 +18,12 @@ export class PointingCanvasState<
   onPointerMove: TLEvents<S>['pointer'] = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
-      this.tool.transition('brushing')
+      this.tool.transition('translating')
     }
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {
-    if (!this.app.inputs.shiftKey) {
-      this.app.setSelectedShapes([])
-    }
+    this.app.setSelectedShapes([])
     this.tool.transition('idle')
   }
 

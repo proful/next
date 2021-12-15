@@ -1,5 +1,5 @@
 import { IdleState, PointingState, ErasingState } from './states'
-import { TLTool, TLApp, TLShape, TLEventMap } from '@tldraw/core'
+import { TLTool, TLApp, TLShape, TLEventMap, TLCursor } from '@tldraw/core'
 
 export abstract class TLEraseTool<
   S extends TLShape = TLShape,
@@ -12,11 +12,5 @@ export abstract class TLEraseTool<
 
   static initial = 'idle'
 
-  onEnter = () => {
-    this.app.cursors.push('cross')
-  }
-
-  onExit = () => {
-    this.app.cursors.pop()
-  }
+  cursor = TLCursor.Cross
 }

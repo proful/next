@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as React from 'react'
-import { autorun } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import {
   Shape,
@@ -22,7 +21,7 @@ import {
   useCursor,
   useZoom,
 } from '~hooks'
-import type { TLBinding, TLBounds, TLCursor, TLHandle, TLTheme } from '@tldraw/core'
+import { TLBinding, TLBounds, TLCursor, TLHandle, TLTheme } from '@tldraw/core'
 import { EMPTY_OBJECT } from '~constants'
 import type { TLReactShape } from '~lib'
 
@@ -40,6 +39,7 @@ export interface TLCanvasProps<S extends TLReactShape> {
   erasingShapes?: S[]
   gridSize?: number
   cursor?: TLCursor
+  cursorRotation?: number
   showGrid?: boolean
   showBounds?: boolean
   showHandles?: boolean
@@ -61,7 +61,8 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   selectedBounds,
   selectedShapes,
   erasingShapes,
-  cursor = 'default',
+  cursor = TLCursor.Default,
+  cursorRotation = 0,
   showBounds = true,
   showHandles = true,
   showBoundsRotation = false,
@@ -82,7 +83,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   usePreventNavigation(rContainer)
   useResizeObserver(rContainer, viewport)
   useGestureEvents(rContainer)
-  useCursor(rContainer, cursor)
+  useCursor(rContainer, cursor, cursorRotation)
   useZoom(rContainer)
 
   const events = useCanvasEvents()

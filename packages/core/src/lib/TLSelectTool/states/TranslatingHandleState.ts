@@ -1,37 +1,43 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Vec } from '@tldraw/vec'
-import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLEventMap, TLEvents, TLHandle } from '~types'
+import { TLApp, TLSelectTool, TLShape, TLShapeWithHandles, TLToolState } from '~lib'
+import { TLCursor, TLEventMap, TLEvents, TLHandle } from '~types'
 import { BoundsUtils, deepCopy } from '~utils'
 
 export class TranslatingHandleState<
-  S extends TLShape,
+  S extends TLShapeWithHandles,
   K extends TLEventMap,
   R extends TLApp<S, K>,
   P extends TLSelectTool<S, K, R>
 > extends TLToolState<S, K, R, P> {
   static id = 'translatingHandle'
+  cursor = TLCursor.Grabbing
 
   private offset = [0, 0]
   private initialTopLeft = [0, 0]
   private index = 0
   private shape: S = {} as S
+  private initialShape: S = {} as S
   private handles: TLHandle[] = []
   private initialHandles: TLHandle[] = []
 
-  onEnter = (info: { target: S & { handles: TLHandle[] }; handle: TLHandle; index: number }) => {
-    this.app.cursors.push('grabbing')
+  onEnter = (info: {
+    fromId: string
+    target: S & { handles: TLHandle[] }
+    handle: TLHandle
+    index: number
+  }) => {
     this.app.history.pause()
     this.offset = [0, 0]
     this.index = info.index
     this.shape = info.target
+    this.initialShape = this.shape.clone()
     this.handles = deepCopy(info.target.handles)
     this.initialHandles = deepCopy(info.target.handles)
     this.initialTopLeft = [...info.target.point]
   }
 
   onExit = () => {
-    this.app.cursors.pop()
     this.app.history.resume()
   }
 
@@ -52,13 +58,18 @@ export class TranslatingHandleState<
         delta[1] = 0
       }
     }
-    const { shape, initialTopLeft, handles, initialHandles, index } = this
-    handles[index].point = Vec.add(delta, initialHandles[index].point)
-    const topLeft = BoundsUtils.getCommonTopLeft(handles.map((h) => h.point))
-    shape.update({
-      point: Vec.add(initialTopLeft, topLeft),
-      handles: handles.map((h) => ({ ...h, point: Vec.sub(h.point, topLeft) })),
-    })
+
+    const { shape, initialShape, index } = this
+
+    shape.onHandleChange({ index, initialShape, delta })
+
+    // const { shape, initialTopLeft, handles, initialHandles, index } = this
+    // handles[index].point = Vec.add(delta, initialHandles[index].point)
+    // const topLeft = BoundsUtils.getCommonTopLeft(handles.map((h) => h.point))
+    // shape.update({
+    //   point: Vec.add(initialTopLeft, topLeft),
+    //   handles: handles.map((h) => ({ ...h, point: Vec.sub(h.point, topLeft) })),
+    // })
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {

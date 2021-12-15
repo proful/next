@@ -16,8 +16,7 @@ export class ResizingState<
   snapshots: Record<
     string,
     {
-      props: TLSerializedShape
-      bounds: TLBounds
+      shape: S
       transformOrigin: number[]
     }
   > = {}
@@ -29,14 +28,14 @@ export class ResizingState<
   boundsRotation = 0
 
   static CURSORS: Record<TLBoundsCorner | TLBoundsEdge, TLCursor> = {
-    [TLBoundsEdge.Bottom]: 'ns-resize',
-    [TLBoundsEdge.Top]: 'ns-resize',
-    [TLBoundsEdge.Left]: 'ew-resize',
-    [TLBoundsEdge.Right]: 'ew-resize',
-    [TLBoundsCorner.BottomLeft]: 'nesw-resize',
-    [TLBoundsCorner.BottomRight]: 'nwse-resize',
-    [TLBoundsCorner.TopLeft]: 'nwse-resize',
-    [TLBoundsCorner.TopRight]: 'nesw-resize',
+    [TLBoundsEdge.Bottom]: TLCursor.NsResize,
+    [TLBoundsEdge.Top]: TLCursor.NsResize,
+    [TLBoundsEdge.Left]: TLCursor.EwResize,
+    [TLBoundsEdge.Right]: TLCursor.EwResize,
+    [TLBoundsCorner.BottomLeft]: TLCursor.NeswResize,
+    [TLBoundsCorner.BottomRight]: TLCursor.NwseResize,
+    [TLBoundsCorner.TopLeft]: TLCursor.NwseResize,
+    [TLBoundsCorner.TopRight]: TLCursor.NeswResize,
   }
 
   onEnter = (info: { handle: TLBoundsCorner | TLBoundsEdge }) => {
@@ -44,7 +43,10 @@ export class ResizingState<
     if (!selectedBounds) throw Error('Expected a selected bounds.')
 
     this.handle = info.handle
-    this.app.cursors.push(ResizingState.CURSORS[info.handle])
+    this.app.cursors.setCursor(
+      ResizingState.CURSORS[info.handle],
+      this.app.selectedBounds?.rotation
+    )
     history.pause()
 
     const initialInnerBounds = BoundsUtils.getBoundsFromPoints(
@@ -67,8 +69,7 @@ export class ResizingState<
         return [
           shape.id,
           {
-            bounds,
-            props: shape.serialized,
+            shape: shape.clone(),
             transformOrigin: [ix, iy],
           },
         ]
@@ -79,7 +80,7 @@ export class ResizingState<
   }
 
   onExit = () => {
-    this.app.cursors.pop()
+    this.app.cursors.reset()
     this.snapshots = {}
     this.initialCommonBounds = {} as TLBounds
     this.boundsRotation = 0
@@ -110,22 +111,20 @@ export class ResizingState<
     const { scaleX, scaleY } = nextBounds
 
     this.app.selectedShapes.forEach((shape) => {
-      const { props, bounds, transformOrigin } = snapshots[shape.id]
+      const { shape: initialShape, transformOrigin } = snapshots[shape.id]
 
       const relativeBounds = BoundsUtils.getRelativeTransformedBoundingBox(
         nextBounds,
         initialCommonBounds,
-        bounds,
+        initialShape.bounds,
         scaleX < 0,
         scaleY < 0
       )
 
       shape.onResize(relativeBounds, {
         type: handle,
-        initialProps: props,
-        initialBounds: bounds,
-        scaleX,
-        scaleY,
+        initialShape,
+        scale: [scaleX, scaleY],
         transformOrigin,
       })
     })
@@ -141,7 +140,7 @@ export class ResizingState<
     switch (e.key) {
       case 'Escape': {
         this.app.selectedShapes.forEach((shape) => {
-          shape.update({ ...this.snapshots[shape.id].props })
+          shape.update({ ...this.snapshots[shape.id].shape })
         })
         this.tool.transition('idle')
         break

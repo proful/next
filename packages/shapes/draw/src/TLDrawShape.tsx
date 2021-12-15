@@ -105,8 +105,8 @@ export class TLDrawShape<P extends TLDrawShapeProps = any> extends TLShape<P> {
    */
   onResize = (bounds: TLBounds, info: TLResizeInfo<P>) => {
     const size = [bounds.width, bounds.height]
-    const flipX = info.scaleX < 0
-    const flipY = info.scaleY < 0
+    const flipX = info.scale[0] < 0
+    const flipY = info.scale[1] < 0
 
     this.update({
       point: [bounds.minX, bounds.minY],

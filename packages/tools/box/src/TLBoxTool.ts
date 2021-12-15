@@ -1,5 +1,5 @@
 import { IdleState, PointingState, CreatingState } from './states'
-import { TLTool, TLShortcut, TLApp, TLShape, TLCustomProps, TLEventMap } from '@tldraw/core'
+import { TLTool, TLApp, TLShape, TLCustomProps, TLEventMap, TLCursor } from '@tldraw/core'
 import type { TLBoxShape, TLBoxShapeProps } from '@tldraw/box-shape'
 
 // shape tools need to have two generics: a union of all shapes in
@@ -21,13 +21,7 @@ export abstract class TLBoxTool<
 
   static initial = 'idle'
 
+  cursor = TLCursor.Cross
+
   abstract Shape: TLBoxShapeClass<T>
-
-  onEnter = () => {
-    this.app.cursors.push('cross')
-  }
-
-  onExit = () => {
-    this.app.cursors.pop()
-  }
 }

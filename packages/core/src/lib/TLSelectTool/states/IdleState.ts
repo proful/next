@@ -24,8 +24,15 @@ export class IdleState<
   onPointerEnter: TLEvents<S>['pointer'] = (info) => {
     if (info.order > 0) return
 
-    if (info.type === TLTargetType.Shape) {
-      this.app.setHoveredShape(info.target.id)
+    switch (info.type) {
+      case TLTargetType.Shape: {
+        this.app.setHoveredShape(info.target.id)
+        break
+      }
+      case TLTargetType.Bounds: {
+        this.tool.transition('hoveringResizeHandle', info)
+        break
+      }
     }
   }
 

@@ -111,6 +111,7 @@ const tlcss = css`
   }
 
   .tl-container {
+    --tl-cursor: inherit;
     --tl-zoom: 1;
     --tl-scale: calc(1 / var(--tl-zoom));
     --tl-padding: calc(64px * var(--tl-scale));
@@ -144,10 +145,13 @@ const tlcss = css`
     touch-action: none;
     overscroll-behavior: none;
     background-color: var(--tl-background);
+    cursor: var(--tl-cursor) !important;
+    box-sizing: border-box;
   }
 
-  .tl-container * {
+  .tl-container {
     box-sizing: border-box;
+    cursor: inherit;
   }
 
   .tl-overlay {
@@ -248,26 +252,6 @@ const tlcss = css`
   .tl-transparent {
     fill: transparent;
     stroke: transparent;
-  }
-
-  .tl-cursor-ns,
-  .tl-cursor-ns:active {
-    cursor: ns-resize;
-  }
-
-  .tl-cursor-ew,
-  .tl-cursor-ew:active {
-    cursor: ew-resize;
-  }
-
-  .tl-cursor-nesw,
-  .tl-cursor-nesw:active {
-    cursor: nesw-resize;
-  }
-
-  .tl-cursor-nwse,
-  .tl-cursor-nwse:active {
-    cursor: nwse-resize;
   }
 
   .tl-corner-handle {
@@ -382,37 +366,28 @@ const tlcss = css`
   }
 
   .tl-handle {
-    pointer-events: all;
-    cursor: grab;
-  }
-
-  .tl-handle:hover .tl-handle-bg {
-    fill: var(--tl-selectFill);
-  }
-
-  .tl-handle:hover .tl-handle-bg > * {
-    stroke: var(--tl-selectFill);
-  }
-
-  .tl-handle:active .tl-handle-bg {
-    fill: var(--tl-selectFill);
-  }
-
-  .tl-handle:active .tl-handle-bg > * {
-    stroke: var(--tl-selectFill);
-  }
-
-  .tl-handle {
     fill: var(--tl-background);
     stroke: var(--tl-selectStroke);
     stroke-width: 1.5px;
+    pointer-events: none;
   }
 
   .tl-handle-bg {
     fill: transparent;
     stroke: none;
-    pointer-events: all;
     r: calc(16px / max(1, var(--tl-zoom)));
+    pointer-events: all;
+    cursor: grab;
+  }
+
+  .tl-handle-bg:active {
+    pointer-events: all;
+    fill: none;
+  }
+
+  .tl-handle-bg:hover {
+    cursor: grab;
+    fill: var(--tl-selectFill);
   }
 
   .tl-binding-indicator {

@@ -1,6 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLToolState, TLShape } from '~lib'
-import type { TLEventMap, TLEvents } from '~types'
+import { TLCursor, TLEventMap, TLEvents } from '~types'
 
 export class PointingSelectedShapeState<
   S extends TLShape,
@@ -9,6 +9,7 @@ export class PointingSelectedShapeState<
   P extends TLSelectTool<S, K, R>
 > extends TLToolState<S, K, R, P> {
   static id = 'pointingSelectedShape'
+  cursor = TLCursor.Move
 
   private pointedSelectedShape?: TLShape
 
@@ -16,7 +17,9 @@ export class PointingSelectedShapeState<
     this.pointedSelectedShape = info.target
   }
 
-  onExit = () => (this.pointedSelectedShape = undefined)
+  onExit = () => {
+    this.pointedSelectedShape = undefined
+  }
 
   onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)

@@ -11,13 +11,12 @@ export const BoundsBackground = observer(function BoundsBackground<S extends TLR
   const events = useBoundsEvents('background')
 
   return (
-    <SVGContainer>
+    <SVGContainer {...events}>
       <rect
         className="tl-bounds-bg"
         width={Math.max(1, bounds.width)}
         height={Math.max(1, bounds.height)}
         pointerEvents="all"
-        {...events}
       />
     </SVGContainer>
   )

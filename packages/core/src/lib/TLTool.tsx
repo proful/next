@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { TLApp, TLShape } from '~lib'
-import type { TLEventMap } from '~types'
+import type { TLEventMap, TLStateEvents } from '~types'
 import { TLState } from './TLState'
 
 export interface TLToolConstructor<
@@ -18,5 +19,12 @@ export abstract class TLTool<
 > extends TLState<S, K, R, R> {
   get app() {
     return this.root
+  }
+
+  onTransition: TLStateEvents<S, K>['onTransition'] = (info) => {
+    const { toId } = info
+    const toState = this.children.get(toId)!
+    this.app.cursors.reset()
+    if (toState.cursor) this.app.cursors.setCursor(toState.cursor)
   }
 }

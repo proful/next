@@ -1,14 +1,15 @@
-export type TLCursor =
-  | 'default'
-  | 'pointer'
-  | 'cross'
-  | 'grab'
-  | 'grabbing'
-  | 'resize-edge'
-  | 'resize-corner'
-  | 'text'
-  | 'move'
-  | 'ew-resize'
-  | 'ns-resize'
-  | 'nesw-resize'
-  | 'nwse-resize'
+export enum TLCursor {
+  Default = 'default',
+  Pointer = 'pointer',
+  Cross = 'crosshair',
+  Grab = 'grab',
+  Grabbing = 'grabbing',
+  ResizeEdge = 'resize-edge',
+  ResizeCorner = 'resize-corner',
+  Text = 'text',
+  Move = 'move',
+  EwResize = 'ew-resize',
+  NsResize = 'ns-resize',
+  NeswResize = 'nesw-resize',
+  NwseResize = 'nwse-resize',
+}

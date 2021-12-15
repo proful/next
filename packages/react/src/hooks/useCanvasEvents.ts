@@ -14,13 +14,13 @@ export function useCanvasEvents() {
 
     const onPointerDown: TLReactCustomEvents['pointer'] = (e) => {
       const { order = 0 } = e
-      e.currentTarget?.setPointerCapture(e.pointerId)
+      if (!order) e.currentTarget?.setPointerCapture(e.pointerId)
       callbacks.onPointerDown?.({ type: TLTargetType.Canvas, target: 'canvas', order }, e)
     }
 
     const onPointerUp: TLReactCustomEvents['pointer'] = (e) => {
       const { order = 0 } = e
-      e.currentTarget?.releasePointerCapture(e.pointerId)
+      if (!order) e.currentTarget?.releasePointerCapture(e.pointerId)
       callbacks.onPointerUp?.({ type: TLTargetType.Canvas, target: 'canvas', order }, e)
     }
 

@@ -67,7 +67,7 @@ function App(): JSX.Element {
 
   const [model] = React.useState<TLSerializedApp>({
     currentPageId: 'page1',
-    selectedIds: ['line1', 'polyline1'],
+    selectedIds: ['box1'],
     pages: [
       {
         name: 'Page',
@@ -79,21 +79,29 @@ function App(): JSX.Element {
             parentId: 'page1',
             point: [100, 400],
             size: [100, 100],
+            rotation: Math.PI / 6,
           },
           {
-            id: 'polyline1',
-            type: 'polyline',
+            id: 'box2',
+            type: 'box',
             parentId: 'page1',
-            point: [100, 100],
-            handles: [{ point: [0, 0] }, { point: [30, 70] }, { point: [100, 100] }],
+            point: [300, 400],
+            size: [100, 100],
           },
-          {
-            id: 'line1',
-            type: 'line',
-            parentId: 'page1',
-            point: [300, 100],
-            handles: [{ point: [0, 0] }, { point: [30, 70] }],
-          },
+          // {
+          //   id: 'polyline1',
+          //   type: 'polyline',
+          //   parentId: 'page1',
+          //   point: [100, 100],
+          //   handles: [{ point: [0, 0] }, { point: [30, 70] }, { point: [100, 100] }],
+          // },
+          // {
+          //   id: 'line1',
+          //   type: 'line',
+          //   parentId: 'page1',
+          //   point: [300, 100],
+          //   handles: [{ point: [0, 0] }, { point: [230, 270] }],
+          // },
           // {
           //   id: 'dot1',
           //   type: 'dot',

@@ -24,7 +24,7 @@ export function useHandleEvents<S extends TLReactShape = TLReactShape>(
 
     const onPointerDown: TLReactCustomEvents['pointer'] = (e) => {
       const { order = 0 } = e
-      if (e.order === 0) e.currentTarget?.setPointerCapture(e.pointerId)
+      if (!order) e.currentTarget?.setPointerCapture(e.pointerId)
       const handle = shape.handles![index]
       callbacks.onPointerDown?.(
         { type: TLTargetType.Handle, target: shape, handle, index, order },
@@ -35,7 +35,7 @@ export function useHandleEvents<S extends TLReactShape = TLReactShape>(
 
     const onPointerUp: TLReactCustomEvents['pointer'] = (e) => {
       const { order = 0 } = e
-      if (e.order === 0) e.currentTarget?.releasePointerCapture(e.pointerId)
+      if (!order) e.currentTarget?.releasePointerCapture(e.pointerId)
       const handle = shape.handles![index]
       callbacks.onPointerUp?.({ type: TLTargetType.Handle, target: shape, handle, index, order }, e)
       e.order = order + 1

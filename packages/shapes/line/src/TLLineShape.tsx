@@ -13,10 +13,11 @@ export class TLLineShape<P extends TLLineShapeProps = any> extends TLPolylineSha
   constructor(props = {} as TLCustomProps<Partial<P>>) {
     super(props)
     this.init(props)
+    this.handles = props.handles ?? [{ point: [0, 0] }, { point: [1, 1] }]
     makeObservable(this)
   }
 
-  @observable handles = [{ point: [0, 0] }, { point: [1, 1] }]
+  // @observable handles = [{ point: [0, 0] }, { point: [1, 1] }]
 
   static id = 'line'
 

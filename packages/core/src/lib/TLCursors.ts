@@ -1,40 +1,36 @@
 import { action, makeObservable, observable } from 'mobx'
-import type { TLCursor } from '~types/TLCursor'
+import { TLCursor } from '~types/TLCursor'
 
 export class TLCursors {
   constructor() {
     makeObservable(this)
   }
 
-  @observable cursor: TLCursor = 'default'
+  @observable cursor = TLCursor.Default
   @observable rotation = 0
 
-  private stack: TLCursor[] = []
-
-  showPrevious = () => {
-    this.pop()
-  }
+  // private stack: TLCursor[] = []
 
   @action reset = () => {
-    this.cursor = 'default'
-    this.stack = []
+    this.cursor = TLCursor.Default
+    // this.stack = []
   }
 
-  @action push = (cursor: TLCursor, rotation = 0) => {
-    if (this.cursor) {
-      this.stack.push(this.cursor)
-    }
+  @action setCursor = (cursor: TLCursor, rotation = 0) => {
+    // if (this.cursor) {
+    //   this.stack.push(this.cursor)
+    // }
     this.cursor = cursor
     this.rotation = rotation
-  }
-
-  @action pop = () => {
-    this.cursor = this.stack.pop() ?? 'default'
   }
 
   @action setRotation = (rotation: number) => {
     this.rotation = rotation
   }
+
+  // @action pop = () => {
+  //   this.cursor = this.stack.pop() ?? TLCursor.Default
+  // }
 
   // updateElementCursor = () => {
   //   const elm = document.body

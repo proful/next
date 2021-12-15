@@ -20,23 +20,24 @@ export class PointingResizeHandleState<
   pointedHandle?: TLBoundsHandle
 
   static CURSORS: Record<TLBoundsCorner | TLBoundsEdge, TLCursor> = {
-    [TLBoundsEdge.Bottom]: 'ns-resize',
-    [TLBoundsEdge.Top]: 'ns-resize',
-    [TLBoundsEdge.Left]: 'ew-resize',
-    [TLBoundsEdge.Right]: 'ew-resize',
-    [TLBoundsCorner.BottomLeft]: 'nesw-resize',
-    [TLBoundsCorner.BottomRight]: 'nwse-resize',
-    [TLBoundsCorner.TopLeft]: 'nwse-resize',
-    [TLBoundsCorner.TopRight]: 'nesw-resize',
+    [TLBoundsEdge.Bottom]: TLCursor.NsResize,
+    [TLBoundsEdge.Top]: TLCursor.NsResize,
+    [TLBoundsEdge.Left]: TLCursor.EwResize,
+    [TLBoundsEdge.Right]: TLCursor.EwResize,
+    [TLBoundsCorner.BottomLeft]: TLCursor.NeswResize,
+    [TLBoundsCorner.BottomRight]: TLCursor.NwseResize,
+    [TLBoundsCorner.TopLeft]: TLCursor.NwseResize,
+    [TLBoundsCorner.TopRight]: TLCursor.NeswResize,
   }
 
   onEnter = (info: { target: TLBoundsCorner | TLBoundsEdge }) => {
-    this.app.cursors.push(PointingResizeHandleState.CURSORS[info.target])
+    const rotation = this.app.selectedBounds!.rotation
+    this.app.cursors.setCursor(PointingResizeHandleState.CURSORS[info.target], rotation)
     this.pointedHandle = info.target
   }
 
   onExit = () => {
-    this.app.cursors.pop()
+    this.app.cursors.reset()
   }
 
   onWheel: TLEvents<S>['wheel'] = (info, e) => {

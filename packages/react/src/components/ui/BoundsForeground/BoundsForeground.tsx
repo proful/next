@@ -18,8 +18,6 @@ export const BoundsForeground = observer(function BoundsForeground<S extends TLR
   const size = 8 / zoom
   const targetSize = 6 / zoom
 
-  const events = useBoundsEvents('center')
-
   return (
     <SVGContainer>
       <rect
@@ -27,7 +25,6 @@ export const BoundsForeground = observer(function BoundsForeground<S extends TLR
         width={Math.max(width, 1)}
         height={Math.max(height, 1)}
         pointerEvents="none"
-        {...events}
       />
       {showResizeHandles && (
         <>

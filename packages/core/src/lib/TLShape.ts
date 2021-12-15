@@ -4,6 +4,7 @@ import {
   intersectLineSegmentPolyline,
   intersectPolygonBounds,
 } from '@tldraw/intersect'
+import Vec from '@tldraw/vec'
 import { action, computed, makeObservable, observable } from 'mobx'
 import type { TLBounds, AnyObject, TLBoundsCorner, TLBoundsEdge } from '~types'
 import type { TLHandle } from '~types/TLHandle'
@@ -35,11 +36,15 @@ export interface TLShapeProps {
 
 export interface TLResizeInfo<P = any> {
   type: TLBoundsEdge | TLBoundsCorner
-  scaleX: number
-  scaleY: number
+  scale: number[]
   transformOrigin: number[]
-  initialBounds: TLBounds
-  initialProps: TLShapeProps & P
+  initialShape: TLSerializedShape<P>
+}
+
+export interface TLHandleChangeInfo<P = any> {
+  index: number
+  delta: number[]
+  initialShape: TLSerializedShape<P>
 }
 
 export type TLCustomProps<P extends AnyObject = any> = TLShapeProps & Partial<P>
@@ -192,10 +197,17 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
     Object.assign(this, this.validateProps(props as Partial<TLShapeProps> & Partial<P>))
     return this
   }
+
+  clone = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return new this.constructor(this.serialized)
+  }
 }
 
 export abstract class TLShapeWithHandles<
   P extends { handles: TLHandle[] } = any,
+  H extends TLHandle = TLHandle,
   M = any
 > extends TLShape<P, M> {
   protected propsKeys = new Set<string>([
@@ -214,6 +226,27 @@ export abstract class TLShapeWithHandles<
   ])
 
   @observable handles: TLHandle[] = []
+
+  onHandleChange = ({ initialShape, delta, index }: TLHandleChangeInfo<P>) => {
+    const nextHandles = [...initialShape.handles]
+    nextHandles[index] = {
+      ...nextHandles[index],
+      point: Vec.add(delta, initialShape.handles[index].point),
+    }
+    const topLeft = BoundsUtils.getCommonTopLeft(nextHandles.map((h) => h.point))
+    this.update({
+      point: Vec.add(initialShape.point, topLeft),
+      handles: nextHandles.map((h) => ({ ...h, point: Vec.sub(h.point, topLeft) })),
+    })
+
+    // const { shape, initialShape, handles } = this
+    // handles[index].point = Vec.add(delta, initialHandles[index].point)
+    // const topLeft = BoundsUtils.getCommonTopLeft(handles.map((h) => h.point))
+    // shape.update({
+    //   point: Vec.add(initialTopLeft, topLeft),
+    //   handles: handles.map((h) => ({ ...h, point: Vec.sub(h.point, topLeft) })),
+    // })
+  }
 }
 
 export abstract class TLShapeWithChildren<

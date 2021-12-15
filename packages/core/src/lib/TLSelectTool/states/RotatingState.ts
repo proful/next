@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLShapeWithHandles, TLToolState } from '~lib'
-import type { TLBounds, TLEventMap, TLEvents, TLHandle } from '~types'
+import { TLBounds, TLCursor, TLEventMap, TLEvents, TLHandle } from '~types'
 import { BoundsUtils, deepCopy, GeomUtils } from '~utils'
 
 export class RotatingState<
@@ -11,6 +11,7 @@ export class RotatingState<
   P extends TLSelectTool<S, K, R>
 > extends TLToolState<S, K, R, P> {
   static id = 'rotating'
+  cursor = TLCursor.Grabbing
 
   snapshot: Record<
     string,
@@ -28,8 +29,6 @@ export class RotatingState<
 
   onEnter = () => {
     const { history, selectedShapesArray, selectedBounds } = this.app
-
-    this.app.cursors.push('grabbing')
 
     if (!selectedBounds) throw Error('Expected selected bounds.')
 
@@ -52,7 +51,6 @@ export class RotatingState<
 
   onExit = () => {
     this.app.history.resume()
-    this.app.cursors.pop()
     this.snapshot = {}
   }
 
@@ -110,6 +108,9 @@ export class RotatingState<
         })
       }
     })
+
+    const rotation = this.app.selectedBounds!.rotation
+    this.app.cursors.setCursor(TLCursor.Grabbing, rotation)
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {

@@ -17,6 +17,7 @@ import {
   ResizingState,
   RotatingState,
   PinchingState,
+  HoveringResizeHandleState,
 } from './states'
 
 export class TLSelectTool<
@@ -47,5 +48,6 @@ export class TLSelectTool<
     RotatingState,
     RotatingState,
     PinchingState,
+    HoveringResizeHandleState,
   ]
 }

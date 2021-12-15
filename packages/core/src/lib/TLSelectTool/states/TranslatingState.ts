@@ -1,6 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLEventMap, TLEvents } from '~types'
+import { TLCursor, TLEventMap, TLEvents } from '~types'
 import { uniqueId } from '~utils'
 
 export class TranslatingState<
@@ -10,6 +10,7 @@ export class TranslatingState<
   P extends TLSelectTool<S, K, R>
 > extends TLToolState<S, K, R, P> {
   static id = 'translating'
+  cursor = TLCursor.Move
 
   private isCloning = false
   private didClone = false
@@ -88,7 +89,6 @@ export class TranslatingState<
   onEnter = () => {
     // Pause the history when we enter
     this.app.history.pause()
-    this.app.cursors.push('move')
 
     // Set initial data
     const { selectedShapesArray, inputs } = this.app
@@ -108,8 +108,6 @@ export class TranslatingState<
   onExit = () => {
     // Resume the history when we exit
     this.app.history.resume()
-
-    this.app.cursors.pop()
 
     // Reset initial data
     this.didClone = false

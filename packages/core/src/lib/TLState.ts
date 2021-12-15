@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { action, makeObservable, observable } from 'mobx'
-import type { TLEventHandlers, TLShortcut, TLEvents, TLStateEvents, AnyObject } from '~types'
+import type {
+  TLEventHandlers,
+  TLShortcut,
+  TLEvents,
+  TLStateEvents,
+  AnyObject,
+  TLCursor,
+} from '~types'
 import type { TLShape } from '~lib'
 import { KeyUtils } from '~utils'
 import type { TLEventMap } from '~types/TLEventMap'
@@ -40,6 +47,7 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
   private _initial?: string
   private _states: TLStateClass<S, K, any, any>[]
   private _isActive = false
+  readonly cursor?: TLCursor
 
   protected _disposables: (() => void)[] = []
 
@@ -397,6 +405,8 @@ export abstract class TLState<
 
     makeObservable(this)
   }
+
+  static cursor?: TLCursor
 
   registerKeyboardShortcuts = (): void => {
     if (!this._shortcuts?.length) return

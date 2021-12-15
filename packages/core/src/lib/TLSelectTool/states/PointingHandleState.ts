@@ -1,21 +1,20 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLEventMap, TLEvents } from '~types'
+import { TLEvents, TLEventMap, TLHandle, TLCursor } from '~types'
 
-export class PointingBoundsBackgroundState<
+export class PointingHandleState<
   S extends TLShape,
   K extends TLEventMap,
   R extends TLApp<S, K>,
   P extends TLSelectTool<S, K, R>
 > extends TLToolState<S, K, R, P> {
-  static id = 'pointingBoundsBackground'
+  static id = 'pointingHandle'
+  cursor = TLCursor.Grabbing
 
-  onEnter = () => {
-    this.app.cursors.push('move')
-  }
+  info = {} as { shape: S; target: S; handle: TLHandle; index: number }
 
-  onExit = () => {
-    this.app.cursors.pop()
+  onEnter = (info: { shape: S; target: S; handle: TLHandle; index: number }) => {
+    this.info = info
   }
 
   onWheel: TLEvents<S>['wheel'] = (info, e) => {
@@ -25,12 +24,11 @@ export class PointingBoundsBackgroundState<
   onPointerMove: TLEvents<S>['pointer'] = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
-      this.tool.transition('translating')
+      this.tool.transition('translatingHandle', this.info)
     }
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {
-    this.app.setSelectedShapes([])
     this.tool.transition('idle')
   }
 

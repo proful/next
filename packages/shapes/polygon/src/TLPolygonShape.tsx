@@ -122,7 +122,7 @@ export class TLPolygonShape<P extends TLPolygonShapeProps = any> extends TLBoxSh
     return this.update({
       point: [bounds.minX, bounds.minY],
       size: [Math.max(1, bounds.width), Math.max(1, bounds.height)],
-      isFlippedY: info.scaleY < 0 ? !initialFlipped : initialFlipped,
+      isFlippedY: info.scale[1] < 0 ? !initialFlipped : initialFlipped,
     })
   }
 

@@ -20,15 +20,14 @@ export const RotateHandle = observer<RotateHandleProps>(function RotateHandle({
   const events = useBoundsEvents('rotate')
 
   return (
-    <g cursor="grab" opacity={isHidden ? 0 : 1}>
+    <g opacity={isHidden ? 0 : 1} {...events}>
       <circle
-        className="tl-transparent"
+        className="tl-transparent "
         aria-label="rotate target"
         cx={cx}
         cy={cy}
         r={targetSize}
         pointerEvents={isHidden ? 'none' : 'all'}
-        {...events}
       />
       <circle
         className="tl-rotate-handle"

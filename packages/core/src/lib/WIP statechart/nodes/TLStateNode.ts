@@ -50,17 +50,17 @@ export abstract class TLStateNode<S extends TLShape = TLShape, C extends any = a
   /* --------------------- Events --------------------- */
 
   onTransition: TLEvent<S>['onTransition'] = (info) => {
-    this._onTransition?.(info, this.context)
+    // this._onTransition?.(info, this.context)
   }
 
   onEnter: TLEvent<S>['onEnter'] = (info) => {
     this._isActive = true
-    this._onEnter?.(info, this.context)
+    // this._onEnter?.(info, this.context)
   }
 
   onExit: TLEvent<S>['onExit'] = (info) => {
     this._isActive = false
-    this._onExit?.(info, this.context)
+    // this._onExit?.(info, this.context)
   }
 
   onWheel: TLEvent<S>['wheel'] = (info, event) => {
@@ -182,19 +182,19 @@ export abstract class TLBranchStateNode<
   }
 
   onTransition: TLEvent<S>['onTransition'] = (info) => {
-    this._onTransition?.(info, this.context)
+    // this._onTransition?.(info, this.context)
   }
 
   onEnter: TLEvent<S>['onEnter'] = (info) => {
     this._isActive = true
     if (this.initial) this.transition(this.initial, info)
-    this._onEnter?.(info, this.context)
+    // this._onEnter?.(info, this.context)
   }
 
   onExit: TLEvent<S>['onExit'] = (info) => {
     this._isActive = false
     this.currentState?.onExit?.({ fromId: 'parent' })
-    this._onExit?.(info, this.context)
+    // this._onExit?.(info, this.context)
   }
 
   onWheel: TLEvent<S>['wheel'] = (info, event) => {

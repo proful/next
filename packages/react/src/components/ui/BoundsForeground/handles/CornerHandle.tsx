@@ -30,7 +30,7 @@ export const CornerHandle = observer(function CornerHandle({
   const events = useBoundsEvents(corner)
 
   return (
-    <g opacity={isHidden ? 0 : 1}>
+    <g opacity={isHidden ? 0 : 1} {...events}>
       <rect
         className={'tl-transparent ' + (isHidden ? '' : cornerBgClassnames[corner])}
         aria-label={`${corner} target`}
@@ -39,7 +39,6 @@ export const CornerHandle = observer(function CornerHandle({
         width={targetSize * 2.5}
         height={targetSize * 2.5}
         pointerEvents={isHidden ? 'none' : 'all'}
-        {...events}
       />
       <rect
         className="tl-corner-handle"
