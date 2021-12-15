@@ -28,7 +28,7 @@ export const NuPrimaryTools = observer(function NuPrimaryTools() {
     (e: React.MouseEvent<HTMLButtonElement>) => {
       const tool = e.currentTarget.dataset.tool
       if (tool) app.selectTool(tool)
-      app.setToolLock(true)
+      app.settings.update({ isToolLocked: true })
     },
     [app]
   )
@@ -38,7 +38,7 @@ export const NuPrimaryTools = observer(function NuPrimaryTools() {
   return (
     <div className="nu-primary-tools">
       <button className="nu-floating-button"></button>
-      <div className="nu-panel nu-floating-panel" data-tool-locked={app.isToolLocked}>
+      <div className="nu-panel nu-floating-panel" data-tool-locked={app.settings.isToolLocked}>
         <NuButton
           data-tool="select"
           data-selected={selectedToolId === 'select'}

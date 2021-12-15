@@ -20,38 +20,38 @@ export const NuToolBar = observer(function ToolBar(): JSX.Element {
     (e: React.MouseEvent<HTMLButtonElement>) => {
       const tool = e.currentTarget.dataset.tool
       if (tool) app.selectTool(tool)
-      app.setToolLock(true)
+      app.settings.update({ isToolLocked: true })
     },
     [app]
   )
 
   const handleToolLockClick = React.useCallback(() => {
-    app.setToolLock(!app.isToolLocked)
+    app.settings.update({ isToolLocked: !app.settings.isToolLocked })
   }, [app])
 
   const zoomIn = React.useCallback(() => {
-    app.zoomIn()
+    app.api.zoomIn()
   }, [app])
 
   const zoomOut = React.useCallback(() => {
-    app.zoomOut()
+    app.api.zoomOut()
   }, [app])
 
   const resetZoom = React.useCallback(() => {
-    app.resetZoom()
+    app.api.resetZoom()
   }, [app])
 
   const zoomToFit = React.useCallback(() => {
-    app.zoomToFit()
+    app.api.zoomToFit()
   }, [app])
 
   const zoomToSelection = React.useCallback(() => {
-    app.zoomToSelection()
+    app.api.zoomToSelection()
   }, [app])
 
   return (
     <div className="nu-toolbar">
-      <input type="checkbox" checked={app.isToolLocked} onChange={handleToolLockClick} />
+      <input type="checkbox" checked={app.settings.isToolLocked} onChange={handleToolLockClick} />
       Camera
       <button onClick={zoomOut}>-</button>
       <button onClick={zoomIn}>+</button>

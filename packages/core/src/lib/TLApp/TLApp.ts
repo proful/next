@@ -277,15 +277,6 @@ export class TLApp<
     )
   }
 
-  /* -------------------- Settings -------------------- */
-
-  @observable showGrid = false
-
-  @action setSetting = <T extends 'showGrid'>(setting: T, value: this[T]): this => {
-    this[setting] = value
-    return this
-  }
-
   /* ------------------ Shape Classes ----------------- */
 
   // Map of shape classes (used for deserialization)
@@ -307,12 +298,6 @@ export class TLApp<
   }
 
   /* -------------------- Settings -------------------- */
-
-  @observable isToolLocked = false
-
-  @action setToolLock(value: boolean) {
-    this.isToolLocked = value
-  }
 
   /* ---------------------- Pages --------------------- */
 
@@ -516,7 +501,7 @@ export class TLApp<
   /* ----------------- Event Handlers ----------------- */
 
   readonly onTransition: TLStateEvents<S, K>['onTransition'] = () => {
-    this.setToolLock(false)
+    this.settings.update({ isToolLocked: false })
   }
 
   readonly onWheel: TLEvents<S, K>['wheel'] = (info, e) => {

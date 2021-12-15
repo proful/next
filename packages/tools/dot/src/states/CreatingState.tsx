@@ -39,7 +39,7 @@ export class CreatingState<
     if (this.creatingShape) {
       this.app.setSelectedShapes([this.creatingShape])
     }
-    if (!this.app.isToolLocked) {
+    if (!this.app.settings.isToolLocked) {
       this.app.transition('select')
     }
   }

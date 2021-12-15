@@ -135,7 +135,14 @@ export class TLApi<S extends TLShape = TLShape, K extends TLEventMap = TLEventMa
   }
 
   toggleGrid = (): this => {
-    this.#app.setSetting('showGrid', !this.#app.showGrid)
+    const { settings } = this.#app
+    settings.update({ showGrid: !settings.showGrid })
+    return this
+  }
+
+  toggleToolLock = (): this => {
+    const { settings } = this.#app
+    settings.update({ showGrid: !settings.isToolLocked })
     return this
   }
 
