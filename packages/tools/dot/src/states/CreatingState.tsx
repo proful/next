@@ -18,7 +18,7 @@ export class CreatingState<
     const shape = new Shape({
       id: uniqueId(),
       parentId: this.app.currentPage.id,
-      point: this.app.inputs.currentPoint,
+      point: this.app.inputs.originPoint,
     })
 
     this.creatingShape = shape
@@ -46,5 +46,16 @@ export class CreatingState<
 
   onWheel: TLStateEvents<S, K>['onWheel'] = (info, e) => {
     this.onPointerMove(info, e)
+  }
+
+  onKeyDown: TLStateEvents<S>['onKeyDown'] = (info, e) => {
+    switch (e.key) {
+      case 'Escape': {
+        if (!this.creatingShape) throw Error('Expected a creating shape.')
+        this.app.deleteShapes([this.creatingShape])
+        this.tool.transition('idle')
+        break
+      }
+    }
   }
 }

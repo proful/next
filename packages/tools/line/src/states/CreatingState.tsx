@@ -1,25 +1,19 @@
-import type { TLBoxTool } from '../TLBoxTool'
-import type { TLBoxShape } from '@tldraw/box-shape'
-import {
-  TLShape,
-  TLApp,
-  TLToolState,
-  uniqueId,
-  BoundsUtils,
-  TLEventMap,
-  TLStateEvents,
-} from '@tldraw/core'
+import type { TLLineTool } from '../TLLineTool'
+import type { TLLineShape } from '@tldraw/line-shape'
+import { TLShape, TLApp, TLToolState, uniqueId, TLEventMap, TLStateEvents } from '@tldraw/core'
+import Vec from '@tldraw/vec'
 
 export class CreatingState<
   S extends TLShape,
-  T extends S & TLBoxShape,
+  T extends S & TLLineShape,
   K extends TLEventMap,
   R extends TLApp<S, K>,
-  P extends TLBoxTool<T, S, K, R>
+  P extends TLLineTool<T, S, K, R>
 > extends TLToolState<S, K, R, P> {
   static id = 'creating'
 
   creatingShape?: T
+  initialShape?: T
 
   onEnter = () => {
     const { Shape } = this.tool
@@ -27,9 +21,9 @@ export class CreatingState<
       id: uniqueId(),
       parentId: this.app.currentPage.id,
       point: this.app.inputs.originPoint,
-      size: [1, 1],
+      handles: [{ point: [0, 0] }, { point: [1, 1] }],
     })
-
+    this.initialShape = shape.clone()
     this.creatingShape = shape
     this.app.currentPage.addShapes(shape)
     this.app.setSelectedShapes([shape])
@@ -37,12 +31,20 @@ export class CreatingState<
 
   onPointerMove: TLStateEvents<S, K>['onPointerMove'] = () => {
     if (!this.creatingShape) throw Error('Expected a creating shape.')
-    const { currentPoint, originPoint } = this.app.inputs
-    const bounds = BoundsUtils.getBoundsFromPoints([currentPoint, originPoint])
-    this.creatingShape.update({
-      point: [bounds.minX, bounds.minY],
-      size: [bounds.width, bounds.height],
-    })
+    const {
+      inputs: { shiftKey, previousPoint, originPoint, currentPoint },
+    } = this.app
+    if (Vec.isEqual(previousPoint, currentPoint)) return
+    const delta = Vec.sub(currentPoint, originPoint)
+    if (shiftKey) {
+      if (Math.abs(delta[0]) < Math.abs(delta[1])) {
+        delta[0] = 0
+      } else {
+        delta[1] = 0
+      }
+    }
+    const { initialShape } = this
+    this.creatingShape.onHandleChange({ index: 1, initialShape, delta })
   }
 
   onPointerUp: TLStateEvents<S, K>['onPointerUp'] = () => {

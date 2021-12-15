@@ -7,6 +7,8 @@ import {
   TLApp,
   TLEventMap,
   TLStateEvents,
+  TLEventInfo,
+  TLHandle,
 } from '@tldraw/core'
 import type { TLDrawShape } from '@tldraw/draw-shape'
 import type { TLDrawTool } from '../TLDrawTool'
@@ -93,5 +95,16 @@ export class CreatingState<
 
   onWheel: TLStateEvents<S, K>['onWheel'] = (info, e) => {
     this.onPointerMove(info, e)
+  }
+
+  onKeyDown: TLStateEvents<S>['onKeyDown'] = (info, e) => {
+    switch (e.key) {
+      case 'Escape': {
+        if (!this.creatingShape) throw Error('Expected a creating shape.')
+        this.app.deleteShapes([this.creatingShape])
+        this.tool.transition('idle')
+        break
+      }
+    }
   }
 }

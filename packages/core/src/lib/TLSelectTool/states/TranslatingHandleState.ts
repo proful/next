@@ -58,18 +58,8 @@ export class TranslatingHandleState<
         delta[1] = 0
       }
     }
-
     const { shape, initialShape, index } = this
-
     shape.onHandleChange({ index, initialShape, delta })
-
-    // const { shape, initialTopLeft, handles, initialHandles, index } = this
-    // handles[index].point = Vec.add(delta, initialHandles[index].point)
-    // const topLeft = BoundsUtils.getCommonTopLeft(handles.map((h) => h.point))
-    // shape.update({
-    //   point: Vec.add(initialTopLeft, topLeft),
-    //   handles: handles.map((h) => ({ ...h, point: Vec.sub(h.point, topLeft) })),
-    // })
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {

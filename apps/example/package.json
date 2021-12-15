@@ -26,6 +26,7 @@
     "@tldraw/star-shape": "2.0.0-alpha.1",
     "@tldraw/box-tool": "2.0.0-alpha.1",
     "@tldraw/dot-tool": "2.0.0-alpha.1",
+    "@tldraw/line-tool": "2.0.0-alpha.1",
     "@tldraw/draw-tool": "2.0.0-alpha.1",
     "@tldraw/erase-tool": "2.0.0-alpha.1",
     "@tldraw/vec": "2.0.0-alpha.1",

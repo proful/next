@@ -39,4 +39,14 @@ export class ErasingState<
   onWheel: TLStateEvents<S, K>['onWheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }
+
+  onKeyDown: TLStateEvents<S>['onKeyDown'] = (info, e) => {
+    switch (e.key) {
+      case 'Escape': {
+        this.app.setErasingShapes([])
+        this.tool.transition('idle')
+        break
+      }
+    }
+  }
 }

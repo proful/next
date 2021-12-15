@@ -31,6 +31,7 @@ import {
   NuDotTool,
   NuEraseTool,
   NuStarTool,
+  NuLineTool,
 } from '~lib/tools'
 import { AppUI } from '~components/AppUI'
 import { NuContextBar } from '~components/NuContextBar/NuContextBar'
@@ -63,6 +64,7 @@ function App(): JSX.Element {
     NuDotTool,
     NuStarTool,
     NuEraseTool,
+    NuLineTool,
   ])
 
   const [model] = React.useState<TLSerializedApp>({

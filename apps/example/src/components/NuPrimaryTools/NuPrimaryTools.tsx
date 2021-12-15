@@ -11,7 +11,7 @@ import {
 } from '@radix-ui/react-icons'
 import { observer } from 'mobx-react-lite'
 import { NuButton } from '~components/NuButton'
-import { EraserIcon } from '~components/icons'
+import { EraserIcon, LineIcon } from '~components/icons'
 
 export const NuPrimaryTools = observer(function NuPrimaryTools() {
   const app = useApp()
@@ -98,6 +98,14 @@ export const NuPrimaryTools = observer(function NuPrimaryTools() {
           onDoubleClick={handleToolDoubleClick}
         >
           <StarIcon />
+        </NuButton>
+        <NuButton
+          data-tool="line"
+          data-selected={selectedToolId === 'line'}
+          onClick={handleToolClick}
+          onDoubleClick={handleToolDoubleClick}
+        >
+          <LineIcon />
         </NuButton>
       </div>
       <button className="nu-floating-button"></button>

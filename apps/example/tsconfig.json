@@ -24,7 +24,8 @@
     { "path": "../../packages/tools/box" },
     { "path": "../../packages/tools/dot" },
     { "path": "../../packages/tools/draw" },
-    { "path": "../../packages/tools/erase" }
+    { "path": "../../packages/tools/erase" },
+    { "path": "../../packages/tools/line" }
   ],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],
