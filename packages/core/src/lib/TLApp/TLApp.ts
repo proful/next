@@ -145,13 +145,13 @@ export class TLApp<
 
   static initial = 'select'
 
-  api: TLApi<S, K>
+  readonly api: TLApi<S, K>
 
-  inputs = new TLInputs<K>()
+  readonly inputs = new TLInputs<K>()
 
-  viewport = new TLViewport()
+  readonly viewport = new TLViewport()
 
-  settings = new TLSettings()
+  readonly settings = new TLSettings()
 
   /* -------------------- Document -------------------- */
 
@@ -210,7 +210,7 @@ export class TLApp<
 
   /* -------------------- App State ------------------- */
 
-  loadAppState(state: TLSerializedApp) {
+  loadDocumentModel(state: TLSerializedApp) {
     this.history.deserialize(state)
   }
 
@@ -552,127 +552,4 @@ export class TLApp<
   readonly onPinchEnd: TLEvents<S, K>['pinch'] = (info, e) => {
     this.inputs.onPinchEnd([...this.viewport.getPagePoint(info.point), 0.5], e)
   }
-
-  // /* ------------------- Public API ------------------- */
-
-  // /**
-  //  * Set the current page.
-  //  *
-  //  * @param page The new current page or page id.
-  //  */
-  // changePage = (page: string | TLPage<S, K>): this => {
-  //   return this.setCurrentPage(page)
-  // }
-
-  // /**
-  //  * Set the hovered shape.
-  //  *
-  //  * @param shape The new hovered shape or shape id.
-  //  */
-  // hover = (shape: string | S | undefined): this => {
-  //   return this.setHoveredShape(shape)
-  // }
-
-  // /**
-  //  * Create one or more shapes on the current page.
-  //  *
-  //  * @param shapes The new shape instances or serialized shapes.
-  //  */
-  // create = (...shapes: S[] | TLSerializedShape[]): this => {
-  //   return this.createShapes(shapes)
-  // }
-
-  // /**
-  //  * Update one or more shapes on the current page.
-  //  *
-  //  * @param shapes The serialized shape changes to apply.
-  //  */
-  // update = (...shapes: { id: string } & TLSerializedShape[]): this => {
-  //   shapes.forEach((shape) => {
-  //     this.currentPage.shapes.find((instance) => shape.id === instance.id)?.update(shape)
-  //   })
-  //   return this
-  // }
-
-  // /**
-  //  * Delete one or more shapes from the current page.
-  //  *
-  //  * @param shapes The shapes or shape ids to delete.
-  //  */
-  // delete = (...shapes: S[] | string[]): this => {
-  //   if (shapes.length === 0) shapes = this.selectedIds
-  //   return this.deleteShapes(shapes)
-  // }
-
-  // /**
-  //  * Select one or more shapes on the current page.
-  //  *
-  //  * @param shapes The shapes or shape ids to select.
-  //  */
-  // select = (...shapes: S[] | string[]): this => {
-  //   return this.setSelectedShapes(shapes)
-  // }
-
-  // /**
-  //  * Deselect one or more selected shapes on the current page.
-  //  *
-  //  * @param ids The shapes or shape ids to deselect.
-  //  */
-  // deselect = (...shapes: S[] | string[]): this => {
-  //   const ids =
-  //     typeof shapes[0] === 'string'
-  //       ? (shapes as string[])
-  //       : (shapes as S[]).map((shape) => shape.id)
-  //   this.setSelectedShapes(this.selectedIds.filter((id) => !ids.includes(id)))
-  //   return this
-  // }
-
-  // /** Select all shapes on the current page. */
-  // selectAll = (): this => {
-  //   return this.setSelectedShapes(this.currentPage.shapes)
-  // }
-
-  // /** Deselect all shapes on the current page. */
-  // deselectAll = (): this => {
-  //   return this.setSelectedShapes([])
-  // }
-
-  // /** Zoom the camera in. */
-  // zoomIn = (): this => {
-  //   this.viewport.zoomIn()
-  //   return this
-  // }
-
-  // /** Zoom the camera out. */
-  // zoomOut = (): this => {
-  //   this.viewport.zoomOut()
-  //   return this
-  // }
-
-  // /** Reset the camera to 100%. */
-  // resetZoom = (): this => {
-  //   this.viewport.resetZoom()
-  //   return this
-  // }
-
-  // /** Zoom to fit all of the current page's shapes in the viewport. */
-  // zoomToFit = (): this => {
-  //   const { shapes } = this.currentPage
-  //   if (shapes.length === 0) return this
-  //   const commonBounds = BoundsUtils.getCommonBounds(shapes.map((shape) => shape.bounds))
-  //   this.viewport.zoomToBounds(commonBounds)
-  //   return this
-  // }
-
-  // /** Zoom to fit the current selection in the viewport. */
-  // zoomToSelection = (): this => {
-  //   const { selectedBounds } = this
-  //   if (!selectedBounds) return this
-  //   this.viewport.zoomToBounds(selectedBounds)
-  //   return this
-  // }
-
-  // toggleGrid = (): this => {
-  //   return this.setSetting('showGrid', !this.showGrid)
-  // }
 }

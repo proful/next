@@ -9,6 +9,6 @@ export function usePropControl<S extends TLReactShape, R extends TLReactApp<S> =
 ) {
   React.useEffect(() => {
     if (!('model' in props)) return
-    if (props.model) app.history.deserialize(props.model)
+    if (props.model) app.loadDocumentModel(props.model)
   }, [(props as TLAppPropsWithoutApp<S>).model])
 }

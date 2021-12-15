@@ -25,19 +25,19 @@ export class NuPolylineShape extends TLPolylineShape<NuPolylineShapeProps> {
 
   static id = 'polyline'
 
-  ReactComponent = observer(({ events, isErasing, isSelected }: TLComponentProps) => {
-    const { points, stroke, fill, strokeWidth, opacity } = this
+  ReactComponent = observer(({ events, isErasing }: TLComponentProps) => {
+    const { points, stroke, strokeWidth, opacity } = this
 
     const path = points.join()
 
     return (
       <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
         <g>
-          <polygon className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'} points={path} />
-          <polygon
+          <polyline className={'tl-hitarea-stroke'} points={path} />
+          <polyline
             points={path}
             stroke={stroke}
-            fill={fill}
+            fill={'none'}
             strokeWidth={strokeWidth}
             strokeLinejoin="round"
           />
@@ -50,7 +50,7 @@ export class NuPolylineShape extends TLPolylineShape<NuPolylineShapeProps> {
     const { points } = this
 
     const path = points.join()
-    return <polygon points={path} />
+    return <polyline points={path} />
   })
 
   validateProps = (props: Partial<NuPolylineShapeProps & TLShapeProps>) => {
