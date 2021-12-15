@@ -88,7 +88,6 @@ export class TranslatingState<
   onEnter = () => {
     // Pause the history when we enter
     this.app.history.pause()
-
     this.app.cursors.push('move')
 
     // Set initial data

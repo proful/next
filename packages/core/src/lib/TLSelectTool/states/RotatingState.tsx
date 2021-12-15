@@ -29,6 +29,8 @@ export class RotatingState<
   onEnter = () => {
     const { history, selectedShapesArray, selectedBounds } = this.app
 
+    this.app.cursors.push('grabbing')
+
     if (!selectedBounds) throw Error('Expected selected bounds.')
 
     history.pause()
@@ -50,6 +52,7 @@ export class RotatingState<
 
   onExit = () => {
     this.app.history.resume()
+    this.app.cursors.pop()
     this.snapshot = {}
   }
 

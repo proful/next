@@ -20,6 +20,7 @@ export class TranslatingHandleState<
   private initialHandles: TLHandle[] = []
 
   onEnter = (info: { target: S & { handles: TLHandle[] }; handle: TLHandle; index: number }) => {
+    this.app.cursors.push('grabbing')
     this.app.history.pause()
     this.offset = [0, 0]
     this.index = info.index
@@ -30,6 +31,7 @@ export class TranslatingHandleState<
   }
 
   onExit = () => {
+    this.app.cursors.pop()
     this.app.history.resume()
   }
 

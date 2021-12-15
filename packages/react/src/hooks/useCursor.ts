@@ -31,7 +31,6 @@ export function useCursor(ref: React.RefObject<HTMLDivElement>, cursor: TLCursor
   React.useEffect(() => {
     const elm = ref.current
     if (!elm) return
-    console.log('setting cursor', CURSORS[cursor](0))
     elm.style.setProperty('cursor', CURSORS[cursor](0))
   }, [cursor])
 }

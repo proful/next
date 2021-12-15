@@ -14,6 +14,11 @@ export class PointingHandleState<
 
   onEnter = (info: { shape: S; target: S; handle: TLHandle; index: number }) => {
     this.info = info
+    this.app.cursors.push('grabbing')
+  }
+
+  onExit = () => {
+    this.app.cursors.pop()
   }
 
   onWheel: TLEvents<S>['wheel'] = (info, e) => {

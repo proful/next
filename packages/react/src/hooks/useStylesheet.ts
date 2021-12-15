@@ -383,6 +383,7 @@ const tlcss = css`
 
   .tl-handle {
     pointer-events: all;
+    cursor: grab;
   }
 
   .tl-handle:hover .tl-handle-bg {

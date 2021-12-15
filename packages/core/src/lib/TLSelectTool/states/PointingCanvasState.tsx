@@ -12,7 +12,12 @@ export class PointingCanvasState<
 
   onEnter = () => {
     const { shiftKey } = this.app.inputs
+    this.app.cursors.push('cross')
     if (!shiftKey) this.app.setSelectedShapes([])
+  }
+
+  onExit = () => {
+    this.app.cursors.pop()
   }
 
   onWheel: TLEvents<S>['wheel'] = (info, e) => {

@@ -10,6 +10,14 @@ export class PointingRotateHandleState<
 > extends TLToolState<S, K, R, P> {
   static id = 'pointingRotateHandle'
 
+  onEnter = () => {
+    this.app.cursors.push('grabbing')
+  }
+
+  onExit = () => {
+    this.app.cursors.pop()
+  }
+
   onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }

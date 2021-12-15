@@ -40,13 +40,11 @@ export class ResizingState<
   }
 
   onEnter = (info: { handle: TLBoundsCorner | TLBoundsEdge }) => {
-    this.handle = info.handle
     const { history, selectedShapesArray, selectedBounds } = this.app
-
     if (!selectedBounds) throw Error('Expected a selected bounds.')
 
+    this.handle = info.handle
     this.app.cursors.push(ResizingState.CURSORS[info.handle])
-
     history.pause()
 
     const initialInnerBounds = BoundsUtils.getBoundsFromPoints(

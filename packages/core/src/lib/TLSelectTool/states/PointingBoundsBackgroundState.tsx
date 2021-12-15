@@ -10,6 +10,14 @@ export class PointingBoundsBackgroundState<
 > extends TLToolState<S, K, R, P> {
   static id = 'pointingBoundsBackground'
 
+  onEnter = () => {
+    this.app.cursors.push('move')
+  }
+
+  onExit = () => {
+    this.app.cursors.pop()
+  }
+
   onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)
   }
