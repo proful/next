@@ -16,6 +16,7 @@ export function useBoundsEvents(handle: TLBoundsHandle) {
     const onPointerDown: TLReactCustomEvents['pointer'] = (e) => {
       const { order = 0 } = e
       if (order) e.currentTarget?.setPointerCapture(e.pointerId)
+      console.log(e.currentTarget)
       callbacks.onPointerDown?.({ type: TLTargetType.Bounds, target: handle, order }, e)
       e.order = order + 1
     }

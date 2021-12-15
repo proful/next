@@ -1,6 +1,13 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLEvents, TLBoundsHandle, TLEventMap } from '~types'
+import {
+  TLEvents,
+  TLBoundsHandle,
+  TLEventMap,
+  TLBoundsEdge,
+  TLBoundsCorner,
+  TLCursor,
+} from '~types'
 
 export class PointingResizeHandleState<
   S extends TLShape,
@@ -12,8 +19,24 @@ export class PointingResizeHandleState<
 
   pointedHandle?: TLBoundsHandle
 
-  onEnter = (info: { target: TLBoundsHandle }) => {
+  static CURSORS: Record<TLBoundsCorner | TLBoundsEdge, TLCursor> = {
+    [TLBoundsEdge.Bottom]: 'ns-resize',
+    [TLBoundsEdge.Top]: 'ns-resize',
+    [TLBoundsEdge.Left]: 'ew-resize',
+    [TLBoundsEdge.Right]: 'ew-resize',
+    [TLBoundsCorner.BottomLeft]: 'nesw-resize',
+    [TLBoundsCorner.BottomRight]: 'nwse-resize',
+    [TLBoundsCorner.TopLeft]: 'nwse-resize',
+    [TLBoundsCorner.TopRight]: 'nesw-resize',
+  }
+
+  onEnter = (info: { target: TLBoundsCorner | TLBoundsEdge }) => {
+    this.app.cursors.push(PointingResizeHandleState.CURSORS[info.target])
     this.pointedHandle = info.target
+  }
+
+  onExit = () => {
+    this.app.cursors.pop()
   }
 
   onWheel: TLEvents<S>['wheel'] = (info, e) => {

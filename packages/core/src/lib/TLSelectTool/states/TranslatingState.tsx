@@ -89,6 +89,8 @@ export class TranslatingState<
     // Pause the history when we enter
     this.app.history.pause()
 
+    this.app.cursors.push('move')
+
     // Set initial data
     const { selectedShapesArray, inputs } = this.app
 
@@ -107,6 +109,8 @@ export class TranslatingState<
   onExit = () => {
     // Resume the history when we exit
     this.app.history.resume()
+
+    this.app.cursors.pop()
 
     // Reset initial data
     this.didClone = false

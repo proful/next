@@ -1,6 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLShape, TLSelectTool, TLToolState, TLSerializedShape } from '~lib'
-import { TLBounds, TLBoundsCorner, TLBoundsEdge, TLEventMap, TLEvents } from '~types'
+import { TLBounds, TLBoundsCorner, TLBoundsEdge, TLCursor, TLEventMap, TLEvents } from '~types'
 import { BoundsUtils } from '~utils'
 
 export class ResizingState<
@@ -28,11 +28,24 @@ export class ResizingState<
   transformOrigins: Record<string, number[]> = {}
   boundsRotation = 0
 
+  static CURSORS: Record<TLBoundsCorner | TLBoundsEdge, TLCursor> = {
+    [TLBoundsEdge.Bottom]: 'ns-resize',
+    [TLBoundsEdge.Top]: 'ns-resize',
+    [TLBoundsEdge.Left]: 'ew-resize',
+    [TLBoundsEdge.Right]: 'ew-resize',
+    [TLBoundsCorner.BottomLeft]: 'nesw-resize',
+    [TLBoundsCorner.BottomRight]: 'nwse-resize',
+    [TLBoundsCorner.TopLeft]: 'nwse-resize',
+    [TLBoundsCorner.TopRight]: 'nesw-resize',
+  }
+
   onEnter = (info: { handle: TLBoundsCorner | TLBoundsEdge }) => {
     this.handle = info.handle
     const { history, selectedShapesArray, selectedBounds } = this.app
 
     if (!selectedBounds) throw Error('Expected a selected bounds.')
+
+    this.app.cursors.push(ResizingState.CURSORS[info.handle])
 
     history.pause()
 
@@ -68,6 +81,7 @@ export class ResizingState<
   }
 
   onExit = () => {
+    this.app.cursors.pop()
     this.snapshots = {}
     this.initialCommonBounds = {} as TLBounds
     this.boundsRotation = 0

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Vec } from '@tldraw/vec'
-import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import type { TLBounds, TLEventMap, TLEvents } from '~types'
-import { BoundsUtils, GeomUtils } from '~utils'
+import { TLApp, TLSelectTool, TLShape, TLShapeWithHandles, TLToolState } from '~lib'
+import type { TLBounds, TLEventMap, TLEvents, TLHandle } from '~types'
+import { BoundsUtils, deepCopy, GeomUtils } from '~utils'
 
 export class RotatingState<
   S extends TLShape,
@@ -17,8 +18,10 @@ export class RotatingState<
       point: number[]
       center: number[]
       rotation?: number
+      handles?: TLHandle[]
     }
   > = {}
+
   initialCommonCenter = [0, 0]
   initialCommonBounds = {} as TLBounds
   initialAngle = 0
@@ -35,7 +38,12 @@ export class RotatingState<
     this.snapshot = Object.fromEntries(
       selectedShapesArray.map((shape) => [
         shape.id,
-        { point: [...shape.point], center: [...shape.center], rotation: shape.rotation },
+        {
+          point: [...shape.point],
+          center: [...shape.center],
+          rotation: shape.rotation,
+          handles: 'handles' in shape ? deepCopy((shape as any).handles) : undefined,
+        },
       ])
     )
   }
@@ -80,21 +88,18 @@ export class RotatingState<
 
       if ('handles' in shape) {
         // Don't rotate shapes with handles; instead, rotate the handles
-        // Object.values(shape.handles).forEach((handle) => {
-        //   handle.point = Vec.rotWith(
-        //     initialShape.handles![handle.id as keyof ArrowShape['handles']].point,
-        //     relativeCenter,
-        //     angleDelta
-        //   )
-        // })
-        // const handlePoints = {
-        //   start: [...shape.handles.start.point],
-        //   end: [...shape.handles.end.point],
-        // }
-        // const offset = Utils.getCommonTopLeft([handlePoints.start, handlePoints.end])
-        // shape.handles.start.point = Vec.sub(handlePoints.start, offset)
-        // shape.handles.end.point = Vec.sub(handlePoints.end, offset)
-        // shape.point = Vec.add(Vec.sub(rotatedCenter, relativeCenter), offset)
+        const initialHandles = (initialShape as unknown as TLShapeWithHandles).handles
+        const handlePoints = initialHandles!.map((handle) =>
+          Vec.rotWith(handle.point, relativeCenter, angleDelta)
+        )
+        const topLeft = BoundsUtils.getCommonTopLeft(handlePoints)
+        shape.update({
+          point: Vec.add(topLeft, Vec.sub(rotatedCenter, relativeCenter)),
+          handles: initialHandles.map((h, i) => ({
+            ...h,
+            point: Vec.sub(handlePoints[i], topLeft),
+          })),
+        })
       } else {
         shape.update({
           point: Vec.sub(rotatedCenter, relativeCenter),

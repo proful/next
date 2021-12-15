@@ -19,8 +19,10 @@ import {
   useStylesheet,
   useRendererContext,
   usePreventNavigation,
+  useCursor,
+  useZoom,
 } from '~hooks'
-import type { TLBinding, TLBounds, TLHandle, TLTheme } from '@tldraw/core'
+import type { TLBinding, TLBounds, TLCursor, TLHandle, TLTheme } from '@tldraw/core'
 import { EMPTY_OBJECT } from '~constants'
 import type { TLReactShape } from '~lib'
 
@@ -37,6 +39,7 @@ export interface TLCanvasProps<S extends TLReactShape> {
   selectedShapes?: S[]
   erasingShapes?: S[]
   gridSize?: number
+  cursor?: TLCursor
   showGrid?: boolean
   showBounds?: boolean
   showHandles?: boolean
@@ -58,6 +61,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   selectedBounds,
   selectedShapes,
   erasingShapes,
+  cursor = 'default',
   showBounds = true,
   showHandles = true,
   showBoundsRotation = false,
@@ -71,29 +75,19 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   children,
 }: Partial<TLCanvasProps<S>>): JSX.Element {
   const rContainer = React.useRef<HTMLDivElement>(null)
+  const { viewport, components, meta } = useRendererContext()
+  const { zoom } = viewport.camera
+
   useStylesheet(theme, id)
   usePreventNavigation(rContainer)
-
-  const { viewport, components, meta } = useRendererContext()
-
   useResizeObserver(rContainer, viewport)
   useGestureEvents(rContainer)
-
-  // If we zoomed, set the CSS variable for the zoom
-  React.useLayoutEffect(() => {
-    return autorun(() => {
-      const { zoom } = viewport.camera
-      const container = rContainer.current
-      if (!container) return
-      container.style.setProperty('--tl-zoom', zoom.toString())
-    })
-  }, [])
+  useCursor(rContainer, cursor)
+  useZoom(rContainer)
 
   const events = useCanvasEvents()
 
-  const { zoom } = viewport.camera
-
-  const handleShape =
+  const shapeWithHandles =
     selectedShapes?.length === 1 &&
     (selectedShapes[0] as S & { handles: TLHandle[] }).handles !== undefined
       ? (selectedShapes[0] as S & { handles: TLHandle[] })
@@ -156,13 +150,13 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                   />
                 </Container>
               )}
-              {showHandles && handleShape && components.Handle && (
+              {showHandles && shapeWithHandles && components.Handle && (
                 <Container bounds={selectedBounds} zIndex={10003}>
                   <SVGContainer>
-                    {handleShape.handles!.map((handle, i) =>
+                    {shapeWithHandles.handles!.map((handle, i) =>
                       React.createElement(components.Handle!, {
                         key: `${handle.id}_handle_${i}`,
-                        shape: handleShape,
+                        shape: shapeWithHandles,
                         handle,
                         index: i,
                       })

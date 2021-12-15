@@ -250,19 +250,23 @@ const tlcss = css`
     stroke: transparent;
   }
 
-  .tl-cursor-ns {
+  .tl-cursor-ns,
+  .tl-cursor-ns:active {
     cursor: ns-resize;
   }
 
-  .tl-cursor-ew {
+  .tl-cursor-ew,
+  .tl-cursor-ew:active {
     cursor: ew-resize;
   }
 
-  .tl-cursor-nesw {
+  .tl-cursor-nesw,
+  .tl-cursor-nesw:active {
     cursor: nesw-resize;
   }
 
-  .tl-cursor-nwse {
+  .tl-cursor-nwse,
+  .tl-cursor-nwse:active {
     cursor: nwse-resize;
   }
 

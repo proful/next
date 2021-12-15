@@ -11,4 +11,12 @@ export abstract class TLEraseTool<
   static states = [IdleState, PointingState, ErasingState]
 
   static initial = 'idle'
+
+  onEnter = () => {
+    this.app.cursors.push('cross')
+  }
+
+  onExit = () => {
+    this.app.cursors.pop()
+  }
 }

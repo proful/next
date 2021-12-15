@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
-import type { TLEventHandlers, TLInputs, TLViewport } from '@tldraw/core'
+import type { TLCursor, TLEventHandlers, TLInputs, TLViewport } from '@tldraw/core'
 import {
   BoundsBackground as _BoundsBackground,
   BoundsForeground as _BoundsForeground,
@@ -67,11 +67,11 @@ export const RendererContext = observer(function App<S extends TLReactShape>({
     }
   })
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const { Brush, Handle, Grid, ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } =
       components
 
-    autorun(() => {
+    return autorun(() => {
       setCurrentContext({
         id,
         viewport,

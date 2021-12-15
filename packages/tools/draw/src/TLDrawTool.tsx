@@ -23,4 +23,12 @@ export abstract class TLDrawTool<
   abstract Shape: {
     new (props: TLShapeProps & Partial<TLDrawShapeProps & unknown>): T
   }
+
+  onEnter = () => {
+    this.app.cursors.push('cross')
+  }
+
+  onExit = () => {
+    this.app.cursors.pop()
+  }
 }
