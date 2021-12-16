@@ -7,6 +7,8 @@ import type { NuStarShape } from './NuStarShape'
 import type { NuDotShape } from './NuDotShape'
 import type { NuLineShape } from './NuLineShape'
 import type { NuPolylineShape } from './NuPolylineShape'
+import type { NuCodeSandboxShape } from './NuCodeSandboxShape'
+import type { NuYouTubeShape } from './NuYouTubeShape'
 
 export type Shape =
   | NuBoxShape
@@ -18,6 +20,9 @@ export type Shape =
   | NuStarShape
   | NuPolylineShape
   | NuLineShape
+  | NuLineShape
+  | NuCodeSandboxShape
+  | NuYouTubeShape
 
 export * from './NuBoxShape'
 export * from './NuPenShape'
@@ -28,3 +33,5 @@ export * from './NuDotShape'
 export * from './NuStarShape'
 export * from './NuLineShape'
 export * from './NuPolylineShape'
+export * from './NuCodeSandboxShape'
+export * from './NuYouTubeShape'

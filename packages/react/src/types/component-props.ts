@@ -34,7 +34,8 @@ export type TLBoundsDetailProps<S extends TLReactShape = TLReactShape> = {
   bounds: TLBounds
   scaledBounds: TLBounds
   zoom: number
-  detail: 'size' | 'rotation'
+  rotation?: number
+  detail?: 'size' | 'rotation'
 }
 
 export type TLBoundsDetailComponent<S extends TLReactShape = TLReactShape> = (

@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
-import { TLShapeProps, assignOwnProps, TLCustomProps } from '@tldraw/core'
+import { TLShapeProps, assignOwnProps, TLCustomProps, TLHandle } from '@tldraw/core'
 import { SVGContainer, TLComponentProps, TLIndicatorProps } from '@tldraw/react'
 import { TLLineShape, TLLineShapeProps } from '@tldraw/line-shape'
 import { observer } from 'mobx-react-lite'
 import { makeObservable, observable } from 'mobx'
 import { NuStyleProps, withClampedStyles } from './NuStyleProps'
 
-interface NuLineShapeProps extends NuStyleProps, TLLineShapeProps {}
+interface NuLineShapeProps extends NuStyleProps, TLLineShapeProps {
+  handles: TLHandle[]
+}
 
 export class NuLineShape extends TLLineShape<NuLineShapeProps> {
   constructor(props = {} as TLCustomProps<NuLineShapeProps>) {

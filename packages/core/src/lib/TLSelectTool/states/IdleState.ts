@@ -13,7 +13,7 @@ export class IdleState<
   static shortcuts: TLShortcut<TLShape, TLEventMap, TLApp>[] = [
     {
       keys: ['delete', 'backspace'],
-      fn: (app) => app.api.deleteShapes(),
+      fn: app => app.api.deleteShapes(),
     },
   ]
 
@@ -21,7 +21,7 @@ export class IdleState<
     this.app.setHoveredShape(undefined)
   }
 
-  onPointerEnter: TLEvents<S>['pointer'] = (info) => {
+  onPointerEnter: TLEvents<S>['pointer'] = info => {
     if (info.order > 0) return
 
     switch (info.type) {
@@ -30,7 +30,9 @@ export class IdleState<
         break
       }
       case TLTargetType.Bounds: {
-        this.tool.transition('hoveringResizeHandle', info)
+        if (!(info.target === 'background' || info.target === 'center')) {
+          this.tool.transition('hoveringResizeHandle', info)
+        }
         break
       }
     }
@@ -92,7 +94,7 @@ export class IdleState<
     }
   }
 
-  onPointerLeave: TLEvents<S>['pointer'] = (info) => {
+  onPointerLeave: TLEvents<S>['pointer'] = info => {
     if (info.order > 0) return
 
     if (info.type === TLTargetType.Shape) {

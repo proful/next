@@ -9,6 +9,7 @@ import {
   TLEventMap,
   TLStateEvents,
 } from '@tldraw/core'
+import Vec from '@tldraw/vec'
 
 export class CreatingState<
   S extends TLShape,
@@ -20,6 +21,7 @@ export class CreatingState<
   static id = 'creating'
 
   creatingShape?: T
+  aspectRatio?: number
 
   onEnter = () => {
     const { Shape } = this.tool
@@ -30,6 +32,8 @@ export class CreatingState<
       size: [1, 1],
     })
 
+    this.aspectRatio = Shape.aspectRatio
+
     this.creatingShape = shape
     this.app.currentPage.addShapes(shape)
     this.app.setSelectedShapes([shape])
@@ -39,6 +43,18 @@ export class CreatingState<
     if (!this.creatingShape) throw Error('Expected a creating shape.')
     const { currentPoint, originPoint } = this.app.inputs
     const bounds = BoundsUtils.getBoundsFromPoints([currentPoint, originPoint])
+
+    if (this.aspectRatio) {
+      const size = [bounds.width, Math.max(1, bounds.width * this.aspectRatio)]
+      const delta = Vec.sub(currentPoint, originPoint)
+      const point = [
+        delta[0] < 0 ? originPoint[0] - size[0] : originPoint[0],
+        delta[1] < 0 ? originPoint[1] - size[1] : originPoint[1],
+      ]
+      this.creatingShape.update({ point, size })
+      return
+    }
+
     this.creatingShape.update({
       point: [bounds.minX, bounds.minY],
       size: [bounds.width, bounds.height],

@@ -20,6 +20,8 @@ import {
   NuStarShape,
   NuLineShape,
   NuPolylineShape,
+  NuCodeSandboxShape,
+  NuYouTubeShape,
   Shape,
 } from '~lib/shapes'
 import {
@@ -32,6 +34,8 @@ import {
   NuEraseTool,
   NuStarTool,
   NuLineTool,
+  NuCodeSandboxTool,
+  NuYouTubeTool,
 } from '~lib/tools'
 import { AppUI } from '~components/AppUI'
 import { NuContextBar } from '~components/NuContextBar/NuContextBar'
@@ -53,6 +57,8 @@ function App(): JSX.Element {
     NuStarShape,
     NuPolylineShape,
     NuLineShape,
+    NuCodeSandboxShape,
+    NuYouTubeShape,
   ])
 
   const [Tools] = React.useState<TLReactToolConstructor<Shape>[]>(() => [
@@ -65,6 +71,8 @@ function App(): JSX.Element {
     NuStarTool,
     NuEraseTool,
     NuLineTool,
+    NuCodeSandboxTool,
+    NuYouTubeTool,
   ])
 
   const [model] = React.useState<TLSerializedApp>({
@@ -84,19 +92,19 @@ function App(): JSX.Element {
             rotation: Math.PI / 6,
           },
           {
-            id: 'box2',
-            type: 'box',
+            id: 'code1',
+            type: 'code',
             parentId: 'page1',
             point: [300, 400],
             size: [100, 100],
           },
-          // {
-          //   id: 'polyline1',
-          //   type: 'polyline',
-          //   parentId: 'page1',
-          //   point: [100, 100],
-          //   handles: [{ point: [0, 0] }, { point: [30, 70] }, { point: [100, 100] }],
-          // },
+          {
+            id: 'polyline1',
+            type: 'polyline',
+            parentId: 'page1',
+            point: [100, 100],
+            handles: [{ point: [0, 0] }, { point: [30, 70] }, { point: [100, 100] }],
+          },
           // {
           //   id: 'line1',
           //   type: 'line',
@@ -194,7 +202,7 @@ function App(): JSX.Element {
     ],
   })
 
-  const onMount = React.useCallback<TLReactCallbacks<Shape>['onMount']>((app) => {
+  const onMount = React.useCallback<TLReactCallbacks<Shape>['onMount']>(app => {
     setApp(app)
     // app.selectAll()
   }, [])

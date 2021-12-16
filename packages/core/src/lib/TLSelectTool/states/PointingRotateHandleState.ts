@@ -1,4 +1,5 @@
 import { Vec } from '@tldraw/vec'
+import { CURSORS } from '~constants'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
 import { TLCursor, TLEventMap, TLEvents } from '~types'
 
@@ -9,7 +10,12 @@ export class PointingRotateHandleState<
   P extends TLSelectTool<S, K, R>
 > extends TLToolState<S, K, R, P> {
   static id = 'pointingRotateHandle'
+
   cursor = TLCursor.Grabbing
+
+  onEnter = () => {
+    this.updateCursor()
+  }
 
   onWheel: TLEvents<S>['wheel'] = (info, e) => {
     this.onPointerMove(info, e)
@@ -28,5 +34,10 @@ export class PointingRotateHandleState<
 
   onPinchStart: TLEvents<S>['pinch'] = (info, event) => {
     this.tool.transition('pinching', { info, event })
+  }
+
+  private updateCursor() {
+    const rotation = this.app.selectedBounds!.rotation
+    this.app.cursors.setCursor(TLCursor.Grabbing, rotation)
   }
 }

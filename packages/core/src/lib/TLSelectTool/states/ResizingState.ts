@@ -12,6 +12,7 @@ export class ResizingState<
   static id = 'resizing'
 
   isSingle = false
+  isAspectRatioLocked = false
   handle: TLBoundsCorner | TLBoundsEdge = TLBoundsCorner.BottomRight
   snapshots: Record<
     string,
@@ -50,16 +51,17 @@ export class ResizingState<
     history.pause()
 
     const initialInnerBounds = BoundsUtils.getBoundsFromPoints(
-      selectedShapesArray.map((shape) => BoundsUtils.getBoundsCenter(shape.bounds))
+      selectedShapesArray.map(shape => BoundsUtils.getBoundsCenter(shape.bounds))
     )
 
     this.isSingle = selectedShapesArray.length === 1
+    this.isAspectRatioLocked = this.isSingle && !!selectedShapesArray[0].isAspectRatioLocked
     this.boundsRotation = this.isSingle ? selectedShapesArray[0].rotation ?? 0 : 0
     this.initialCommonBounds = { ...selectedBounds }
     this.initialCommonCenter = BoundsUtils.getBoundsCenter(this.initialCommonBounds)
 
     this.snapshots = Object.fromEntries(
-      selectedShapesArray.map((shape) => {
+      selectedShapesArray.map(shape => {
         const { bounds } = shape
         const ic = BoundsUtils.getBoundsCenter(bounds)
 
@@ -76,7 +78,7 @@ export class ResizingState<
       })
     )
 
-    selectedShapesArray.forEach((shape) => shape.onResizeStart?.())
+    selectedShapesArray.forEach(shape => shape.onResizeStart?.())
   }
 
   onExit = () => {
@@ -105,12 +107,12 @@ export class ResizingState<
       handle,
       delta,
       this.boundsRotation,
-      shiftKey
+      shiftKey || this.isAspectRatioLocked
     )
 
     const { scaleX, scaleY } = nextBounds
 
-    this.app.selectedShapes.forEach((shape) => {
+    this.app.selectedShapes.forEach(shape => {
       const { shape: initialShape, transformOrigin } = snapshots[shape.id]
 
       const relativeBounds = BoundsUtils.getRelativeTransformedBoundingBox(
@@ -139,7 +141,7 @@ export class ResizingState<
   onKeyDown: TLEvents<S>['keyboard'] = (info, e) => {
     switch (e.key) {
       case 'Escape': {
-        this.app.selectedShapes.forEach((shape) => {
+        this.app.selectedShapes.forEach(shape => {
           shape.update({ ...this.snapshots[shape.id].shape })
         })
         this.tool.transition('idle')

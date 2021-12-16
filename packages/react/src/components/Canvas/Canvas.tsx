@@ -40,6 +40,7 @@ export interface TLCanvasProps<S extends TLReactShape> {
   gridSize?: number
   cursor?: TLCursor
   cursorRotation?: number
+  boundsRotation?: number
   showGrid?: boolean
   showBounds?: boolean
   showHandles?: boolean
@@ -63,6 +64,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   erasingShapes,
   cursor = TLCursor.Default,
   cursorRotation = 0,
+  boundsRotation = 0,
   showBounds = true,
   showHandles = true,
   showBoundsRotation = false,
@@ -88,9 +90,10 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
 
   const events = useCanvasEvents()
 
-  const shapeWithHandles =
-    selectedShapes?.length === 1 &&
-    (selectedShapes[0] as S & { handles: TLHandle[] }).handles !== undefined
+  const onlySelectedShape = selectedShapes?.length === 1 && selectedShapes[0]
+
+  const onlySelectedShapeWithHandles =
+    onlySelectedShape && 'handles' in onlySelectedShape
       ? (selectedShapes[0] as S & { handles: TLHandle[] })
       : undefined
 
@@ -151,13 +154,13 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                   />
                 </Container>
               )}
-              {showHandles && shapeWithHandles && components.Handle && (
+              {showHandles && onlySelectedShapeWithHandles && components.Handle && (
                 <Container bounds={selectedBounds} zIndex={10003}>
                   <SVGContainer>
-                    {shapeWithHandles.handles!.map((handle, i) =>
+                    {onlySelectedShapeWithHandles.handles.map((handle, i) =>
                       React.createElement(components.Handle!, {
                         key: `${handle.id}_handle_${i}`,
-                        shape: shapeWithHandles,
+                        shape: onlySelectedShapeWithHandles,
                         handle,
                         index: i,
                       })
@@ -172,6 +175,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                   bounds={selectedBounds}
                   detail={showBoundsRotation ? 'rotation' : 'size'}
                   hidden={!showBoundsDetail}
+                  rotation={boundsRotation}
                 />
               )}
               {selectedShapes && components.ContextBar && (

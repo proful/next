@@ -137,7 +137,7 @@ export class TLApp<
     const shortcuts = (this.constructor['shortcuts'] || []) as TLShortcut<S, K>[]
     this._disposables.push(
       ...[...ownShortcuts, ...shortcuts].map(({ keys, fn }) => {
-        return KeyUtils.registerShortcut(keys, (e) => {
+        return KeyUtils.registerShortcut(keys, e => {
           fn(this, this, e)
         })
       })
@@ -215,7 +215,7 @@ export class TLApp<
     return {
       currentPageId: this.currentPageId,
       selectedIds: Array.from(this.selectedIds.values()),
-      pages: this.pages.map((page) => page.serialized),
+      pages: this.pages.map(page => page.serialized),
     }
   }
 
@@ -231,7 +231,7 @@ export class TLApp<
   }
 
   @action removePages(...pages: TLPage<S, K>[]): void {
-    this.pages = this.pages.filter((page) => !pages.includes(page))
+    this.pages = this.pages.filter(page => !pages.includes(page))
     this.persist()
   }
 
@@ -245,7 +245,7 @@ export class TLApp<
   }
 
   @computed get currentPage(): TLPage<S, K> {
-    const page = this.pages.find((page) => page.id === this.currentPageId)
+    const page = this.pages.find(page => page.id === this.currentPageId)
     if (!page) throw Error(`Could not find a page named ${this.currentPageId}.`)
     return page
   }
@@ -264,9 +264,9 @@ export class TLApp<
     if (typeof shapes[0] === 'string') {
       ids = new Set(shapes as string[])
     } else {
-      ids = new Set((shapes as S[]).map((shape) => shape.id))
+      ids = new Set((shapes as S[]).map(shape => shape.id))
     }
-    this.setSelectedShapes(this.selectedShapesArray.filter((shape) => !ids.has(shape.id)))
+    this.setSelectedShapes(this.selectedShapesArray.filter(shape => !ids.has(shape.id)))
     this.currentPage.removeShapes(...shapes)
     this.persist()
     return this
@@ -292,7 +292,7 @@ export class TLApp<
 
   @computed get hoveredShape(): S | undefined {
     const { hoveredId, currentPage } = this
-    return hoveredId ? currentPage.shapes.find((shape) => shape.id === hoveredId) : undefined
+    return hoveredId ? currentPage.shapes.find(shape => shape.id === hoveredId) : undefined
   }
 
   @action readonly setHoveredShape = (shape: string | S | undefined): this => {
@@ -317,12 +317,17 @@ export class TLApp<
     selectedIds.clear()
     selectedShapes.clear()
     if (shapes[0] && typeof shapes[0] === 'string') {
-      shapes.forEach((s) => selectedIds.add(s as string))
+      shapes.forEach(s => selectedIds.add(s as string))
     } else {
-      shapes.forEach((s) => selectedIds.add((s as S).id))
+      shapes.forEach(s => selectedIds.add((s as S).id))
     }
-    const newSelectedShapes = this.currentPage.shapes.filter((shape) => selectedIds.has(shape.id))
-    newSelectedShapes.forEach((s) => selectedShapes.add(s))
+    const newSelectedShapes = this.currentPage.shapes.filter(shape => selectedIds.has(shape.id))
+    newSelectedShapes.forEach(s => selectedShapes.add(s))
+    if (newSelectedShapes.length === 1) {
+      this.boundsRotation = newSelectedShapes[0].rotation ?? 0
+    } else {
+      this.boundsRotation = 0
+    }
     return this
   }
 
@@ -340,12 +345,12 @@ export class TLApp<
     erasingIds.clear()
     erasingShapes.clear()
     if (shapes[0] && typeof shapes[0] === 'string') {
-      shapes.forEach((s) => erasingIds.add(s as string))
+      shapes.forEach(s => erasingIds.add(s as string))
     } else {
-      shapes.forEach((s) => erasingIds.add((s as S).id))
+      shapes.forEach(s => erasingIds.add((s as S).id))
     }
-    const newErasingShapes = this.currentPage.shapes.filter((shape) => erasingIds.has(shape.id))
-    newErasingShapes.forEach((s) => erasingShapes.add(s))
+    const newErasingShapes = this.currentPage.shapes.filter(shape => erasingIds.has(shape.id))
+    newErasingShapes.forEach(s => erasingShapes.add(s))
     return this
   }
 
@@ -385,7 +390,7 @@ export class TLApp<
   @computed get showBounds() {
     return (
       this.currentState.id === 'select' &&
-      (this.selectedShapes.size > 1 || !this.selectedShapesArray.every((shape) => shape.hideBounds))
+      (this.selectedShapes.size > 1 || !this.selectedShapesArray.every(shape => shape.hideBounds))
     )
   }
 
@@ -393,7 +398,7 @@ export class TLApp<
     return (
       this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
-      !this.selectedShapesArray.every((shape) => shape.hideBoundsDetail)
+      !this.selectedShapesArray.every(shape => shape.hideBoundsDetail)
     )
   }
 
@@ -412,7 +417,7 @@ export class TLApp<
       this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
       (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
-      !this.selectedShapesArray.every((shape) => shape.hideContextBar)
+      !this.selectedShapesArray.every(shape => shape.hideContextBar)
     )
   }
 
@@ -422,7 +427,7 @@ export class TLApp<
       this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
       (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
-      !this.selectedShapesArray.every((shape) => shape.hideRotateHandle)
+      !this.selectedShapesArray.every(shape => shape.hideRotateHandle)
     )
   }
 
@@ -432,7 +437,7 @@ export class TLApp<
       this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
       (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
-      !this.selectedShapesArray.every((shape) => shape.hideResizeHandles)
+      !this.selectedShapesArray.every(shape => shape.hideResizeHandles)
     )
   }
 
@@ -442,10 +447,11 @@ export class TLApp<
       viewport: { currentView },
     } = this
 
-    return currentPage.shapes.filter((shape) => {
+    return currentPage.shapes.filter(shape => {
       return (
         shape.parentId === currentPage.id &&
-        (BoundsUtils.boundsContain(currentView, shape.rotatedBounds) ||
+        (shape.stayMounted ||
+          BoundsUtils.boundsContain(currentView, shape.rotatedBounds) ||
           BoundsUtils.boundsCollide(currentView, shape.rotatedBounds))
       )
     })
@@ -454,7 +460,13 @@ export class TLApp<
   @computed get selectedBounds(): TLBounds | undefined {
     return this.selectedShapesArray.length === 1
       ? { ...this.selectedShapesArray[0].bounds, rotation: this.selectedShapesArray[0].rotation }
-      : BoundsUtils.getCommonBounds(this.selectedShapesArray.map((shape) => shape.rotatedBounds))
+      : BoundsUtils.getCommonBounds(this.selectedShapesArray.map(shape => shape.rotatedBounds))
+  }
+
+  @observable boundsRotation = 0
+
+  @action setBoundsRotation(radians: number) {
+    this.boundsRotation = radians
   }
 
   /* ------------------ Shape Classes ----------------- */
@@ -462,11 +474,11 @@ export class TLApp<
   Shapes = new Map<string, TLShapeConstructor<S>>()
 
   registerShapes = (...Shapes: TLShapeConstructor<S>[]) => {
-    Shapes.forEach((Shape) => this.Shapes.set(Shape.id, Shape))
+    Shapes.forEach(Shape => this.Shapes.set(Shape.id, Shape))
   }
 
   deregisterShapes = (...Shapes: TLShapeConstructor<S>[]) => {
-    Shapes.forEach((Shape) => this.Shapes.delete(Shape.id))
+    Shapes.forEach(Shape => this.Shapes.delete(Shape.id))
   }
 
   getShapeClass = (type: string): TLShapeConstructor<S> => {
@@ -501,7 +513,7 @@ export class TLApp<
   }
 
   notify = <E extends TLSubscriptionEventName>(event: E, info: TLSubscriptionEventInfo<E>) => {
-    this.subscriptions.forEach((subscription) => {
+    this.subscriptions.forEach(subscription => {
       if (subscription.event === event) {
         subscription.callback(this, info)
       }

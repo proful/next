@@ -53,12 +53,15 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   constructor(props: TLShapeProps & Partial<P>) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.type = this.constructor['id']
+    const { type, stayMounted } = this.constructor['id']
+    this.type = type
+    this.stayMounted = stayMounted
     this.init(props)
     makeObservable(this)
   }
 
   static type: string
+  static aspectRatio?: number
 
   protected propsKeys = new Set<string>([
     'type',
@@ -75,6 +78,7 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   ])
 
   private version = 1
+  readonly stayMounted: boolean = false
   readonly showCloneHandles: boolean = false
   readonly hideResizeHandles: boolean = false
   readonly hideRotateHandle: boolean = false
@@ -102,7 +106,7 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
 
   protected init = (props: TLShapeProps & Partial<P>) => {
     assignOwnProps(this, props)
-    Object.keys(props).forEach((key) => this.propsKeys.add(key))
+    Object.keys(props).forEach(key => this.propsKeys.add(key))
     this.lastSerialized = this.getSerialized()
     makeObservable(this)
   }
@@ -169,7 +173,7 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   getSerialized = (): TLSerializedShape<P> => {
     const propKeys = Array.from(this.propsKeys.values()) as (keyof TLShapeProps & P)[]
     return deepCopy(
-      Object.fromEntries(propKeys.map((key) => [key, this[key]]))
+      Object.fromEntries(propKeys.map(key => [key, this[key]]))
     ) as TLSerializedShape<P>
   }
 
@@ -233,10 +237,10 @@ export abstract class TLShapeWithHandles<
       ...nextHandles[index],
       point: Vec.add(delta, initialShape.handles[index].point),
     }
-    const topLeft = BoundsUtils.getCommonTopLeft(nextHandles.map((h) => h.point))
+    const topLeft = BoundsUtils.getCommonTopLeft(nextHandles.map(h => h.point))
     this.update({
       point: Vec.add(initialShape.point, topLeft),
-      handles: nextHandles.map((h) => ({ ...h, point: Vec.sub(h.point, topLeft) })),
+      handles: nextHandles.map(h => ({ ...h, point: Vec.sub(h.point, topLeft) })),
     })
 
     // const { shape, initialShape, handles } = this

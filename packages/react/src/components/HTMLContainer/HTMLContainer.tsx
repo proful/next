@@ -3,15 +3,16 @@ import * as React from 'react'
 
 interface HTMLContainerProps extends React.HTMLProps<HTMLDivElement> {
   centered?: boolean
+  opacity?: number
   children: React.ReactNode
 }
 
 export const HTMLContainer = React.forwardRef<HTMLDivElement, HTMLContainerProps>(
-  function HTMLContainer({ children, centered, className = '', ...rest }, ref) {
+  function HTMLContainer({ children, opacity, centered, className = '', ...rest }, ref) {
     return (
       <Observer>
         {() => (
-          <div ref={ref} className={`tl-positioned-div ${className}`} {...rest}>
+          <div ref={ref} className={`tl-positioned-div ${className}`} style={opacity ? {opacity} : undefined} {...rest}>
             <div className={`tl-positioned-inner ${centered ? 'tl-centered' : ''}`}>{children}</div>
           </div>
         )}

@@ -8,15 +8,17 @@ import type { TLReactShape } from '~lib'
 
 export interface TLBoundsDetailContainerProps<S extends TLReactShape> {
   hidden: boolean
-  detail: 'size' | 'rotation'
   bounds: TLBounds
   shapes: S[]
+  detail?: 'size' | 'rotation'
+  rotation?: number
 }
 
 export const BoundsDetailContainer = observer(function BoundsDetail<S extends TLReactShape>({
   bounds,
   hidden,
   shapes,
+  rotation = 0,
   detail = 'size',
 }: TLBoundsDetailContainerProps<S>) {
   const {
@@ -43,6 +45,7 @@ export const BoundsDetailContainer = observer(function BoundsDetail<S extends TL
         bounds={bounds}
         scaledBounds={scaledBounds}
         zoom={zoom}
+        rotation={rotation}
         detail={detail}
       />
     </div>

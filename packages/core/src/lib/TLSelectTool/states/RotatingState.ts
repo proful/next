@@ -47,9 +47,12 @@ export class RotatingState<
         },
       ])
     )
+
+    this.updateCursor()
   }
 
   onExit = () => {
+    this.app.setBoundsRotation(0)
     this.app.history.resume()
     this.snapshot = {}
   }
@@ -109,8 +112,8 @@ export class RotatingState<
       }
     })
 
-    const rotation = this.app.selectedBounds!.rotation
-    this.app.cursors.setCursor(TLCursor.Grabbing, rotation)
+    this.updateCursor()
+    this.app.setBoundsRotation(angleDelta)
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {
@@ -129,5 +132,10 @@ export class RotatingState<
         break
       }
     }
+  }
+
+  private updateCursor() {
+    const rotation = this.app.selectedBounds!.rotation
+    this.app.cursors.setCursor(TLCursor.Grabbing, rotation)
   }
 }

@@ -7,6 +7,7 @@ import type { TLBoxShape, TLBoxShapeProps } from '@tldraw/box-shape'
 
 export interface TLBoxShapeClass<T extends TLBoxShape = TLBoxShape> {
   new (props: TLCustomProps<TLBoxShapeProps & unknown>): T
+  aspectRatio?: number
 }
 
 export abstract class TLBoxTool<

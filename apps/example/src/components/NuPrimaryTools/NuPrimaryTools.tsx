@@ -8,6 +8,8 @@ import {
   StarIcon,
   ShadowIcon,
   BoxIcon,
+  CodeIcon,
+  VideoIcon,
 } from '@radix-ui/react-icons'
 import { observer } from 'mobx-react-lite'
 import { NuButton } from '~components/NuButton'
@@ -106,6 +108,22 @@ export const NuPrimaryTools = observer(function NuPrimaryTools() {
           onDoubleClick={handleToolDoubleClick}
         >
           <LineIcon />
+        </NuButton>
+        <NuButton
+          data-tool="code"
+          data-selected={selectedToolId === 'code'}
+          onClick={handleToolClick}
+          onDoubleClick={handleToolDoubleClick}
+        >
+          <CodeIcon />
+        </NuButton>
+        <NuButton
+          data-tool="youtube"
+          data-selected={selectedToolId === 'youtube'}
+          onClick={handleToolClick}
+          onDoubleClick={handleToolDoubleClick}
+        >
+          <VideoIcon />
         </NuButton>
       </div>
       <button className="nu-floating-button"></button>
