@@ -8,6 +8,8 @@ import {
   BoundsUtils,
   TLEventMap,
   TLStateEvents,
+  TLBounds,
+  TLBoundsCorner,
 } from '@tldraw/core'
 import Vec from '@tldraw/vec'
 
@@ -22,17 +24,28 @@ export class CreatingState<
 
   creatingShape?: T
   aspectRatio?: number
+  initialBounds = {} as TLBounds
 
   onEnter = () => {
+    const {
+      currentPage,
+      inputs: { originPoint, currentPoint },
+    } = this.app
     const { Shape } = this.tool
     const shape = new Shape({
       id: uniqueId(),
-      parentId: this.app.currentPage.id,
-      point: this.app.inputs.originPoint,
+      parentId: currentPage.id,
+      point: originPoint,
       size: [1, 1],
     })
 
-    this.aspectRatio = Shape.aspectRatio
+    this.initialBounds = BoundsUtils.getBoundsFromPoints([originPoint, currentPoint])
+
+    if (shape.aspectRatio) {
+      this.aspectRatio = shape.aspectRatio
+      this.initialBounds.height = Math.max(1, this.initialBounds.width * this.aspectRatio)
+      this.initialBounds.maxY = this.initialBounds.minY + this.initialBounds.height
+    }
 
     this.creatingShape = shape
     this.app.currentPage.addShapes(shape)
@@ -41,19 +54,27 @@ export class CreatingState<
 
   onPointerMove: TLStateEvents<S, K>['onPointerMove'] = () => {
     if (!this.creatingShape) throw Error('Expected a creating shape.')
-    const { currentPoint, originPoint } = this.app.inputs
-    const bounds = BoundsUtils.getBoundsFromPoints([currentPoint, originPoint])
+    const { initialBounds } = this
+    const { currentPoint, originPoint, shiftKey } = this.app.inputs
 
-    if (this.aspectRatio) {
-      const size = [bounds.width, Math.max(1, bounds.width * this.aspectRatio)]
-      const delta = Vec.sub(currentPoint, originPoint)
-      const point = [
-        delta[0] < 0 ? originPoint[0] - size[0] : originPoint[0],
-        delta[1] < 0 ? originPoint[1] - size[1] : originPoint[1],
-      ]
-      this.creatingShape.update({ point, size })
-      return
-    }
+    const bounds = BoundsUtils.getTransformedBoundingBox(
+      initialBounds,
+      TLBoundsCorner.BottomRight,
+      Vec.sub(currentPoint, originPoint),
+      0,
+      shiftKey || this.creatingShape.isAspectRatioLocked
+    )
+
+    // if (this.aspectRatio) {
+    //   const size = [bounds.width, Math.max(1, bounds.width * this.aspectRatio)]
+    //   const delta = Vec.sub(currentPoint, originPoint)
+    //   const point = [
+    //     delta[0] < 0 ? originPoint[0] - size[0] : originPoint[0],
+    //     delta[1] < 0 ? originPoint[1] - size[1] : originPoint[1],
+    //   ]
+    //   this.creatingShape.update({ point, size })
+    //   return
+    // }
 
     this.creatingShape.update({
       point: [bounds.minX, bounds.minY],

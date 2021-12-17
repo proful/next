@@ -250,6 +250,10 @@ export class TLApp<
     return page
   }
 
+  getPageById = (id: string) => {
+    return this.pages.find(page => page.id === id)
+  }
+
   /* --------------------- Shapes --------------------- */
 
   @action readonly createShapes = (shapes: S[] | TLSerializedShape[]): this => {
@@ -272,6 +276,10 @@ export class TLApp<
     return this
   }
 
+  getShapeById = <T extends S>(id: string, pageId = this.currentPage.id): T | undefined => {
+    return this.getPageById(pageId)?.shapes.find(shape => shape.id === id) as T
+  }
+
   /* -------------------------------------------------- */
   /*                      App State                     */
   /* -------------------------------------------------- */
@@ -285,6 +293,20 @@ export class TLApp<
   selectTool = this.transition
 
   registerTools = this.registerStates
+
+  /* ------------------ Editing Shape ----------------- */
+
+  @observable editingId?: string
+
+  @computed get editingShape(): S | undefined {
+    const { editingId, currentPage } = this
+    return editingId ? currentPage.shapes.find(shape => shape.id === editingId) : undefined
+  }
+
+  @action readonly setEditingShape = (shape: string | S | undefined): this => {
+    this.editingId = typeof shape === 'string' ? shape : shape?.id
+    return this
+  }
 
   /* ------------------ Hovered Shape ----------------- */
 
@@ -426,7 +448,9 @@ export class TLApp<
     return (
       this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
-      (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
+      (stateId === 'idle' ||
+        stateId === 'hoveringResizeHandle' ||
+        stateId === 'pointingResizeHandle') &&
       !this.selectedShapesArray.every(shape => shape.hideRotateHandle)
     )
   }
@@ -436,7 +460,9 @@ export class TLApp<
     return (
       this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
-      (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
+      (stateId === 'idle' ||
+        stateId === 'hoveringResizeHandle' ||
+        stateId === 'pointingResizeHandle') &&
       !this.selectedShapesArray.every(shape => shape.hideResizeHandles)
     )
   }

@@ -2,6 +2,8 @@
 const esbuild = require('esbuild')
 const pkg = require('../package.json')
 
+const { log } = console
+
 async function main() {
   try {
     await esbuild.build({

@@ -50,7 +50,7 @@ export class HoveringResizeHandleState<
     this.tool.transition('pinching', { info, event })
   }
 
-  onPointerDown: TLEvents<S>['pointer'] = (info) => {
+  onPointerDown: TLEvents<S>['pointer'] = info => {
     const {
       inputs: { ctrlKey },
     } = this.app
@@ -85,5 +85,29 @@ export class HoveringResizeHandleState<
 
   onPointerLeave: TLEvents<S>['pointer'] = () => {
     this.tool.transition('idle')
+  }
+
+  onDoubleClick: TLEvents<S>['pointer'] = info => {
+    if (info.order) return
+
+    if (this.app.selectedShapesArray.length !== 1) return
+    const selectedShape = this.app.selectedShapesArray[0]
+    if (!selectedShape.isEditable) return
+
+    switch (info.type) {
+      case TLTargetType.Shape: {
+        this.tool.transition('editingShape', info)
+        break
+      }
+      case TLTargetType.Bounds: {
+        if (this.app.selectedShapesArray.length === 1) {
+          this.tool.transition('editingShape', {
+            type: TLTargetType.Shape,
+            target: selectedShape,
+          })
+        }
+        break
+      }
+    }
   }
 }

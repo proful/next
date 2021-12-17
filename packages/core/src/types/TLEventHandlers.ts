@@ -14,6 +14,7 @@ export interface TLEventHandlers<
   onPointerMove: TLEvents<S, K, E>['pointer']
   onPointerEnter: TLEvents<S, K, E>['pointer']
   onPointerLeave: TLEvents<S, K, E>['pointer']
+  onDoubleClick: TLEvents<S, K, E>['pointer']
   onKeyDown: TLEvents<S, K, E>['keyboard']
   onKeyUp: TLEvents<S, K, E>['keyboard']
   onPinchStart: TLEvents<S, K, E>['pinch']

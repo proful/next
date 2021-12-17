@@ -2,6 +2,8 @@
 const esbuild = require('esbuild')
 const pkg = require('../package.json')
 
+const { log } = console
+
 async function main() {
   esbuild.build({
     entryPoints: ['./src/index.ts'],
@@ -19,10 +21,10 @@ async function main() {
     watch: {
       onRebuild(error) {
         if (error) {
-          console.log(`× ${pkg.name}: An error in prevented the rebuild.`)
+          log(`× ${pkg.name}: An error in prevented the rebuild.`)
           return
         }
-        console.log(`✔ ${pkg.name}: Rebuilt.`)
+        log(`✔ ${pkg.name}: Rebuilt.`)
       },
     },
   })

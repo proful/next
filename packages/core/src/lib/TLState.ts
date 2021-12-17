@@ -52,7 +52,7 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
   protected _disposables: (() => void)[] = []
 
   dispose() {
-    this._disposables.forEach((disposable) => disposable())
+    this._disposables.forEach(disposable => disposable())
     return this
   }
 
@@ -77,7 +77,7 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
   }
 
   get descendants(): (TLState<S, K, this, any> | this)[] {
-    return Array.from(this.children.values()).flatMap((state) => [state, ...state.descendants])
+    return Array.from(this.children.values()).flatMap(state => [state, ...state.descendants])
   }
 
   /* ------------------ Child States ------------------ */
@@ -85,13 +85,11 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
   children = new Map<string, TLState<S, K, any, any>>([])
 
   registerStates = (...stateClasses: TLStateClass<S, K, any>[]): void => {
-    stateClasses.forEach((StateClass) =>
-      this.children.set(StateClass.id, new StateClass(this, this))
-    )
+    stateClasses.forEach(StateClass => this.children.set(StateClass.id, new StateClass(this, this)))
   }
 
   deregisterStates = (...states: TLStateClass<S, K, any>[]): void => {
-    states.forEach((StateClass) => {
+    states.forEach(StateClass => {
       this.children.get(StateClass.id)?.dispose()
       this.children.delete(StateClass.id)
     })
@@ -150,7 +148,7 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
      *
      * @param info The previous state and any info sent via the transition.
      */
-    onTransition: (info) => {
+    onTransition: info => {
       this.onTransition?.(info)
     },
 
@@ -159,7 +157,7 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
      *
      * @param info The previous state and any info sent via the transition.
      */
-    onEnter: (info) => {
+    onEnter: info => {
       this._isActive = true
       if (this.initial) this.transition(this.initial, info)
       this.onEnter?.(info)
@@ -170,7 +168,7 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
      *
      * @param info The next state and any info sent via the transition.
      */
-    onExit: (info) => {
+    onExit: info => {
       this._isActive = false
       this.currentState?.onExit?.({ toId: 'parent' })
       this.onExit?.(info)
@@ -246,6 +244,18 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
     onPointerLeave: (info, event) => {
       this.onPointerLeave?.(info, event)
       this.forwardEvent('onPointerLeave', info, event)
+    },
+
+    /**
+     * Respond to double click events forwarded to the state by its parent. Run the current active
+     * child state's handler, then the state's own handler.
+     *
+     * @param info The event info from TLInputs.
+     * @param event The DOM event.
+     */
+    onDoubleClick: (info, event) => {
+      this.onDoubleClick?.(info, event)
+      this.forwardEvent('onDoubleClick', info, event)
     },
 
     /**
@@ -357,6 +367,8 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
 
   onPointerLeave?: TLEvents<S, K>['pointer']
 
+  onDoubleClick?: TLEvents<S, K>['pointer']
+
   onKeyDown?: TLEvents<S, K>['keyboard']
 
   onKeyUp?: TLEvents<S, K>['keyboard']
@@ -413,7 +425,7 @@ export abstract class TLState<
 
     this._disposables.push(
       ...this._shortcuts.map(({ keys, fn }) => {
-        return KeyUtils.registerShortcut(keys, (event) => {
+        return KeyUtils.registerShortcut(keys, event => {
           if (!this.isActive) return
           fn(this.root, this, event)
         })
@@ -444,13 +456,13 @@ export abstract class TLState<
   children = new Map<string, TLState<S, K, R, any>>([])
 
   registerStates = (...stateClasses: TLStateClass<S, K, R, any>[]): void => {
-    stateClasses.forEach((StateClass) =>
+    stateClasses.forEach(StateClass =>
       this.children.set(StateClass.id, new StateClass(this, this._root))
     )
   }
 
   deregisterStates = (...states: TLStateClass<S, K, R, any>[]): void => {
-    states.forEach((StateClass) => {
+    states.forEach(StateClass => {
       this.children.get(StateClass.id)?.dispose()
       this.children.delete(StateClass.id)
     })

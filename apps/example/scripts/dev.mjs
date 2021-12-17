@@ -2,12 +2,14 @@
 import fs from 'fs'
 import esbuildServe from 'esbuild-serve'
 
+const { log } = console
+
 async function main() {
   if (!fs.existsSync('./dist')) {
     fs.mkdirSync('./dist')
   }
 
-  fs.copyFile('./src/index.html', './dist/index.html', (err) => {
+  fs.copyFile('./src/index.html', './dist/index.html', err => {
     if (err) throw err
   })
 

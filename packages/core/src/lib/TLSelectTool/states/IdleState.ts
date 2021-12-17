@@ -17,12 +17,18 @@ export class IdleState<
     },
   ]
 
+  onEnter = (info: { fromId: string } & any) => {
+    if (info.fromId === 'editing') {
+      this.onPointerDown(info as any, {} as any)
+    }
+  }
+
   onExit = () => {
     this.app.setHoveredShape(undefined)
   }
 
   onPointerEnter: TLEvents<S>['pointer'] = info => {
-    if (info.order > 0) return
+    if (info.order) return
 
     switch (info.type) {
       case TLTargetType.Shape: {
@@ -95,7 +101,7 @@ export class IdleState<
   }
 
   onPointerLeave: TLEvents<S>['pointer'] = info => {
-    if (info.order > 0) return
+    if (info.order) return
 
     if (info.type === TLTargetType.Shape) {
       if (this.app.hoveredId) {
@@ -106,5 +112,29 @@ export class IdleState<
 
   onPinchStart: TLEvents<S>['pinch'] = (info, event) => {
     this.tool.transition('pinching', { info, event })
+  }
+
+  onDoubleClick: TLEvents<S>['pointer'] = info => {
+    if (info.order) return
+
+    if (this.app.selectedShapesArray.length !== 1) return
+    const selectedShape = this.app.selectedShapesArray[0]
+    if (!selectedShape.isEditable) return
+
+    switch (info.type) {
+      case TLTargetType.Shape: {
+        this.tool.transition('editingShape', info)
+        break
+      }
+      case TLTargetType.Bounds: {
+        if (this.app.selectedShapesArray.length === 1) {
+          this.tool.transition('editingShape', {
+            type: TLTargetType.Shape,
+            target: selectedShape,
+          })
+        }
+        break
+      }
+    }
   }
 }

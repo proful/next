@@ -172,9 +172,9 @@ export enum TLTargetType {
 }
 
 export type TLEventInfo<S extends TLShape, H extends TLHandle = TLHandle> =
-  | { type: TLTargetType.Canvas; target: 'canvas'; order: number }
-  | { type: TLTargetType.Shape; target: S; order: number }
-  | { type: TLTargetType.Handle; target: S; handle: H; index: number; order: number }
+  | { type: TLTargetType.Canvas; target: 'canvas'; order?: number }
+  | { type: TLTargetType.Shape; target: S; order?: number }
+  | { type: TLTargetType.Handle; target: S; handle: H; index: number; order?: number }
   | {
       type: TLTargetType.Bounds
       target: TLBoundsHandle

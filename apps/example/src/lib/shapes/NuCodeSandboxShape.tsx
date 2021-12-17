@@ -16,10 +16,13 @@ export class NuCodeSandboxShape extends TLBoxShape<NuCodeSandboxShapeProps> {
     super(props)
     props.size = props.size ?? [600, 320]
     this.init(props)
+    this.propsKeys.add('embedId')
     makeObservable(this)
   }
 
   static id = 'code'
+
+  isEditable = true
 
   @observable stroke = '#000000'
   @observable fill = '#ffffff'
@@ -28,23 +31,23 @@ export class NuCodeSandboxShape extends TLBoxShape<NuCodeSandboxShapeProps> {
   @observable opacity = 1
   @observable embedId?: string = ''
 
-  ReactComponent = observer(({ events, isSelected, isErasing }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isSelected, isEditing, isErasing }: TLComponentProps) => {
     const { opacity, embedId } = this
 
     return (
       <HTMLContainer
-        {...events}
         style={{
           overflow: 'hidden',
           pointerEvents: 'all',
           opacity: isErasing ? 0.2 : opacity,
         }}
+        {...events}
       >
         <div
           style={{
             width: '100%',
             height: '100%',
-            pointerEvents: isSelected ? 'all' : 'none',
+            pointerEvents: isEditing ? 'all' : 'none',
             userSelect: 'none',
           }}
         >

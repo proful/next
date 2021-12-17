@@ -5,9 +5,11 @@ import { createRequire } from 'module'
 
 const pkg = createRequire(import.meta.url)('../package.json')
 
+const { log } = console
+
 async function main() {
   if (fs.existsSync('./dist')) {
-    fs.rmSync('./dist', { recursive: true }, (e) => {
+    fs.rmSync('./dist', { recursive: true }, e => {
       if (e) {
         throw e
       }
@@ -30,14 +32,14 @@ async function main() {
       sourcemap: false,
     })
 
-    fs.copyFile('./src/index.html', './dist/index.html', (err) => {
+    fs.copyFile('./src/index.html', './dist/index.html', err => {
       if (err) throw err
     })
 
-    console.log(`✔ ${pkg.name}: Build completed.`)
+    log(`✔ ${pkg.name}: Build completed.`)
   } catch (e) {
-    console.log(`× ${pkg.name}: Build failed due to an error.`)
-    console.log(e)
+    log(`× ${pkg.name}: Build failed due to an error.`)
+    log(e)
   }
 }
 

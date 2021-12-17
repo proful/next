@@ -12,8 +12,14 @@ export const HTMLContainer = React.forwardRef<HTMLDivElement, HTMLContainerProps
     return (
       <Observer>
         {() => (
-          <div ref={ref} className={`tl-positioned-div ${className}`} style={opacity ? {opacity} : undefined} {...rest}>
-            <div className={`tl-positioned-inner ${centered ? 'tl-centered' : ''}`}>{children}</div>
+          <div
+            ref={ref}
+            className={`tl-positioned-div ${className}`}
+            style={opacity ? { opacity } : undefined}
+          >
+            <div className={`tl-positioned-inner ${centered ? 'tl-centered' : ''}`} {...rest}>
+              {children}
+            </div>
           </div>
         )}
       </Observer>

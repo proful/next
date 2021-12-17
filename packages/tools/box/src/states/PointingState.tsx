@@ -19,4 +19,8 @@ export class PointingState<
       this.app.setSelectedShapes(this.app.currentPage.shapes)
     }
   }
+
+  onPointerUp = () => {
+    this.tool.transition('idle')
+  }
 }

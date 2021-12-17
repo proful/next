@@ -37,7 +37,7 @@ export class TranslatingState<
       }
     }
 
-    selectedShapes.forEach((shape) =>
+    selectedShapes.forEach(shape =>
       shape.update({ point: Vec.add(initialPoints[shape.id], delta) })
     )
   }
@@ -45,16 +45,17 @@ export class TranslatingState<
   private startCloning() {
     if (!this.didClone) {
       // Create the clones
-      this.clones = this.app.selectedShapesArray.map((shape) => {
+      this.clones = this.app.selectedShapesArray.map(shape => {
         const ShapeClass = this.app.getShapeClass(shape.type)
         if (!ShapeClass) throw Error('Could not find that shape class.')
-        return new ShapeClass({
+        const clone = new ShapeClass({
           ...shape.serialized,
           id: uniqueId(),
           type: shape.type,
           point: this.initialPoints[shape.id],
           rotation: shape.rotation,
         })
+        return clone
       })
 
       this.initialClonePoints = Object.fromEntries(
@@ -65,7 +66,7 @@ export class TranslatingState<
     }
 
     // Move shapes back to their start positions
-    this.app.selectedShapes.forEach((shape) => {
+    this.app.selectedShapes.forEach(shape => {
       shape.update({ point: this.initialPoints[shape.id] })
     })
 
@@ -139,7 +140,7 @@ export class TranslatingState<
         break
       }
       case 'Escape': {
-        this.app.selectedShapes.forEach((shape) => {
+        this.app.selectedShapes.forEach(shape => {
           shape.update({ point: this.initialPoints[shape.id] })
         })
         this.tool.transition('idle')

@@ -4,9 +4,11 @@ const esbuild = require('esbuild')
 const { gzip } = require('zlib')
 const pkg = require('../package.json')
 
+const { log } = console
+
 async function main() {
   if (fs.existsSync('./dist')) {
-    fs.rmSync('./dist', { recursive: true }, (e) => {
+    fs.rmSync('./dist', { recursive: true }, e => {
       if (e) {
         throw e
       }
@@ -53,7 +55,7 @@ async function main() {
 
     fs.readFile('./dist/esm/index.js', (_err, data) => {
       gzip(data, (_err, result) => {
-        console.log(
+        log(
           `✔ ${pkg.name}: Built package. ${(esmSize / 1000).toFixed(2)}kb (${(
             result.length / 1000
           ).toFixed(2)}kb gzipped)`
@@ -61,8 +63,8 @@ async function main() {
       })
     })
   } catch (e) {
-    console.log(`× ${pkg.name}: Build failed due to an error.`)
-    console.log(e)
+    log(`× ${pkg.name}: Build failed due to an error.`)
+    log(e)
   }
 }
 

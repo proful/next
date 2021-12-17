@@ -63,6 +63,7 @@ const InnerApp = observer(function InnerApp<S extends TLReactShape>(
       inputs={app.inputs}
       callbacks={app._events as any}
       brush={app.brush}
+      editingShape={app.editingShape}
       hoveredShape={app.hoveredShape}
       selectedBounds={app.selectedBounds}
       selectedShapes={app.selectedShapesArray}

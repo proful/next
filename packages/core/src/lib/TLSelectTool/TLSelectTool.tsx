@@ -1,5 +1,5 @@
 import type { TLApp, TLShape } from '~lib'
-import type { TLEventMap } from '~types'
+import type { TLEventInfo, TLEventMap, TLHandle } from '~types'
 import { TLTool } from '../TLTool'
 import {
   IdleState,
@@ -18,6 +18,7 @@ import {
   RotatingState,
   PinchingState,
   HoveringResizeHandleState,
+  EditingShapeState,
 } from './states'
 
 export class TLSelectTool<
@@ -39,6 +40,7 @@ export class TLSelectTool<
     PointingShapeBehindBoundsState,
     PointingSelectedShapeState,
     PointingBoundsBackgroundState,
+    HoveringResizeHandleState,
     PointingResizeHandleState,
     PointingRotateHandleState,
     PointingHandleState,
@@ -48,6 +50,6 @@ export class TLSelectTool<
     RotatingState,
     RotatingState,
     PinchingState,
-    HoveringResizeHandleState,
+    EditingShapeState,
   ]
 }

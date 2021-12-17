@@ -14,6 +14,7 @@ export interface NuYouTubeShapeProps extends TLBoxShapeProps, NuStyleProps {
 export class NuYouTubeShape extends TLBoxShape<NuYouTubeShapeProps> {
   constructor(props = {} as TLCustomProps<NuYouTubeShapeProps>) {
     super(props)
+    this.propsKeys.add('embedId')
     this.init(props)
 
     this.isAspectRatioLocked = true
@@ -24,8 +25,8 @@ export class NuYouTubeShape extends TLBoxShape<NuYouTubeShapeProps> {
 
   static id = 'youtube'
 
-  static aspectRatio = 480 / 853
-
+  aspectRatio = 480 / 853
+  isEditable = true
   @observable stroke = '#000000'
   @observable fill = '#ffffff'
   @observable strokeWidth = 2
@@ -33,23 +34,23 @@ export class NuYouTubeShape extends TLBoxShape<NuYouTubeShapeProps> {
   @observable opacity = 1
   @observable embedId?: string = ''
 
-  ReactComponent = observer(({ events, isSelected, isErasing }: TLComponentProps) => {
+  ReactComponent = observer(({ events, isEditing, isErasing }: TLComponentProps) => {
     const { opacity, embedId } = this
 
     return (
       <HTMLContainer
-        {...events}
         style={{
           overflow: 'hidden',
-          opacity: isErasing ? 0.2 : opacity,
           pointerEvents: 'all',
+          opacity: isErasing ? 0.2 : opacity,
         }}
+        {...events}
       >
         <div
           style={{
             width: '100%',
             height: '100%',
-            pointerEvents: isSelected ? 'all' : 'none',
+            pointerEvents: isEditing ? 'all' : 'none',
             userSelect: 'none',
           }}
         >
@@ -127,7 +128,7 @@ export class NuYouTubeShape extends TLBoxShape<NuYouTubeShapeProps> {
   validateProps = (props: Partial<TLCustomProps<NuYouTubeShapeProps>>) => {
     if (props.size !== undefined) {
       props.size[0] = Math.max(props.size[0], 1)
-      props.size[1] = Math.max(props.size[0] * NuYouTubeShape.aspectRatio, 1)
+      props.size[1] = Math.max(props.size[0] * this.aspectRatio, 1)
     }
     return withClampedStyles(props)
   }

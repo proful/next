@@ -26,6 +26,7 @@ export class RotatingState<
   initialCommonCenter = [0, 0]
   initialCommonBounds = {} as TLBounds
   initialAngle = 0
+  initialBoundsRotation = 0
 
   onEnter = () => {
     const { history, selectedShapesArray, selectedBounds } = this.app
@@ -33,11 +34,12 @@ export class RotatingState<
     if (!selectedBounds) throw Error('Expected selected bounds.')
 
     history.pause()
+    this.initialBoundsRotation = this.app.boundsRotation
     this.initialCommonBounds = { ...selectedBounds }
     this.initialCommonCenter = BoundsUtils.getBoundsCenter(selectedBounds)
     this.initialAngle = Vec.angle(this.initialCommonCenter, this.app.inputs.currentPoint)
     this.snapshot = Object.fromEntries(
-      selectedShapesArray.map((shape) => [
+      selectedShapesArray.map(shape => [
         shape.id,
         {
           point: [...shape.point],
@@ -52,7 +54,6 @@ export class RotatingState<
   }
 
   onExit = () => {
-    this.app.setBoundsRotation(0)
     this.app.history.resume()
     this.snapshot = {}
   }
@@ -77,7 +78,7 @@ export class RotatingState<
       angleDelta = GeomUtils.snapAngleToSegments(angleDelta, 24)
     }
 
-    selectedShapes.forEach((shape) => {
+    selectedShapes.forEach(shape => {
       const initialShape = snapshot[shape.id]
 
       let initialAngle = 0
@@ -93,7 +94,7 @@ export class RotatingState<
       if ('handles' in shape) {
         // Don't rotate shapes with handles; instead, rotate the handles
         const initialHandles = (initialShape as unknown as TLShapeWithHandles).handles
-        const handlePoints = initialHandles!.map((handle) =>
+        const handlePoints = initialHandles!.map(handle =>
           Vec.rotWith(handle.point, relativeCenter, angleDelta)
         )
         const topLeft = BoundsUtils.getCommonTopLeft(handlePoints)
@@ -113,7 +114,7 @@ export class RotatingState<
     })
 
     this.updateCursor()
-    this.app.setBoundsRotation(angleDelta)
+    this.app.setBoundsRotation(this.initialBoundsRotation + angleDelta)
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {
@@ -125,7 +126,7 @@ export class RotatingState<
   onKeyDown: TLEvents<S>['keyboard'] = (info, e) => {
     switch (e.key) {
       case 'Escape': {
-        this.app.selectedShapes.forEach((shape) => {
+        this.app.selectedShapes.forEach(shape => {
           shape.update(this.snapshot[shape.id])
         })
         this.tool.transition('idle')
@@ -135,7 +136,6 @@ export class RotatingState<
   }
 
   private updateCursor() {
-    const rotation = this.app.selectedBounds!.rotation
-    this.app.cursors.setCursor(TLCursor.Grabbing, rotation)
+    this.app.cursors.setCursor(TLCursor.Grabbing, this.app.boundsRotation)
   }
 }

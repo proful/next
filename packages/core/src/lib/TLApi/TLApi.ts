@@ -45,9 +45,7 @@ export class TLApi<S extends TLShape = TLShape, K extends TLEventMap = TLEventMa
    * @param shapes The serialized shape changes to apply.
    */
   updateShapes = (...shapes: { id: string } & TLSerializedShape[]): this => {
-    shapes.forEach((shape) => {
-      this.#app.currentPage.shapes.find((instance) => shape.id === instance.id)?.update(shape)
-    })
+    shapes.forEach(shape => this.#app.getShapeById(shape.id)?.update(shape))
     return this
   }
 
@@ -78,11 +76,9 @@ export class TLApi<S extends TLShape = TLShape, K extends TLEventMap = TLEventMa
    */
   deselectShapes = (...shapes: S[] | string[]): this => {
     const ids =
-      typeof shapes[0] === 'string'
-        ? (shapes as string[])
-        : (shapes as S[]).map((shape) => shape.id)
+      typeof shapes[0] === 'string' ? (shapes as string[]) : (shapes as S[]).map(shape => shape.id)
     this.#app.setSelectedShapes(
-      this.#app.selectedShapesArray.filter((shape) => !ids.includes(shape.id))
+      this.#app.selectedShapesArray.filter(shape => !ids.includes(shape.id))
     )
     return this
   }
@@ -121,7 +117,7 @@ export class TLApi<S extends TLShape = TLShape, K extends TLEventMap = TLEventMa
   zoomToFit = (): this => {
     const { shapes } = this.#app.currentPage
     if (shapes.length === 0) return this
-    const commonBounds = BoundsUtils.getCommonBounds(shapes.map((shape) => shape.bounds))
+    const commonBounds = BoundsUtils.getCommonBounds(shapes.map(shape => shape.bounds))
     this.#app.viewport.zoomToBounds(commonBounds)
     return this
   }

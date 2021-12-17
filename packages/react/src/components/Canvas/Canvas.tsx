@@ -118,20 +118,20 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
               <Shape
                 key={'shape_' + shape.id}
                 shape={shape}
-                isEditing={editingShape === shape}
-                isHovered={hoveredShape === shape}
-                isBinding={bindingShape === shape}
+                isEditing={shape === editingShape}
+                isHovered={shape === hoveredShape}
+                isBinding={shape === bindingShape}
                 isSelected={selectedShapes?.includes(shape)}
                 isErasing={erasingShapes?.includes(shape)}
                 meta={meta}
                 zIndex={1000 + i}
               />
             ))}
-          {selectedShapes?.map((shape) => (
+          {selectedShapes?.map(shape => (
             <Indicator
               key={'selected_indicator_' + shape.id}
               shape={shape}
-              isEditing={false}
+              isEditing={shape === editingShape}
               isHovered={false}
               isBinding={false}
               isSelected={true}
@@ -170,7 +170,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
               )}
               {selectedShapes && components.BoundsDetail && (
                 <BoundsDetailContainer
-                  key={'detail' + selectedShapes.map((shape) => shape.id).join('')}
+                  key={'detail' + selectedShapes.map(shape => shape.id).join('')}
                   shapes={selectedShapes}
                   bounds={selectedBounds}
                   detail={showBoundsRotation ? 'rotation' : 'size'}
@@ -180,7 +180,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
               )}
               {selectedShapes && components.ContextBar && (
                 <ContextBarContainer
-                  key={'context' + selectedShapes.map((shape) => shape.id).join('')}
+                  key={'context' + selectedShapes.map(shape => shape.id).join('')}
                   shapes={selectedShapes}
                   hidden={!showContextBar}
                   bounds={selectedShapes.length === 1 ? selectedShapes[0].bounds : selectedBounds}

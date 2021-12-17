@@ -37,7 +37,6 @@ export class PointingRotateHandleState<
   }
 
   private updateCursor() {
-    const rotation = this.app.selectedBounds!.rotation
-    this.app.cursors.setCursor(TLCursor.Grabbing, rotation)
+    this.app.cursors.setCursor(TLCursor.Grabbing, this.app.boundsRotation)
   }
 }

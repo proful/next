@@ -49,33 +49,33 @@ export interface TLHandleChangeInfo<P = any> {
 
 export type TLCustomProps<P extends AnyObject = any> = TLShapeProps & Partial<P>
 
+export const defaultPropKeys = [
+  'type',
+  'nonce',
+  'parentId',
+  'point',
+  'name',
+  'rotation',
+  'isGhost',
+  'isHidden',
+  'isLocked',
+  'isGenerated',
+  'isAspectRatioLocked',
+]
+
 export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   constructor(props: TLShapeProps & Partial<P>) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const { type, stayMounted } = this.constructor['id']
+    const type = this.constructor['id']
     this.type = type
-    this.stayMounted = stayMounted
     this.init(props)
     makeObservable(this)
   }
 
   static type: string
-  static aspectRatio?: number
 
-  protected propsKeys = new Set<string>([
-    'type',
-    'nonce',
-    'parentId',
-    'point',
-    'name',
-    'rotation',
-    'isGhost',
-    'isHidden',
-    'isLocked',
-    'isGenerated',
-    'isAspectRatioLocked',
-  ])
+  protected propsKeys = new Set<string>(defaultPropKeys)
 
   private version = 1
   readonly stayMounted: boolean = false
@@ -85,7 +85,9 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   readonly hideContextBar: boolean = false
   readonly hideBoundsDetail: boolean = false
   readonly hideBounds: boolean = false
+  readonly isEditable: boolean = false
   readonly isStateful: boolean = false
+  readonly aspectRatio?: number
   readonly type: string
   readonly id: string = 'id'
   nonce = 0
@@ -104,9 +106,10 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
 
   abstract getBounds: () => TLBounds
 
-  protected init = (props: TLShapeProps & Partial<P>) => {
+  protected init = (props: TLShapeProps & Partial<P>, propKeys: string[] = []) => {
     assignOwnProps(this, props)
-    Object.keys(props).forEach(key => this.propsKeys.add(key))
+    const keys = [...propKeys, ...Object.keys(props)]
+    keys.forEach(key => this.propsKeys.add(key))
     this.lastSerialized = this.getSerialized()
     makeObservable(this)
   }
