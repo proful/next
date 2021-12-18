@@ -12,9 +12,9 @@ export class EditingShapeState<
 
   editingShape = {} as S
 
-  onEnter = (info: { type: TLTargetType.Shape; target: S; order?: number }) => {
-    this.editingShape = info.target
-    this.app.setEditingShape(info.target)
+  onEnter = (info: { type: TLTargetType.Shape; shape: S; order?: number }) => {
+    this.editingShape = info.shape
+    this.app.setEditingShape(info.shape)
   }
 
   onExit = () => {
@@ -24,7 +24,7 @@ export class EditingShapeState<
   onPointerDown = (info: TLEventInfo<S>) => {
     switch (info.type) {
       case TLTargetType.Shape: {
-        if (info.target === this.editingShape) return
+        if (info.shape === this.editingShape) return
         this.tool.transition('idle', info)
         break
       }

@@ -1,4 +1,4 @@
-import { TLShape, TLApp, TLToolState, TLShortcut, TLEventMap, TLStateEvents } from '@tldraw/core'
+import { TLShape, TLApp, TLToolState, TLEventMap, TLStateEvents } from '@tldraw/core'
 import type { TLEraseTool } from '../TLEraseTool'
 
 export class IdleState<
@@ -10,7 +10,7 @@ export class IdleState<
   static id = 'idle'
 
   onPointerDown: TLStateEvents<S, K>['onPointerDown'] = (info, e) => {
-    if (info.order > 0) return
+    if (info.order) return
     this.tool.transition('pointing')
   }
 

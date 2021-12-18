@@ -7,8 +7,6 @@ import {
   TLApp,
   TLEventMap,
   TLStateEvents,
-  TLEventInfo,
-  TLHandle,
 } from '@tldraw/core'
 import type { TLDrawShape } from '@tldraw/draw-shape'
 import type { TLDrawTool } from '../TLDrawTool'
@@ -66,7 +64,7 @@ export class CreatingState<
     // to stay in the same place.
     if (point[0] < this.offset[0] || point[1] < this.offset[1]) {
       this.offset = [Math.min(this.offset[0], point[0]), Math.min(this.offset[1], point[1])]
-      this.points = this.rawPoints.map((point) => Vec.sub(point, this.offset).concat(point[2]))
+      this.points = this.rawPoints.map(point => Vec.sub(point, this.offset).concat(point[2]))
       this.creatingShape.update({
         point: Vec.add(originPoint, this.offset),
         points: this.points,

@@ -32,11 +32,11 @@ export class IdleState<
 
     switch (info.type) {
       case TLTargetType.Shape: {
-        this.app.setHoveredShape(info.target.id)
+        this.app.setHoveredShape(info.shape.id)
         break
       }
       case TLTargetType.Bounds: {
-        if (!(info.target === 'background' || info.target === 'center')) {
+        if (!(info.handle === 'background' || info.handle === 'center')) {
           this.tool.transition('hoveringResizeHandle', info)
         }
         break
@@ -58,7 +58,7 @@ export class IdleState<
 
     switch (info.type) {
       case TLTargetType.Bounds: {
-        switch (info.target) {
+        switch (info.handle) {
           case 'center': {
             break
           }
@@ -71,20 +71,20 @@ export class IdleState<
             break
           }
           default: {
-            this.tool.transition('pointingResizeHandle', { target: info.target })
+            this.tool.transition('pointingResizeHandle', info)
           }
         }
         break
       }
       case TLTargetType.Shape: {
-        if (selectedShapes.has(info.target)) {
-          this.tool.transition('pointingSelectedShape', { target: info.target })
+        if (selectedShapes.has(info.shape)) {
+          this.tool.transition('pointingSelectedShape', info)
         } else {
           const { selectedBounds, inputs } = this.app
           if (selectedBounds && PointUtils.pointInBounds(inputs.currentPoint, selectedBounds)) {
-            this.tool.transition('pointingShapeBehindBounds', { target: info.target })
+            this.tool.transition('pointingShapeBehindBounds', info)
           } else {
-            this.tool.transition('pointingShape', { target: info.target })
+            this.tool.transition('pointingShape', info)
           }
         }
         break

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLShapeWithHandles, TLToolState } from '~lib'
-import { TLCursor, TLEventMap, TLEvents, TLHandle } from '~types'
+import { TLCursor, TLEventHandleInfo, TLEventMap, TLEvents, TLHandle } from '~types'
 import { BoundsUtils, deepCopy } from '~utils'
 
 export class TranslatingHandleState<
@@ -21,20 +21,19 @@ export class TranslatingHandleState<
   private handles: TLHandle[] = []
   private initialHandles: TLHandle[] = []
 
-  onEnter = (info: {
-    fromId: string
-    target: S & { handles: TLHandle[] }
-    handle: TLHandle
-    index: number
-  }) => {
+  onEnter = (
+    info: {
+      fromId: string
+    } & TLEventHandleInfo<S, TLHandle>
+  ) => {
     this.app.history.pause()
     this.offset = [0, 0]
     this.index = info.index
-    this.shape = info.target
+    this.shape = info.shape
     this.initialShape = this.shape.clone()
-    this.handles = deepCopy(info.target.handles)
-    this.initialHandles = deepCopy(info.target.handles)
-    this.initialTopLeft = [...info.target.point]
+    this.handles = deepCopy(info.shape.handles)
+    this.initialHandles = deepCopy(info.shape.handles)
+    this.initialTopLeft = [...info.shape.point]
   }
 
   onExit = () => {

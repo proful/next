@@ -1,4 +1,5 @@
 import { TLTestApp } from '~test/TLTestApp'
+import { TLTargetType } from '~types'
 import { TLApp } from '../TLApp'
 import { TLSelectTool } from './TLSelectTool'
 
@@ -27,19 +28,36 @@ describe('When in the idle state', () => {
     app.pointerLeave([10, 10], 'box1')
     expect(app.hoveredId).toBeUndefined()
   })
+})
 
-  it('Sets editing shape', () => {
+describe('editing shape', () => {
+  it('Sets editing shape when double clicking an editable shape', () => {
     const app = new TLTestApp()
-    app.pointerEnter([10, 10], 'box1')
-    app.doubleClick([10, 10], 'box1')
-    expect(app.editingId).toBe('box1')
+    app.doubleClick([10, 10], 'box3')
+    expect(app.editingId).toBe('box3')
   })
 
-  it('Clears editing shape', () => {
+  it('Does not set editing shape when double clicking a shape that is not editable', () => {
     const app = new TLTestApp()
-    app.pointerEnter([10, 10], 'box1')
     app.doubleClick([10, 10], 'box1')
-    app.pointerDown([10, 10], 'box2')
     expect(app.editingId).toBeUndefined()
+  })
+
+  it('Clears editing shape when clicking outside of the editing shape', () => {
+    const app = new TLTestApp()
+    app.doubleClick([10, 10], 'box3')
+    app.click([-100, -110], { type: TLTargetType.Canvas, target: 'canvas', order: 0 })
+    app.setEditingShape()
+    expect(app.editingId).toBeUndefined()
+    expect(app.editingShape).toBeUndefined()
+  })
+
+  it('Does not clear editing shape when clicking inside of the editing shape', () => {
+    const app = new TLTestApp()
+    app.doubleClick([10, 10], 'box3')
+    app.pointerDown([10, 10], 'box1')
+    app.setEditingShape()
+    expect(app.editingId).toBeUndefined()
+    expect(app.editingShape).toBeUndefined()
   })
 })

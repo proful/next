@@ -1,6 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLShape, TLSelectTool, TLToolState } from '~lib'
-import type { TLEventMap, TLEvents } from '~types'
+import type { TLEventMap, TLEvents, TLEventShapeInfo } from '~types'
 
 export class PointingShapeBehindBoundsState<
   S extends TLShape,
@@ -10,9 +10,9 @@ export class PointingShapeBehindBoundsState<
 > extends TLToolState<S, K, R, P> {
   static id = 'pointingShapeBehindBounds'
 
-  info = {} as { target: TLShape }
+  info = {} as TLEventShapeInfo<S>
 
-  onEnter = (info: { target: TLShape }) => {
+  onEnter = (info: TLEventShapeInfo<S>) => {
     this.info = info
   }
 
@@ -34,9 +34,9 @@ export class PointingShapeBehindBoundsState<
     } = this.app
 
     if (shiftKey) {
-      this.app.setSelectedShapes([...Array.from(selectedIds.values()), this.info.target.id])
+      this.app.setSelectedShapes([...Array.from(selectedIds.values()), this.info.shape.id])
     } else {
-      this.app.setSelectedShapes([this.info.target.id])
+      this.app.setSelectedShapes([this.info.shape.id])
     }
 
     this.tool.transition('idle')

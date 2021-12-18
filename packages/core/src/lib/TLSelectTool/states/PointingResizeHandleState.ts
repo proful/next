@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import { TLEvents, TLBoundsHandle, TLEventMap, TLBoundsEdge, TLBoundsCorner } from '~types'
+import { TLEvents, TLBoundsHandle, TLEventMap, TLBoundsCorner, TLEventBoundsInfo } from '~types'
 import { CURSORS } from '~constants'
 
 export class PointingResizeHandleState<
@@ -14,8 +14,8 @@ export class PointingResizeHandleState<
 
   handle: TLBoundsHandle = TLBoundsCorner.BottomLeft
 
-  onEnter = (info: { target: TLBoundsCorner | TLBoundsEdge }) => {
-    this.handle = info.target
+  onEnter = (info: TLEventBoundsInfo) => {
+    this.handle = info.handle
     this.updateCursor()
   }
 

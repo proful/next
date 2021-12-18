@@ -7,39 +7,39 @@ export function useCanvasEvents() {
   const { callbacks } = useRendererContext()
 
   const events = React.useMemo(() => {
-    const onPointerMove: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerMove: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
-      callbacks.onPointerMove?.({ type: TLTargetType.Canvas, target: 'canvas', order }, e)
+      callbacks.onPointerMove?.({ type: TLTargetType.Canvas, order }, e)
     }
 
-    const onPointerDown: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerDown: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
       if (!order) e.currentTarget?.setPointerCapture(e.pointerId)
-      callbacks.onPointerDown?.({ type: TLTargetType.Canvas, target: 'canvas', order }, e)
+      callbacks.onPointerDown?.({ type: TLTargetType.Canvas, order }, e)
     }
 
-    const onPointerUp: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerUp: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
       if (!order) e.currentTarget?.releasePointerCapture(e.pointerId)
-      callbacks.onPointerUp?.({ type: TLTargetType.Canvas, target: 'canvas', order }, e)
+      callbacks.onPointerUp?.({ type: TLTargetType.Canvas, order }, e)
     }
 
-    const onPointerEnter: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerEnter: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
-      callbacks.onPointerEnter?.({ type: TLTargetType.Canvas, target: 'canvas', order }, e)
+      callbacks.onPointerEnter?.({ type: TLTargetType.Canvas, order }, e)
     }
 
-    const onPointerLeave: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerLeave: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
-      callbacks.onPointerLeave?.({ type: TLTargetType.Canvas, target: 'canvas', order }, e)
+      callbacks.onPointerLeave?.({ type: TLTargetType.Canvas, order }, e)
     }
 
-    const onKeyDown: TLReactCustomEvents['keyboard'] = (e) => {
-      callbacks.onKeyDown?.({ type: TLTargetType.Canvas, target: 'canvas', order: -1 }, e)
+    const onKeyDown: TLReactCustomEvents['keyboard'] = e => {
+      callbacks.onKeyDown?.({ type: TLTargetType.Canvas, order: -1 }, e)
     }
 
-    const onKeyUp: TLReactCustomEvents['keyboard'] = (e) => {
-      callbacks.onKeyUp?.({ type: TLTargetType.Canvas, target: 'canvas', order: -1 }, e)
+    const onKeyUp: TLReactCustomEvents['keyboard'] = e => {
+      callbacks.onKeyUp?.({ type: TLTargetType.Canvas, order: -1 }, e)
     }
 
     return {

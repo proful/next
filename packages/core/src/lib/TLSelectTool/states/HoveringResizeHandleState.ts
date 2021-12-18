@@ -8,6 +8,7 @@ import {
   TLBoundsCorner,
   TLCursor,
   TLTargetType,
+  TLEventBoundsInfo,
 } from '~types'
 
 export class HoveringResizeHandleState<
@@ -36,10 +37,10 @@ export class HoveringResizeHandleState<
     background: TLCursor.Grab,
   }
 
-  onEnter = (info: { target: TLBoundsCorner | TLBoundsEdge }) => {
+  onEnter = (info: TLEventBoundsInfo) => {
     const rotation = this.app.selectedBounds!.rotation
-    this.app.cursors.setCursor(this.CURSORS[info.target], rotation)
-    this.handle = info.target
+    this.app.cursors.setCursor(this.CURSORS[info.handle], rotation)
+    this.handle = info.handle
   }
 
   onExit = () => {
@@ -63,7 +64,7 @@ export class HoveringResizeHandleState<
 
     switch (info.type) {
       case TLTargetType.Bounds: {
-        switch (info.target) {
+        switch (info.handle) {
           case 'center': {
             break
           }
@@ -75,7 +76,7 @@ export class HoveringResizeHandleState<
             break
           }
           default: {
-            this.tool.transition('pointingResizeHandle', { target: info.target })
+            this.tool.transition('pointingResizeHandle', info)
           }
         }
         break

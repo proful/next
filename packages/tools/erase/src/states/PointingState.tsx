@@ -14,7 +14,7 @@ export class PointingState<
     const { currentPoint } = this.app.inputs
 
     this.app.setErasingShapes(
-      this.app.shapesInViewport.filter((shape) => shape.hitTestPoint(currentPoint))
+      this.app.shapesInViewport.filter(shape => shape.hitTestPoint(currentPoint))
     )
   }
 

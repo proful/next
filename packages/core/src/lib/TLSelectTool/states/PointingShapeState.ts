@@ -1,6 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLShape, TLSelectTool, TLToolState } from '~lib'
-import type { TLEventMap, TLEvents } from '~types'
+import type { TLEventMap, TLEvents, TLEventShapeInfo } from '~types'
 
 export class PointingShapeState<
   S extends TLShape,
@@ -10,16 +10,16 @@ export class PointingShapeState<
 > extends TLToolState<S, K, R, P> {
   static id = 'pointingShape'
 
-  onEnter = (info: { target: TLShape }) => {
+  onEnter = (info: TLEventShapeInfo<S>) => {
     const {
       selectedIds,
       inputs: { shiftKey },
     } = this.app
 
     if (shiftKey) {
-      this.app.setSelectedShapes([...Array.from(selectedIds.values()), info.target.id])
+      this.app.setSelectedShapes([...Array.from(selectedIds.values()), info.shape.id])
     } else {
-      this.app.setSelectedShapes([info.target.id])
+      this.app.setSelectedShapes([info.shape])
     }
   }
 

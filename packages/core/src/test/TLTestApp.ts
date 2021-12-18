@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { TLApp, TLSerializedApp, TLShape } from '~lib'
+import { TLApp, TLSerializedApp } from '~lib'
 import { TLEventInfo, TLTargetType } from '~types'
 import { TLTestBox } from './TLTestBox'
+import { TLTestEditableBox } from './TLTestEditableBox'
 
 interface KeyboardOptions {
   shiftKey?: boolean
@@ -20,7 +21,7 @@ type S = TLTestBox
 
 export class TLTestApp extends TLApp<S> {
   constructor(serializedApp?: TLSerializedApp) {
-    super(serializedApp, [TLTestBox], [])
+    super(serializedApp, [TLTestBox, TLTestEditableBox], [])
     this.viewport.updateBounds({
       minX: 0,
       minY: 0,
@@ -55,7 +56,7 @@ export class TLTestApp extends TLApp<S> {
             },
             {
               id: 'box3',
-              type: 'box',
+              type: 'editable-box',
               parentId: 'page1',
               point: [300, 300], // Overlapping box2
             },
@@ -83,11 +84,15 @@ export class TLTestApp extends TLApp<S> {
     return this
   }
 
+  click = (point: number[], info: string | TLEventInfo<S>, options?: PointerOptions) => {
+    this.pointerDown(point, info, options)
+    this.pointerUp(point, info, options)
+    return this
+  }
+
   doubleClick = (point: number[], info: string | TLEventInfo<S>, options?: PointerOptions) => {
-    this.pointerDown(point, info, options)
-    this.pointerUp(point, info, options)
-    this.pointerDown(point, info, options)
-    this.pointerUp(point, info, options)
+    this.click(point, info, options)
+    this.click(point, info, options)
     this._events.onDoubleClick?.(this.getInfo(info), this.getPointerEvent(point, options))
     return this
   }
@@ -144,10 +149,20 @@ export class TLTestApp extends TLApp<S> {
     } as PointerEvent
   }
 
+  getShapesById(ids: string[]) {
+    return ids.map(id => this.getShapeById(id))
+  }
+
   // Tests
 
   expectSelectedIdsToBe = (b: string[]) => {
     expect(new Set(this.selectedIds)).toEqual(new Set(b))
+    return this
+  }
+
+  expectSelectedShapesToBe = (b: string[] | S[]) => {
+    if (b[0] && typeof b[0] === 'string') b = b.map(id => this.getShapeById(id as string))
+    expect(new Set(this.selectedShapes)).toEqual(new Set(b as S[]))
     return this
   }
 

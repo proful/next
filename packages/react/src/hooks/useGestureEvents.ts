@@ -14,7 +14,7 @@ export function useGestureEvents(ref: React.RefObject<HTMLDivElement>) {
   const { viewport, inputs, callbacks } = useRendererContext()
 
   const events = React.useMemo(() => {
-    const onWheel: Handler<'wheel', WheelEvent> = (gesture) => {
+    const onWheel: Handler<'wheel', WheelEvent> = gesture => {
       const { event, delta } = gesture
       event.preventDefault()
       if (inputs.state === 'pinching') return
@@ -22,7 +22,6 @@ export function useGestureEvents(ref: React.RefObject<HTMLDivElement>) {
       callbacks.onWheel?.(
         {
           type: TLTargetType.Canvas,
-          target: 'canvas',
           order: 0,
           delta: gesture.delta,
           point: inputs.currentPoint,
@@ -31,7 +30,7 @@ export function useGestureEvents(ref: React.RefObject<HTMLDivElement>) {
       )
     }
 
-    const onPinchStart: PinchHandler = (gesture) => {
+    const onPinchStart: PinchHandler = gesture => {
       const elm = ref.current
       const { event } = gesture
       if (!(event.target === elm || elm?.contains(event.target as Node))) return
@@ -39,7 +38,6 @@ export function useGestureEvents(ref: React.RefObject<HTMLDivElement>) {
       callbacks.onPinchStart?.(
         {
           type: TLTargetType.Canvas,
-          target: 'canvas',
           order: 0,
           delta: gesture.delta,
           offset: gesture.offset,
@@ -49,7 +47,7 @@ export function useGestureEvents(ref: React.RefObject<HTMLDivElement>) {
       )
     }
 
-    const onPinch: PinchHandler = (gesture) => {
+    const onPinch: PinchHandler = gesture => {
       const elm = ref.current
       const { event } = gesture
       if (!(event.target === elm || elm?.contains(event.target as Node))) return
@@ -57,7 +55,6 @@ export function useGestureEvents(ref: React.RefObject<HTMLDivElement>) {
       callbacks.onPinch?.(
         {
           type: TLTargetType.Canvas,
-          target: 'canvas',
           order: 0,
           delta: gesture.delta,
           offset: gesture.offset,
@@ -67,7 +64,7 @@ export function useGestureEvents(ref: React.RefObject<HTMLDivElement>) {
       )
     }
 
-    const onPinchEnd: PinchHandler = (gesture) => {
+    const onPinchEnd: PinchHandler = gesture => {
       const elm = ref.current
       const { event } = gesture
       if (!(event.target === elm || elm?.contains(event.target as Node))) return
@@ -75,7 +72,6 @@ export function useGestureEvents(ref: React.RefObject<HTMLDivElement>) {
       callbacks.onPinchEnd?.(
         {
           type: TLTargetType.Canvas,
-          target: 'canvas',
           order: 0,
           delta: gesture.delta,
           offset: gesture.offset,

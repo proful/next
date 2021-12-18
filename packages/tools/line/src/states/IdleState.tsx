@@ -12,7 +12,7 @@ export class IdleState<
   static id = 'idle'
 
   onPointerDown: TLStateEvents<S, K>['onPointerDown'] = (info, e) => {
-    if (info.order > 0) return
+    if (info.order) return
     this.tool.transition('pointing')
   }
 

@@ -12,7 +12,7 @@ export function useBoundsEvents(handle: TLBoundsHandle) {
   const events = React.useMemo(() => {
     const onPointerMove: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
-      callbacks.onPointerMove?.({ type: TLTargetType.Bounds, target: handle, order }, e)
+      callbacks.onPointerMove?.({ type: TLTargetType.Bounds, handle, order }, e)
       e.order = order + 1
     }
 
@@ -24,7 +24,7 @@ export function useBoundsEvents(handle: TLBoundsHandle) {
         // HMTL element).
         e.currentTarget?.parentElement?.setPointerCapture(e.pointerId)
       }
-      callbacks.onPointerDown?.({ type: TLTargetType.Bounds, target: handle, order }, e)
+      callbacks.onPointerDown?.({ type: TLTargetType.Bounds, handle, order }, e)
       e.order = order + 1
     }
 
@@ -33,7 +33,7 @@ export function useBoundsEvents(handle: TLBoundsHandle) {
       if (e.currentTarget.tagName === 'g') {
         e.currentTarget?.releasePointerCapture(e.pointerId)
       }
-      callbacks.onPointerUp?.({ type: TLTargetType.Bounds, target: handle, order }, e)
+      callbacks.onPointerUp?.({ type: TLTargetType.Bounds, handle, order }, e)
 
       const now = Date.now()
       const elapsed = now - rDoubleClickTimer.current
@@ -42,7 +42,7 @@ export function useBoundsEvents(handle: TLBoundsHandle) {
         rDoubleClickTimer.current = now
       } else {
         if (elapsed <= DOUBLE_CLICK_DURATION) {
-          callbacks.onDoubleClick?.({ type: TLTargetType.Bounds, target: handle, order }, e)
+          callbacks.onDoubleClick?.({ type: TLTargetType.Bounds, handle, order }, e)
           rDoubleClickTimer.current = -1
         }
       }
@@ -52,22 +52,22 @@ export function useBoundsEvents(handle: TLBoundsHandle) {
 
     const onPointerEnter: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
-      callbacks.onPointerEnter?.({ type: TLTargetType.Bounds, target: handle, order }, e)
+      callbacks.onPointerEnter?.({ type: TLTargetType.Bounds, handle, order }, e)
       e.order = order + 1
     }
 
     const onPointerLeave: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
-      callbacks.onPointerLeave?.({ type: TLTargetType.Bounds, target: handle, order }, e)
+      callbacks.onPointerLeave?.({ type: TLTargetType.Bounds, handle, order }, e)
       e.order = order + 1
     }
 
     const onKeyDown: TLReactCustomEvents['keyboard'] = e => {
-      callbacks.onKeyDown?.({ type: TLTargetType.Bounds, target: handle, order: -1 }, e)
+      callbacks.onKeyDown?.({ type: TLTargetType.Bounds, handle, order: -1 }, e)
     }
 
     const onKeyUp: TLReactCustomEvents['keyboard'] = e => {
-      callbacks.onKeyUp?.({ type: TLTargetType.Bounds, target: handle, order: -1 }, e)
+      callbacks.onKeyUp?.({ type: TLTargetType.Bounds, handle, order: -1 }, e)
     }
 
     return {

@@ -13,21 +13,21 @@ export function useShapeEvents<S extends TLReactShape>(shape: S) {
   const events = React.useMemo(() => {
     const onPointerMove: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
-      callbacks.onPointerMove?.({ type: TLTargetType.Shape, target: shape, order }, e)
+      callbacks.onPointerMove?.({ type: TLTargetType.Shape, shape, order }, e)
       e.order = order + 1
     }
 
     const onPointerDown: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
       if (!order) e.currentTarget?.setPointerCapture(e.pointerId)
-      callbacks.onPointerDown?.({ type: TLTargetType.Shape, target: shape, order }, e)
+      callbacks.onPointerDown?.({ type: TLTargetType.Shape, shape, order }, e)
       e.order = order + 1
     }
 
     const onPointerUp: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
       if (!order) e.currentTarget?.releasePointerCapture(e.pointerId)
-      callbacks.onPointerUp?.({ type: TLTargetType.Shape, target: shape, order }, e)
+      callbacks.onPointerUp?.({ type: TLTargetType.Shape, shape, order }, e)
 
       const now = Date.now()
       const elapsed = now - rDoubleClickTimer.current
@@ -36,7 +36,7 @@ export function useShapeEvents<S extends TLReactShape>(shape: S) {
         rDoubleClickTimer.current = now
       } else {
         if (elapsed <= DOUBLE_CLICK_DURATION) {
-          callbacks.onDoubleClick?.({ type: TLTargetType.Shape, target: shape, order }, e)
+          callbacks.onDoubleClick?.({ type: TLTargetType.Shape, shape, order }, e)
           rDoubleClickTimer.current = -1
         }
       }
@@ -46,22 +46,22 @@ export function useShapeEvents<S extends TLReactShape>(shape: S) {
 
     const onPointerEnter: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
-      callbacks.onPointerEnter?.({ type: TLTargetType.Shape, target: shape, order }, e)
+      callbacks.onPointerEnter?.({ type: TLTargetType.Shape, shape, order }, e)
       e.order = order + 1
     }
 
     const onPointerLeave: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
-      callbacks.onPointerLeave?.({ type: TLTargetType.Shape, target: shape, order }, e)
+      callbacks.onPointerLeave?.({ type: TLTargetType.Shape, shape, order }, e)
       e.order = order + 1
     }
 
     const onKeyDown: TLReactCustomEvents['keyboard'] = e => {
-      callbacks.onKeyDown?.({ type: TLTargetType.Shape, target: shape, order: -1 }, e)
+      callbacks.onKeyDown?.({ type: TLTargetType.Shape, shape, order: -1 }, e)
     }
 
     const onKeyUp: TLReactCustomEvents['keyboard'] = e => {
-      callbacks.onKeyUp?.({ type: TLTargetType.Shape, target: shape, order: -1 }, e)
+      callbacks.onKeyUp?.({ type: TLTargetType.Shape, shape, order: -1 }, e)
     }
 
     return {

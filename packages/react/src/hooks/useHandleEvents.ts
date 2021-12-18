@@ -12,66 +12,51 @@ export function useHandleEvents<S extends TLReactShape = TLReactShape>(
   const { inputs, callbacks } = useRendererContext()
 
   const events = React.useMemo(() => {
-    const onPointerMove: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerMove: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
       const handle = shape.handles![index]
-      callbacks.onPointerMove?.(
-        { type: TLTargetType.Handle, target: shape, handle, index, order },
-        e
-      )
+      callbacks.onPointerMove?.({ type: TLTargetType.Handle, shape, handle, index, order }, e)
       e.order = order + 1
     }
 
-    const onPointerDown: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerDown: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
       if (!order) e.currentTarget?.setPointerCapture(e.pointerId)
       const handle = shape.handles![index]
-      callbacks.onPointerDown?.(
-        { type: TLTargetType.Handle, target: shape, handle, index, order },
-        e
-      )
+      callbacks.onPointerDown?.({ type: TLTargetType.Handle, shape, handle, index, order }, e)
       e.order = order + 1
     }
 
-    const onPointerUp: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerUp: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
       if (!order) e.currentTarget?.releasePointerCapture(e.pointerId)
       const handle = shape.handles![index]
-      callbacks.onPointerUp?.({ type: TLTargetType.Handle, target: shape, handle, index, order }, e)
+      callbacks.onPointerUp?.({ type: TLTargetType.Handle, shape, handle, index, order }, e)
       e.order = order + 1
     }
 
-    const onPointerEnter: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerEnter: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
       const handle = shape.handles![index]
-      callbacks.onPointerEnter?.(
-        { type: TLTargetType.Handle, target: shape, handle, index, order },
-        e
-      )
+      callbacks.onPointerEnter?.({ type: TLTargetType.Handle, shape, handle, index, order }, e)
       e.order = order + 1
     }
 
-    const onPointerLeave: TLReactCustomEvents['pointer'] = (e) => {
+    const onPointerLeave: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
       const handle = shape.handles![index]
-      callbacks.onPointerLeave?.(
-        { type: TLTargetType.Handle, target: shape, handle, index, order },
-        e
-      )
+      callbacks.onPointerLeave?.({ type: TLTargetType.Handle, shape, handle, index, order }, e)
       e.order = order + 1
     }
 
-    const onKeyDown: TLReactCustomEvents['keyboard'] = (e) => {
+    const onKeyDown: TLReactCustomEvents['keyboard'] = e => {
       const handle = shape.handles![index]
-      callbacks.onKeyDown?.(
-        { type: TLTargetType.Handle, target: shape, handle, index, order: -1 },
-        e
-      )
+      callbacks.onKeyDown?.({ type: TLTargetType.Handle, shape, handle, index, order: -1 }, e)
     }
 
-    const onKeyUp: TLReactCustomEvents['keyboard'] = (e) => {
+    const onKeyUp: TLReactCustomEvents['keyboard'] = e => {
       const handle = shape.handles![index]
-      callbacks.onKeyUp?.({ type: TLTargetType.Handle, target: shape, handle, index, order: -1 }, e)
+      callbacks.onKeyUp?.({ type: TLTargetType.Handle, shape, handle, index, order: -1 }, e)
     }
 
     return {

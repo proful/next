@@ -171,15 +171,29 @@ export enum TLTargetType {
   Handle = 'handle',
 }
 
+export type TLEventCanvasInfo = { type: TLTargetType.Canvas; order?: number }
+export type TLEventShapeInfo<S extends TLShape> = {
+  type: TLTargetType.Shape
+  shape: S
+  order?: number
+}
+export type TLEventHandleInfo<S extends TLShape, H extends TLHandle = TLHandle> = {
+  type: TLTargetType.Handle
+  shape: S
+  handle: H
+  index: number
+  order?: number
+}
+export type TLEventBoundsInfo = {
+  type: TLTargetType.Bounds
+  handle: TLBoundsHandle
+  order: number
+}
 export type TLEventInfo<S extends TLShape, H extends TLHandle = TLHandle> =
-  | { type: TLTargetType.Canvas; target: 'canvas'; order?: number }
-  | { type: TLTargetType.Shape; target: S; order?: number }
-  | { type: TLTargetType.Handle; target: S; handle: H; index: number; order?: number }
-  | {
-      type: TLTargetType.Bounds
-      target: TLBoundsHandle
-      order: number
-    }
+  | TLEventCanvasInfo
+  | TLEventShapeInfo<S>
+  | TLEventHandleInfo<S, H>
+  | TLEventBoundsInfo
 
 /* ----------------- Type Assertion ----------------- */
 

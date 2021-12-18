@@ -326,7 +326,7 @@ export function intersectLineSegmentArc(
 
   if (!ellipseTest.didIntersect) return createIntersection('no intersection')
 
-  const points = ellipseTest.points.filter((point) =>
+  const points = ellipseTest.points.filter(point =>
     isAngleBetween(sa, ea, Vec.angle(center, point))
   )
 
@@ -446,9 +446,9 @@ export function intersectLineSegmentEllipse(
   // Filter to only points that are on the segment.
   // Solve for points, then counter-rotate points.
   const points = tValues
-    .filter((t) => t >= 0 && t <= 1)
-    .map((t) => Vec.add(center, Vec.add(a1, Vec.mul(Vec.sub(a2, a1), t))))
-    .map((p) => Vec.rotWith(p, center, rotation))
+    .filter(t => t >= 0 && t <= 1)
+    .map(t => Vec.add(center, Vec.add(a1, Vec.mul(Vec.sub(a2, a1), t))))
+    .map(p => Vec.rotWith(p, center, rotation))
 
   return createIntersection('intersection', ...points)
 }
@@ -558,7 +558,7 @@ export function intersectRectangleRay(
     []
   )
 
-  return sideIntersections.filter((int) => int.didIntersect)
+  return sideIntersections.filter(int => int.didIntersect)
 }
 
 /**
@@ -588,7 +588,7 @@ export function intersectRectangleLineSegment(
     []
   )
 
-  return sideIntersections.filter((int) => int.didIntersect)
+  return sideIntersections.filter(int => int.didIntersect)
 }
 
 /**
@@ -610,9 +610,7 @@ export function intersectRectangleRectangle(
       const intersections = intersectRectangleLineSegment(point2, size2, a1, a2)
 
       acc.push(
-        ...intersections.map((int) =>
-          createIntersection(`${message} ${int.message}`, ...int.points)
-        )
+        ...intersections.map(int => createIntersection(`${message} ${int.message}`, ...int.points))
       )
 
       return acc
@@ -620,7 +618,7 @@ export function intersectRectangleRectangle(
     []
   )
 
-  return sideIntersections.filter((int) => int.didIntersect)
+  return sideIntersections.filter(int => int.didIntersect)
 }
 
 /**
@@ -654,7 +652,7 @@ export function intersectRectangleArc(
     []
   )
 
-  return sideIntersections.filter((int) => int.didIntersect)
+  return sideIntersections.filter(int => int.didIntersect)
 }
 
 /**
@@ -684,7 +682,7 @@ export function intersectRectangleCircle(
     []
   )
 
-  return sideIntersections.filter((int) => int.didIntersect)
+  return sideIntersections.filter(int => int.didIntersect)
 }
 
 /**
@@ -718,7 +716,7 @@ export function intersectRectangleEllipse(
     []
   )
 
-  return sideIntersections.filter((int) => int.didIntersect)
+  return sideIntersections.filter(int => int.didIntersect)
 }
 
 /**
@@ -762,7 +760,7 @@ export function intersectRectanglePolyline(
     []
   )
 
-  return sideIntersections.filter((int) => int.didIntersect)
+  return sideIntersections.filter(int => int.didIntersect)
 }
 /**
  * Find the intersections between a rectangle and a polygon.
@@ -789,7 +787,7 @@ export function intersectRectanglePolygon(
     []
   )
 
-  return sideIntersections.filter((int) => int.didIntersect)
+  return sideIntersections.filter(int => int.didIntersect)
 }
 
 /* -------------------------------------------------- */
@@ -1319,4 +1317,41 @@ export function intersectPolygonBounds(points: number[][], bounds: TLBounds): TL
     [bounds.width, bounds.height],
     points
   )
+}
+
+/**
+ * Find the intersections between a rectangle and a ray.
+ *
+ * @param point
+ * @param size
+ * @param rotation
+ * @param origin
+ * @param direction
+ */
+export function intersectRayPolygon(
+  origin: number[],
+  direction: number[],
+  points: number[][]
+): TLIntersection[] {
+  const sideIntersections = pointsToLineSegments(points, true).reduce<TLIntersection[]>(
+    (acc, [a1, a2], i) => {
+      const intersection = intersectRayLineSegment(origin, direction, a1, a2)
+
+      if (intersection) {
+        acc.push(createIntersection(i.toString(), ...intersection.points))
+      }
+
+      return acc
+    },
+    []
+  )
+
+  return sideIntersections.filter(int => int.didIntersect)
+}
+
+export function pointsToLineSegments(points: number[][], closed = false) {
+  const segments = []
+  for (let i = 1; i < points.length; i++) segments.push([points[i - 1], points[i]])
+  if (closed) segments.push([points[points.length - 1], points[0]])
+  return segments
 }
