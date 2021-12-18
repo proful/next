@@ -90,7 +90,6 @@ function App(): JSX.Element {
               parentId: 'page1',
               point: [((i * 50 + j) % 50) * 150, Math.floor((i * 50 + j) / 50) * 150],
               size: [100, 100],
-              rotation: Math.PI / 6,
             }))
           ),
           {

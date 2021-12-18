@@ -113,7 +113,7 @@ const tlcss = css`
   .tl-container {
     --tl-cursor: inherit;
     --tl-zoom: 1;
-    --tl-scale: min(5, calc(1 / var(--tl-zoom)));
+    --tl-scale: calc(1 / var(--tl-zoom));
     --tl-padding: calc(64px * var(--tl-scale));
     --tl-shadow-color: 0deg 0% 0%;
     --tl-shadow-elevation-low: 0px 0.4px 0.5px hsl(var(--tl-shadow-color) / 0.04),
@@ -217,7 +217,6 @@ const tlcss = css`
     align-items: center;
     justify-content: center;
     contain: layout style size;
-    will-change: transform;
   }
 
   .tl-positioned-svg {
@@ -433,7 +432,6 @@ const tlcss = css`
     pointer-events: none;
     padding: 0;
     contain: layout style size;
-    will-change: transform;
   }
 
   .tl-fade-in {
@@ -478,14 +476,14 @@ const tlcss = css`
     fill: none;
     stroke: transparent;
     pointer-events: stroke;
-    stroke-width: calc(24px * var(--tl-scale));
+    stroke-width: min(100px, calc(24px * var(--tl-scale)));
   }
 
   .tl-hitarea-fill {
     fill: transparent;
     stroke: transparent;
     pointer-events: all;
-    stroke-width: calc(24px * var(--tl-scale));
+    stroke-width: min(100px, calc(24px * var(--tl-scale)));
   }
 
   .tl-grid {
