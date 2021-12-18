@@ -228,10 +228,19 @@ export class TLApp<
 
   @observable currentPageId = 'page'
 
-  getPageById = (pageId: string) => {
+  @computed get currentPage(): TLPage<S, K> {
+    return this.getPageById(this.currentPageId)
+  }
+
+  getPageById = (pageId: string): TLPage<S, K> => {
     const page = this.pages.find(page => page.id === pageId)
     if (!page) throw Error(`Could not find a page named ${pageId}.`)
     return page
+  }
+
+  @action setCurrentPage(page: string | TLPage<S, K>) {
+    this.currentPageId = typeof page === 'string' ? page : page.id
+    return this
   }
 
   @action addPages(pages: TLPage<S, K>[]): void {
@@ -242,15 +251,6 @@ export class TLApp<
   @action removePages(pages: TLPage<S, K>[]): void {
     this.pages = this.pages.filter(page => !pages.includes(page))
     this.persist()
-  }
-
-  @computed get currentPage(): TLPage<S, K> {
-    return this.getPageById(this.currentPageId)
-  }
-
-  @action setCurrentPage(page: string | TLPage<S, K>) {
-    this.currentPageId = typeof page === 'string' ? page : page.id
-    return this
   }
 
   /* --------------------- Shapes --------------------- */
