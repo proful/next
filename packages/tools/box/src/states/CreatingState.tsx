@@ -10,6 +10,7 @@ import {
   TLStateEvents,
   TLBounds,
   TLBoundsCorner,
+  TLCursor,
 } from '@tldraw/core'
 import Vec from '@tldraw/vec'
 
@@ -22,6 +23,7 @@ export class CreatingState<
 > extends TLToolState<S, K, R, P> {
   static id = 'creating'
 
+  cursor = TLCursor.Cross
   creatingShape?: T
   aspectRatio?: number
   initialBounds = {} as TLBounds
@@ -44,8 +46,11 @@ export class CreatingState<
     if (shape.aspectRatio) {
       this.aspectRatio = shape.aspectRatio
       this.initialBounds.height = Math.max(1, this.initialBounds.width * this.aspectRatio)
-      this.initialBounds.maxY = this.initialBounds.minY + this.initialBounds.height
+    } else {
+      this.aspectRatio = 1
+      this.initialBounds.height = this.initialBounds.width
     }
+    this.initialBounds.maxY = this.initialBounds.minY + this.initialBounds.height
 
     this.creatingShape = shape
     this.app.currentPage.addShapes(shape)
@@ -64,6 +69,10 @@ export class CreatingState<
       0,
       shiftKey || this.creatingShape.isAspectRatioLocked
     )
+
+    if (bounds.scaleX < 0) {
+      console.log(true)
+    }
 
     // if (this.aspectRatio) {
     //   const size = [bounds.width, Math.max(1, bounds.width * this.aspectRatio)]

@@ -21,10 +21,18 @@ export abstract class TLTool<
     return this.root
   }
 
-  onTransition: TLStateEvents<S, K>['onTransition'] = (info) => {
+  onEnter = () => {
+    if (this.cursor) this.app.cursors.setCursor(this.cursor)
+  }
+
+  onTransition: TLStateEvents<S, K>['onTransition'] = info => {
     const { toId } = info
     const toState = this.children.get(toId)!
     this.app.cursors.reset()
-    if (toState.cursor) this.app.cursors.setCursor(toState.cursor)
+    if (toState.cursor) {
+      this.app.cursors.setCursor(toState.cursor)
+    } else if (this.cursor) {
+      if (this.cursor) this.app.cursors.setCursor(this.cursor)
+    }
   }
 }

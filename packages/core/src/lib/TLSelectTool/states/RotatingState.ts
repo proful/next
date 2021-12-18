@@ -68,7 +68,7 @@ export class RotatingState<
       inputs: { shiftKey, currentPoint },
     } = this.app
 
-    const { snapshot, initialCommonCenter, initialAngle } = this
+    const { snapshot, initialCommonCenter, initialAngle, initialSelectionRotation } = this
 
     const currentAngle = Vec.angle(initialCommonCenter, currentPoint)
 
@@ -114,7 +114,11 @@ export class RotatingState<
     })
 
     this.updateCursor()
-    this.app.setSelectionRotation(this.initialSelectionRotation + angleDelta)
+
+    const boundsRotation = initialSelectionRotation + angleDelta
+    this.app.setSelectionRotation(
+      shiftKey ? GeomUtils.snapAngleToSegments(boundsRotation, 24) : boundsRotation
+    )
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {

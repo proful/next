@@ -112,6 +112,38 @@ export class ResizingState<
 
     const { scaleX, scaleY } = nextBounds
 
+    const isFlippedX = scaleX < 0 && scaleY >= 0
+    const isFlippedY = scaleY < 0 && scaleX >= 0
+
+    switch (handle) {
+      case TLBoundsCorner.TopLeft:
+      case TLBoundsCorner.BottomRight: {
+        if (isFlippedX || isFlippedY) {
+          if (this.app.cursors.cursor === TLCursor.NwseResize) {
+            this.app.cursors.setCursor(TLCursor.NeswResize, this.app.selectionBounds?.rotation)
+          }
+        } else {
+          if (this.app.cursors.cursor === TLCursor.NeswResize) {
+            this.app.cursors.setCursor(TLCursor.NwseResize, this.app.selectionBounds?.rotation)
+          }
+        }
+        break
+      }
+      case TLBoundsCorner.TopRight:
+      case TLBoundsCorner.BottomLeft: {
+        if (isFlippedX || isFlippedY) {
+          if (this.app.cursors.cursor === TLCursor.NeswResize) {
+            this.app.cursors.setCursor(TLCursor.NwseResize, this.app.selectionBounds?.rotation)
+          }
+        } else {
+          if (this.app.cursors.cursor === TLCursor.NwseResize) {
+            this.app.cursors.setCursor(TLCursor.NeswResize, this.app.selectionBounds?.rotation)
+          }
+        }
+        break
+      }
+    }
+
     this.app.selectedShapes.forEach(shape => {
       const { shape: initialShape, transformOrigin } = snapshots[shape.id]
 

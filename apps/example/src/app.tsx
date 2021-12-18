@@ -77,21 +77,28 @@ function App(): JSX.Element {
 
   const [model] = React.useState<TLDocumentModel>({
     currentPageId: 'page1',
-    selectedIds: ['box1'],
+    selectedIds: ['box0'],
     pages: [
       {
         name: 'Page',
         id: 'page1',
         shapes: [
-          ...Array.from(Array(50)).flatMap((_, i) =>
-            Array.from(Array(50)).map((_, j) => ({
-              id: 'box' + '_' + i + '_' + j,
-              type: 'box',
-              parentId: 'page1',
-              point: [((i * 50 + j) % 50) * 150, Math.floor((i * 50 + j) / 50) * 150],
-              size: [100, 100],
-            }))
-          ),
+          // ...Array.from(Array(50)).flatMap((_, i) =>
+          //   Array.from(Array(50)).map((_, j) => ({
+          //     id: 'box' + '_' + i + '_' + j,
+          //     type: 'box',
+          //     parentId: 'page1',
+          //     point: [((i * 50 + j) % 50) * 150, Math.floor((i * 50 + j) / 50) * 150],
+          //     size: [100, 100],
+          //   }))
+          // ),
+          {
+            id: 'box0',
+            type: 'box',
+            parentId: 'page1',
+            point: [300, 200],
+            size: [100, 100],
+          },
           {
             id: 'box1',
             type: 'box',
