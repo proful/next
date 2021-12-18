@@ -311,17 +311,31 @@ describe('app.shapesInViewport', () => {
 })
 
 describe('app.showSelection', () => {
-  it.todo('Shows bounds only if the select tool is active')
-  it.todo('Shows bounds only when there are selected shapes')
+  it.todo('Shows bounds only if the select tool is active and there are selected shapes')
   it.todo('Hides bounds if the only selected shape has hideBounds=true')
   it.todo('Shows when more than one shape is selected, even if some/all have hideBounds=true')
 })
 
 describe('app.showSelectionDetail', () => {
-  it.todo('Shows bounds only if the select tool is active')
-  it.todo('Shows bounds only when there are selected shapes')
-  it.todo('Hides bounds if the only selected shape has hideBounds=true')
+  it.todo('Shows bounds only if the select tool is active and there are selected shapes')
+  it.todo('Hides bounds if all selected shapes have hideBounds=true')
   it.todo('Shows when more than one shape is selected, even if some/all have hideBounds=true')
+})
+
+describe('app.showSelectionRotation', () => {
+  it.todo('Shows bounds only if showing selection detail')
+  it.todo('Shows bounds only if select tool is in rotating or pointingRotateHandle state')
+})
+
+describe('app.showContextBar', () => {
+  it.todo(
+    'Shows context bar only if the select tool is active and there are selected shapes and the select tool is in either idle or hoveringResizeHandle states'
+  )
+  it.todo('Hides context bar if all selected shapes have hideContextBar=true')
+})
+
+describe('app.showRotateHandle', () => {
+  it.todo('...')
 })
 
 /* ---------------------- Brush --------------------- */

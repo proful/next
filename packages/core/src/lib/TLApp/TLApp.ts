@@ -442,27 +442,26 @@ export class TLApp<
 
   @computed get showSelectionDetail() {
     return (
+      this.selectedShapes.size > 0 &&
       this.currentState.id === 'select' &&
-      (this.selectedShapes.size > 0 || !this.selectedShapesArray[0].hideSelectionDetail)
+      !this.selectedShapesArray.every(shape => shape.hideSelectionDetail)
     )
   }
 
   @computed get showSelectionRotation() {
     const stateId = this.selectedTool.currentState.id
     return (
-      this.currentState.id === 'select' &&
-      ((this.selectedShapes.size > 0 && stateId === 'rotating') ||
-        stateId === 'pointingRotateHandle')
+      this.showSelectionDetail && (stateId === 'rotating' || stateId === 'pointingRotateHandle')
     )
   }
 
   @computed get showContextBar() {
     const stateId = this.selectedTool.currentState.id
     return (
-      this.currentState.id === 'select' &&
       this.selectedShapes.size > 0 &&
+      this.currentState.id === 'select' &&
       (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
-      !this.selectedShapesArray.every(shape => shape.hideContextBar)
+      !this.selectedShapesArray.every(shape => shape.hideSelectionDetail)
     )
   }
 
