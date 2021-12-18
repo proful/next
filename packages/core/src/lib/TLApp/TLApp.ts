@@ -13,6 +13,7 @@ import {
   TLToolConstructor,
   TLShapeConstructor,
   TLSerializedShape,
+  TLCustomProps,
 } from '~lib'
 import type {
   TLBounds,
@@ -225,39 +226,48 @@ export class TLApp<
     new TLPage(this, { id: 'page', name: 'page', shapes: [], bindings: [] }),
   ]
 
-  @action addPages(...pages: TLPage<S, K>[]): void {
+  @observable currentPageId = 'page'
+
+  getPageById = (pageId: string) => {
+    const page = this.pages.find(page => page.id === pageId)
+    if (!page) throw Error(`Could not find a page named ${pageId}.`)
+    return page
+  }
+
+  @action addPages(pages: TLPage<S, K>[]): void {
     this.pages.push(...pages)
     this.persist()
   }
 
-  @action removePages(...pages: TLPage<S, K>[]): void {
+  @action removePages(pages: TLPage<S, K>[]): void {
     this.pages = this.pages.filter(page => !pages.includes(page))
     this.persist()
   }
 
-  /* ------------------ Current Page ------------------ */
-
-  @observable currentPageId = 'page'
+  @computed get currentPage(): TLPage<S, K> {
+    return this.getPageById(this.currentPageId)
+  }
 
   @action setCurrentPage(page: string | TLPage<S, K>) {
     this.currentPageId = typeof page === 'string' ? page : page.id
     return this
   }
 
-  @computed get currentPage(): TLPage<S, K> {
-    const page = this.pages.find(page => page.id === this.currentPageId)
-    if (!page) throw Error(`Could not find a page named ${this.currentPageId}.`)
-    return page
-  }
-
-  getPageById = (id: string) => {
-    return this.pages.find(page => page.id === id)
-  }
-
   /* --------------------- Shapes --------------------- */
+
+  getShapeById = <T extends S>(id: string, pageId = this.currentPage.id): T => {
+    const shape = this.getPageById(pageId)?.shapes.find(shape => shape.id === id) as T
+    if (!shape) throw Error(`Could not find that shape: ${id} on page ${pageId}`)
+    return shape
+  }
 
   @action readonly createShapes = (shapes: S[] | TLSerializedShape[]): this => {
     this.currentPage.addShapes(...shapes)
+    return this
+  }
+
+  @action updateShapes = (shapes: ({ id: string } & Partial<TLCustomProps<S>>)[]): this => {
+    shapes.forEach(shape => this.getShapeById(shape.id)?.update(shape))
     return this
   }
 
@@ -274,12 +284,6 @@ export class TLApp<
     this.currentPage.removeShapes(...shapes)
     this.persist()
     return this
-  }
-
-  getShapeById = <T extends S>(id: string, pageId = this.currentPage.id): T => {
-    const shape = this.getPageById(pageId)?.shapes.find(shape => shape.id === id) as T
-    if (!shape) throw Error(`Could not find that shape: ${id} on page ${pageId}`)
-    return shape
   }
 
   /* -------------------------------------------------- */
@@ -327,6 +331,7 @@ export class TLApp<
   /* ----------------- Selected Shapes ---------------- */
 
   @observable selectedIds: Set<string> = new Set()
+
   @observable selectedShapes: Set<S> = new Set()
 
   @computed get selectedShapesArray() {
@@ -358,6 +363,7 @@ export class TLApp<
   /* ------------------ Erasing Shape ----------------- */
 
   @observable erasingIds: Set<string> = new Set()
+
   @observable erasingShapes: Set<S> = new Set()
 
   @computed get erasingShapesArray() {
@@ -382,13 +388,8 @@ export class TLApp<
 
   @observable brush?: TLBounds
 
-  @action readonly setBrush = (brush: TLBounds): this => {
+  @action readonly setBrush = (brush?: TLBounds): this => {
     this.brush = brush
-    return this
-  }
-
-  @action readonly clearBrush = (): this => {
-    this.brush = undefined
     return this
   }
 

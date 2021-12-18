@@ -46,18 +46,14 @@ describe('editing shape', () => {
   it('Clears editing shape when clicking outside of the editing shape', () => {
     const app = new TLTestApp()
     app.doubleClick([10, 10], 'box3')
-    app.click([-100, -110], { type: TLTargetType.Canvas, target: 'canvas', order: 0 })
-    app.setEditingShape()
+    app.click([-100, -110], { type: TLTargetType.Canvas })
     expect(app.editingId).toBeUndefined()
-    expect(app.editingShape).toBeUndefined()
   })
 
   it('Does not clear editing shape when clicking inside of the editing shape', () => {
     const app = new TLTestApp()
     app.doubleClick([10, 10], 'box3')
-    app.pointerDown([10, 10], 'box1')
-    app.setEditingShape()
-    expect(app.editingId).toBeUndefined()
-    expect(app.editingShape).toBeUndefined()
+    app.pointerDown([10, 10], 'box3')
+    expect(app.editingId).toBe('box3')
   })
 })

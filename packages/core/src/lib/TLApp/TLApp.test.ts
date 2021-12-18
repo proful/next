@@ -58,7 +58,7 @@ describe('When interacting with the public API', () => {
 })
 
 describe('app.setSelectedShapes', () => {
-  it('Sets selected shapes with ids', () => {
+  it('Sets selected shapes when passed an array of ids', () => {
     const app = new TLTestApp()
       .setSelectedShapes(['box1', 'box2'])
       .expectSelectedIdsToBe(['box1', 'box2'])
@@ -69,7 +69,7 @@ describe('app.setSelectedShapes', () => {
     ).toBe(true)
   })
 
-  it('Sets selected shapes with shapes', () => {
+  it('Sets selected shapes when passed an array of shape instances', () => {
     const app = new TLTestApp()
     app
       .setSelectedShapes(app.getShapesById(['box1', 'box2']))
@@ -81,7 +81,7 @@ describe('app.setSelectedShapes', () => {
     ).toBe(true)
   })
 
-  it('Clears selected shapes', () => {
+  it('Clears selected shapes when passed an empty array', () => {
     const app = new TLTestApp()
       .setSelectedShapes([])
       .expectSelectedIdsToBe([])
@@ -91,20 +91,20 @@ describe('app.setSelectedShapes', () => {
 })
 
 describe('app.setHoveredShape', () => {
-  it('Sets hovered shape with id', () => {
+  it('Sets hovered shape when passed a shape id', () => {
     const app = new TLTestApp().setHoveredShape('box1')
     expect(app.hoveredId).toBe('box1')
     expect(app.hoveredShape).toBe(app.getShapeById('box1'))
   })
 
-  it('Sets hovered shape with id with shape', () => {
+  it('Sets hovered shape when passed a shape instance', () => {
     const app = new TLTestApp()
     app.setHoveredShape(app.getShapeById('box1'))
     expect(app.hoveredId).toBe('box1')
     expect(app.hoveredShape).toBe(app.getShapeById('box1'))
   })
 
-  it('Clears hovered shape', () => {
+  it('Clears hovered shape when passed undefined', () => {
     const app = new TLTestApp().setHoveredShape('box1').setHoveredShape(undefined)
     expect(app.hoveredId).toBeUndefined()
     expect(app.hoveredShape).toBeUndefined()
@@ -112,56 +112,130 @@ describe('app.setHoveredShape', () => {
 })
 
 describe('app.setEditingShape', () => {
-  it('Sets editing shape with id', () => {
+  it('Sets editing shape when passed a shape id', () => {
     const app = new TLTestApp().setEditingShape('box3')
     expect(app.editingId).toBe('box3')
     expect(app.editingShape).toBe(app.getShapeById('box3'))
   })
 
-  it('Sets editing shape with shape', () => {
+  it('Sets editing shape when passed a shape instance', () => {
     const app = new TLTestApp()
     app.setEditingShape(app.getShapeById('box3'))
     expect(app.editingId).toBe('box3')
     expect(app.editingShape).toBe(app.getShapeById('box3'))
   })
 
-  it('Clears editing shape', () => {
+  it('Clears editing shape when passed undefined', () => {
     const app = new TLTestApp().setEditingShape('box3').setEditingShape(undefined)
     expect(app.editingId).toBeUndefined()
     expect(app.editingShape).toBeUndefined()
   })
 })
 
-describe('app.createShape', () => {
-  new TLTestApp()
-    .createShapes([
-      {
-        id: 'newbox1',
-        parentId: 'page1',
-        type: 'box',
-        point: [120, 120],
-      },
-    ])
-    .expectShapesToBeDefined(['newbox1'])
-    .expectShapesToHaveProps({
-      newbox1: {
-        id: 'newbox1',
-        point: [120, 120],
-      },
-    })
-    .createShapes([
-      new TLTestBox({
-        id: 'newbox2',
-        parentId: 'page1',
-        type: 'box',
-        point: [220, 220],
-      }),
-    ])
-    .expectShapesToBeDefined(['newbox2'])
-    .expectShapesToHaveProps({
-      newbox2: {
-        id: 'newbox2',
-        point: [220, 220],
-      },
-    })
+/* ---------------------- Pages --------------------- */
+
+describe('app.getPageById', () => {
+  it.todo('Returns a page when passed an id')
+})
+
+describe('app.setCurrentPage', () => {
+  it.todo('Sets the current page when passed an id')
+  it.todo('Sets the current page when passed a page instance')
+})
+
+describe('app.addPages', () => {
+  it.todo('adds pages when passed an array of page instances')
+})
+
+describe('app.removePages', () => {
+  it.todo('removes pages when passed an array of page instances')
+})
+
+/* --------------------- Shapes --------------------- */
+
+describe('app.getShapeById', () => {
+  it.todo('Returns a shape instance when passed an id')
+})
+
+describe('app.createShapes', () => {
+  it('Creates shapes when passed a serialized shape', () => {
+    const app = new TLTestApp()
+    app
+      .createShapes([
+        {
+          id: 'newbox1',
+          parentId: 'page1',
+          type: 'box',
+          point: [120, 120],
+        },
+      ])
+      .expectShapesToBeDefined(['newbox1'])
+      .expectShapesToHaveProps({
+        newbox1: {
+          id: 'newbox1',
+          point: [120, 120],
+        },
+      })
+  })
+
+  it('Creates shapes when passed a shape instance', () => {
+    const app = new TLTestApp()
+    app
+      .createShapes([
+        new TLTestBox({
+          id: 'newbox2',
+          parentId: 'page1',
+          type: 'box',
+          point: [220, 220],
+        }),
+      ])
+      .expectShapesToBeDefined(['newbox2'])
+      .expectShapesToHaveProps({
+        newbox2: {
+          id: 'newbox2',
+          point: [220, 220],
+        },
+      })
+  })
+})
+
+describe('app.updateShapes', () => {
+  it('Updates shapes when passed an array of new props', () => {
+    const app = new TLTestApp()
+    app
+      .updateShapes([{ id: 'box1', point: [200, 200] }])
+      .expectShapesToHaveProps({ box1: { point: [200, 200] } })
+      .updateShapes([
+        { id: 'box1', point: [300, 300] },
+        { id: 'box2', point: [300, 300] },
+      ])
+      .expectShapesToHaveProps({ box1: { point: [300, 300] } })
+  })
+})
+
+describe('app.deleteShapes', () => {
+  it('Deletes shapes when passed an array of ids', () => {
+    const app = new TLTestApp()
+    app.deleteShapes(['box1', 'box2']).expectShapesToBeUndefined(['box1', 'box2'])
+  })
+
+  it('Deletes shapes when passed an array of shape instances', () => {
+    const app = new TLTestApp()
+    app
+      .deleteShapes(app.getShapesById(['box1', 'box2']))
+      .expectShapesToBeUndefined(['box1', 'box2'])
+  })
+})
+
+/* ---------------------- Brush --------------------- */
+
+describe('app.setBrush', () => {
+  it.todo('Sets brush when passed a bounding box')
+  it.todo('Clears brush when passed undefined')
+})
+
+/* ---------------------- Tools --------------------- */
+
+describe('app.selectTool', () => {
+  it.todo('Selects a tool when passed a tool id')
 })

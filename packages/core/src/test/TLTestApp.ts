@@ -121,7 +121,7 @@ export class TLTestApp extends TLApp<S> {
 
   getInfo = (info: string | TLEventInfo<S>): TLEventInfo<S> => {
     return typeof info === 'string'
-      ? { type: TLTargetType.Shape, target: this.getShapeById(info)!, order: 0 }
+      ? { type: TLTargetType.Shape, shape: this.getShapeById(info), order: 0 }
       : info
   }
 
@@ -168,6 +168,12 @@ export class TLTestApp extends TLApp<S> {
 
   expectShapesToBeDefined = (ids: string[], pageId?: string) => {
     ids.forEach(id => expect(this.getShapeById(id, pageId)).toBeDefined())
+    return this
+  }
+
+  expectShapesToBeUndefined = (ids: string[], pageId?: string) => {
+    const page = this.getPageById(pageId ?? this.currentPage.id)!
+    ids.forEach(id => expect(page.shapes.find(s => s.id === id)).toBeUndefined())
     return this
   }
 

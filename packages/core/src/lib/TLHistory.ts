@@ -75,7 +75,7 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
     // Pause the history, to prevent any loops
     this.pause()
 
-    const pagesMap = new Map(this.app.pages.map((page) => [page.id, page]))
+    const pagesMap = new Map(this.app.pages.map(page => [page.id, page]))
     const pagesToAdd: TLPage<S, K>[] = []
 
     for (const serializedPage of pages) {
@@ -83,7 +83,7 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
 
       if (page !== undefined) {
         // Update the page
-        const shapesMap = new Map(page.shapes.map((shape) => [shape.id, shape]))
+        const shapesMap = new Map(page.shapes.map(shape => [shape.id, shape]))
         const shapesToAdd: TLShape[] = []
 
         for (const serializedShape of serializedPage.shapes) {
@@ -119,7 +119,7 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
             id,
             name,
             bindings,
-            shapes: shapes.map((serializedShape) => {
+            shapes: shapes.map(serializedShape => {
               const ShapeClass = this.app.getShapeClass(serializedShape.type)
               return new ShapeClass(serializedShape)
             }),
@@ -129,16 +129,12 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
     }
 
     // Any pages remaining in the pages map need to be removed
-    if (pagesMap.size > 0) this.app.removePages(...pagesMap.values())
+    if (pagesMap.size > 0) this.app.removePages(Array.from(pagesMap.values()))
 
     // Add any new pages
-    if (pagesToAdd.length > 0) this.app.addPages(...pagesToAdd)
+    if (pagesToAdd.length > 0) this.app.addPages(pagesToAdd)
 
-    this.app.setCurrentPage(currentPageId)
-
-    this.app.setSelectedShapes(selectedIds)
-
-    this.app.setErasingShapes([])
+    this.app.setCurrentPage(currentPageId).setSelectedShapes(selectedIds).setErasingShapes([])
 
     // Resume the history if not originally paused
     if (!wasPaused) this.resume()

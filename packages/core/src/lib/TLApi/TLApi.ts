@@ -1,4 +1,4 @@
-import type { TLApp, TLPage, TLSerializedShape, TLShape } from '~lib'
+import type { TLApp, TLCustomProps, TLPage, TLSerializedShape, TLShape } from '~lib'
 import type { TLEventMap } from '~types'
 import { BoundsUtils } from '~utils'
 
@@ -44,8 +44,8 @@ export class TLApi<S extends TLShape = TLShape, K extends TLEventMap = TLEventMa
    *
    * @param shapes The serialized shape changes to apply.
    */
-  updateShapes = (...shapes: { id: string } & TLSerializedShape[]): this => {
-    shapes.forEach(shape => this.#app.getShapeById(shape.id)?.update(shape))
+  updateShapes = (...shapes: ({ id: string } & Partial<TLCustomProps<S>>)[]): this => {
+    this.#app.updateShapes(shapes)
     return this
   }
 

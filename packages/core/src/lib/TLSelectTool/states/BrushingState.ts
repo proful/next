@@ -42,16 +42,16 @@ export class BrushingState<
 
     const hits = this.tree
       .search(brushBounds)
-      .filter((shape) =>
+      .filter(shape =>
         ctrlKey
           ? BoundsUtils.boundsContain(brushBounds, shape.rotatedBounds)
           : shape.hitTestBounds(brushBounds)
       )
 
     if (shiftKey) {
-      if (hits.every((hit) => this.initialSelectedShapes.includes(hit))) {
+      if (hits.every(hit => this.initialSelectedShapes.includes(hit))) {
         // Deselect hit shapes
-        this.app.setSelectedShapes(this.initialSelectedShapes.filter((hit) => !hits.includes(hit)))
+        this.app.setSelectedShapes(this.initialSelectedShapes.filter(hit => !hits.includes(hit)))
       } else {
         // Select hit shapes + initial selected shapes
         this.app.setSelectedShapes(
@@ -65,14 +65,14 @@ export class BrushingState<
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {
-    this.app.clearBrush()
+    this.app.setBrush(undefined)
     this.tool.transition('idle')
   }
 
   handleModifierKey: TLEvents<S>['keyboard'] = (info, e) => {
     switch (e.key) {
       case 'Escape': {
-        this.app.clearBrush()
+        this.app.setBrush(undefined)
         this.app.setSelectedShapes(this.initialSelectedIds)
         this.tool.transition('idle')
         break
