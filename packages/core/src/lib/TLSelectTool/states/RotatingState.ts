@@ -46,7 +46,7 @@ export class RotatingState<
 
     history.pause()
     this.handle = info.handle
-    this.initialSelectionRotation = this.app.boundsRotation
+    this.initialSelectionRotation = this.app.selectionRotation
     this.initialCommonBounds = { ...selectionBounds }
     this.initialCommonCenter = BoundsUtils.getBoundsCenter(selectionBounds)
     this.initialAngle = Vec.angle(this.initialCommonCenter, this.app.inputs.currentPoint)
@@ -125,12 +125,11 @@ export class RotatingState<
       }
     })
 
-    this.updateCursor()
-
-    const boundsRotation = initialSelectionRotation + angleDelta
+    const selectionRotation = initialSelectionRotation + angleDelta
     this.app.setSelectionRotation(
-      shiftKey ? GeomUtils.snapAngleToSegments(boundsRotation, 24) : boundsRotation
+      shiftKey ? GeomUtils.snapAngleToSegments(selectionRotation, 24) : selectionRotation
     )
+    this.updateCursor()
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {
@@ -152,6 +151,6 @@ export class RotatingState<
   }
 
   private updateCursor() {
-    this.app.cursors.setCursor(CURSORS[this.handle], this.app.boundsRotation)
+    this.app.cursors.setCursor(CURSORS[this.handle], this.app.selectionRotation)
   }
 }

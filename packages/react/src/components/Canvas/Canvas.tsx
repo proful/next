@@ -40,7 +40,7 @@ export interface TLCanvasProps<S extends TLReactShape> {
   gridSize?: number
   cursor?: TLCursor
   cursorRotation?: number
-  boundsRotation?: number
+  selectionRotation?: number
   showGrid?: boolean
   showSelection?: boolean
   showHandles?: boolean
@@ -64,7 +64,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   erasingShapes,
   cursor = TLCursor.Default,
   cursorRotation = 0,
-  boundsRotation = 0,
+  selectionRotation = 0,
   showSelection = true,
   showHandles = true,
   showSelectionRotation = false,
@@ -178,7 +178,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                   bounds={selectionBounds}
                   detail={showSelectionRotation ? 'rotation' : 'size'}
                   hidden={!showSelectionDetail}
-                  rotation={boundsRotation}
+                  rotation={selectionRotation}
                 />
               )}
               {selectedShapes && components.ContextBar && (

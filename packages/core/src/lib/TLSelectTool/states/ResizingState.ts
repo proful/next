@@ -26,7 +26,7 @@ export class ResizingState<
   initialCommonBounds = {} as TLBounds
   initialCommonCenter = {} as number[]
   transformOrigins: Record<string, number[]> = {}
-  boundsRotation = 0
+  selectionRotation = 0
 
   static CURSORS: Record<TLResizeCorner | TLResizeEdge, TLCursor> = {
     [TLResizeEdge.Bottom]: TLCursor.NsResize,
@@ -56,7 +56,7 @@ export class ResizingState<
 
     this.isSingle = selectedShapesArray.length === 1
     this.isAspectRatioLocked = this.isSingle && !!selectedShapesArray[0].isAspectRatioLocked
-    this.boundsRotation = this.isSingle ? selectedShapesArray[0].rotation ?? 0 : 0
+    this.selectionRotation = this.isSingle ? selectedShapesArray[0].rotation ?? 0 : 0
     this.initialCommonBounds = { ...selectionBounds }
     this.initialCommonCenter = BoundsUtils.getBoundsCenter(this.initialCommonBounds)
 
@@ -85,7 +85,7 @@ export class ResizingState<
     this.app.cursors.reset()
     this.snapshots = {}
     this.initialCommonBounds = {} as TLBounds
-    this.boundsRotation = 0
+    this.selectionRotation = 0
     this.app.history.resume()
   }
 
@@ -106,7 +106,7 @@ export class ResizingState<
       initialCommonBounds,
       handle,
       delta,
-      this.boundsRotation,
+      this.selectionRotation,
       shiftKey || this.isAspectRatioLocked
     )
 

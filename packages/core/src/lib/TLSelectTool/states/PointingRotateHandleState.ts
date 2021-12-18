@@ -39,6 +39,6 @@ export class PointingRotateHandleState<
   }
 
   private updateCursor() {
-    this.app.cursors.setCursor(CURSORS[this.handle], this.app.boundsRotation)
+    this.app.cursors.setCursor(CURSORS[this.handle], this.app.selectionRotation)
   }
 }

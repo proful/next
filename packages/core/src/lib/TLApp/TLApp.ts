@@ -325,7 +325,7 @@ export class TLApp<
 
   @observable selectedShapes: Set<S> = new Set()
 
-  @observable boundsRotation = 0
+  @observable selectionRotation = 0
 
   @computed get selectedShapesArray() {
     const { selectedShapes, selectedTool } = this
@@ -346,15 +346,15 @@ export class TLApp<
     const newSelectedShapes = this.currentPage.shapes.filter(shape => selectedIds.has(shape.id))
     newSelectedShapes.forEach(s => selectedShapes.add(s))
     if (newSelectedShapes.length === 1) {
-      this.boundsRotation = newSelectedShapes[0].rotation ?? 0
+      this.selectionRotation = newSelectedShapes[0].rotation ?? 0
     } else {
-      this.boundsRotation = 0
+      this.selectionRotation = 0
     }
     return this
   }
 
   @action setSelectionRotation(radians: number) {
-    this.boundsRotation = radians
+    this.selectionRotation = radians
   }
 
   /* ------------------ Erasing Shape ----------------- */
