@@ -3,8 +3,8 @@ import { Vec } from '@tldraw/vec'
 
 import {
   TLBounds,
-  TLBoundsCorner,
-  TLBoundsEdge,
+  TLResizeCorner,
+  TLResizeEdge,
   TLBoundsWithCenter,
   TLSnap,
   TLSnapPoints,
@@ -329,7 +329,7 @@ export class BoundsUtils {
 
   static getTransformedBoundingBox(
     bounds: TLBounds,
-    handle: TLBoundsCorner | TLBoundsEdge | 'center',
+    handle: TLResizeCorner | TLResizeEdge | 'center',
     delta: number[],
     rotation = 0,
     isAspectRatioLocked = false
@@ -368,30 +368,30 @@ The dragging handle (corner or edge) will determine which
 corners should change.
 */
     switch (handle) {
-      case TLBoundsEdge.Top:
-      case TLBoundsCorner.TopLeft:
-      case TLBoundsCorner.TopRight: {
+      case TLResizeEdge.Top:
+      case TLResizeCorner.TopLeft:
+      case TLResizeCorner.TopRight: {
         by0 += dy
         break
       }
-      case TLBoundsEdge.Bottom:
-      case TLBoundsCorner.BottomLeft:
-      case TLBoundsCorner.BottomRight: {
+      case TLResizeEdge.Bottom:
+      case TLResizeCorner.BottomLeft:
+      case TLResizeCorner.BottomRight: {
         by1 += dy
         break
       }
     }
 
     switch (handle) {
-      case TLBoundsEdge.Left:
-      case TLBoundsCorner.TopLeft:
-      case TLBoundsCorner.BottomLeft: {
+      case TLResizeEdge.Left:
+      case TLResizeCorner.TopLeft:
+      case TLResizeCorner.BottomLeft: {
         bx0 += dx
         break
       }
-      case TLBoundsEdge.Right:
-      case TLBoundsCorner.TopRight:
-      case TLBoundsCorner.BottomRight: {
+      case TLResizeEdge.Right:
+      case TLResizeCorner.TopRight:
+      case TLResizeCorner.BottomRight: {
         bx1 += dx
         break
       }
@@ -423,36 +423,36 @@ new box's aspect ratio matches the original aspect ratio.
       const th = bh * (scaleX < 0 ? 1 : -1) * ar
 
       switch (handle) {
-        case TLBoundsCorner.TopLeft: {
+        case TLResizeCorner.TopLeft: {
           if (isTall) by0 = by1 + tw
           else bx0 = bx1 + th
           break
         }
-        case TLBoundsCorner.TopRight: {
+        case TLResizeCorner.TopRight: {
           if (isTall) by0 = by1 + tw
           else bx1 = bx0 - th
           break
         }
-        case TLBoundsCorner.BottomRight: {
+        case TLResizeCorner.BottomRight: {
           if (isTall) by1 = by0 - tw
           else bx1 = bx0 - th
           break
         }
-        case TLBoundsCorner.BottomLeft: {
+        case TLResizeCorner.BottomLeft: {
           if (isTall) by1 = by0 - tw
           else bx0 = bx1 + th
           break
         }
-        case TLBoundsEdge.Bottom:
-        case TLBoundsEdge.Top: {
+        case TLResizeEdge.Bottom:
+        case TLResizeEdge.Top: {
           const m = (bx0 + bx1) / 2
           const w = bh * ar
           bx0 = m - w / 2
           bx1 = m + w / 2
           break
         }
-        case TLBoundsEdge.Left:
-        case TLBoundsEdge.Right: {
+        case TLResizeEdge.Left:
+        case TLResizeEdge.Right: {
           const m = (by0 + by1) / 2
           const h = bw / ar
           by0 = m - h / 2
@@ -478,44 +478,44 @@ so that the two anchor points (initial and result) will be equal.
       const c1 = Vec.med([bx0, by0], [bx1, by1])
 
       switch (handle) {
-        case TLBoundsCorner.TopLeft: {
+        case TLResizeCorner.TopLeft: {
           cv = Vec.sub(Vec.rotWith([bx1, by1], c1, rotation), Vec.rotWith([ax1, ay1], c0, rotation))
           break
         }
-        case TLBoundsCorner.TopRight: {
+        case TLResizeCorner.TopRight: {
           cv = Vec.sub(Vec.rotWith([bx0, by1], c1, rotation), Vec.rotWith([ax0, ay1], c0, rotation))
           break
         }
-        case TLBoundsCorner.BottomRight: {
+        case TLResizeCorner.BottomRight: {
           cv = Vec.sub(Vec.rotWith([bx0, by0], c1, rotation), Vec.rotWith([ax0, ay0], c0, rotation))
           break
         }
-        case TLBoundsCorner.BottomLeft: {
+        case TLResizeCorner.BottomLeft: {
           cv = Vec.sub(Vec.rotWith([bx1, by0], c1, rotation), Vec.rotWith([ax1, ay0], c0, rotation))
           break
         }
-        case TLBoundsEdge.Top: {
+        case TLResizeEdge.Top: {
           cv = Vec.sub(
             Vec.rotWith(Vec.med([bx0, by1], [bx1, by1]), c1, rotation),
             Vec.rotWith(Vec.med([ax0, ay1], [ax1, ay1]), c0, rotation)
           )
           break
         }
-        case TLBoundsEdge.Left: {
+        case TLResizeEdge.Left: {
           cv = Vec.sub(
             Vec.rotWith(Vec.med([bx1, by0], [bx1, by1]), c1, rotation),
             Vec.rotWith(Vec.med([ax1, ay0], [ax1, ay1]), c0, rotation)
           )
           break
         }
-        case TLBoundsEdge.Bottom: {
+        case TLResizeEdge.Bottom: {
           cv = Vec.sub(
             Vec.rotWith(Vec.med([bx0, by0], [bx1, by0]), c1, rotation),
             Vec.rotWith(Vec.med([ax0, ay0], [ax1, ay0]), c0, rotation)
           )
           break
         }
-        case TLBoundsEdge.Right: {
+        case TLResizeEdge.Right: {
           cv = Vec.sub(
             Vec.rotWith(Vec.med([bx0, by0], [bx0, by1]), c1, rotation),
             Vec.rotWith(Vec.med([ax0, ay0], [ax0, ay1]), c0, rotation)
@@ -556,59 +556,59 @@ left past the initial left edge) then swap points on that axis.
   }
 
   static getTransformAnchor(
-    type: TLBoundsEdge | TLBoundsCorner,
+    type: TLResizeEdge | TLResizeCorner,
     isFlippedX: boolean,
     isFlippedY: boolean
-  ): TLBoundsCorner | TLBoundsEdge {
-    let anchor: TLBoundsCorner | TLBoundsEdge = type
+  ): TLResizeCorner | TLResizeEdge {
+    let anchor: TLResizeCorner | TLResizeEdge = type
 
     // Change corner anchors if flipped
     switch (type) {
-      case TLBoundsCorner.TopLeft: {
+      case TLResizeCorner.TopLeft: {
         if (isFlippedX && isFlippedY) {
-          anchor = TLBoundsCorner.BottomRight
+          anchor = TLResizeCorner.BottomRight
         } else if (isFlippedX) {
-          anchor = TLBoundsCorner.TopRight
+          anchor = TLResizeCorner.TopRight
         } else if (isFlippedY) {
-          anchor = TLBoundsCorner.BottomLeft
+          anchor = TLResizeCorner.BottomLeft
         } else {
-          anchor = TLBoundsCorner.BottomRight
+          anchor = TLResizeCorner.BottomRight
         }
         break
       }
-      case TLBoundsCorner.TopRight: {
+      case TLResizeCorner.TopRight: {
         if (isFlippedX && isFlippedY) {
-          anchor = TLBoundsCorner.BottomLeft
+          anchor = TLResizeCorner.BottomLeft
         } else if (isFlippedX) {
-          anchor = TLBoundsCorner.TopLeft
+          anchor = TLResizeCorner.TopLeft
         } else if (isFlippedY) {
-          anchor = TLBoundsCorner.BottomRight
+          anchor = TLResizeCorner.BottomRight
         } else {
-          anchor = TLBoundsCorner.BottomLeft
+          anchor = TLResizeCorner.BottomLeft
         }
         break
       }
-      case TLBoundsCorner.BottomRight: {
+      case TLResizeCorner.BottomRight: {
         if (isFlippedX && isFlippedY) {
-          anchor = TLBoundsCorner.TopLeft
+          anchor = TLResizeCorner.TopLeft
         } else if (isFlippedX) {
-          anchor = TLBoundsCorner.BottomLeft
+          anchor = TLResizeCorner.BottomLeft
         } else if (isFlippedY) {
-          anchor = TLBoundsCorner.TopRight
+          anchor = TLResizeCorner.TopRight
         } else {
-          anchor = TLBoundsCorner.TopLeft
+          anchor = TLResizeCorner.TopLeft
         }
         break
       }
-      case TLBoundsCorner.BottomLeft: {
+      case TLResizeCorner.BottomLeft: {
         if (isFlippedX && isFlippedY) {
-          anchor = TLBoundsCorner.TopRight
+          anchor = TLResizeCorner.TopRight
         } else if (isFlippedX) {
-          anchor = TLBoundsCorner.BottomRight
+          anchor = TLResizeCorner.BottomRight
         } else if (isFlippedY) {
-          anchor = TLBoundsCorner.TopLeft
+          anchor = TLResizeCorner.TopLeft
         } else {
-          anchor = TLBoundsCorner.TopRight
+          anchor = TLResizeCorner.TopRight
         }
         break
       }

@@ -17,7 +17,7 @@ describe('SelectionForeground', () => {
         zoom={1}
         shapes={[]}
         showResizeHandles={false}
-        showRotateHandle={false}
+        showRotateHandles={false}
       />
     )
   })

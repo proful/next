@@ -6,7 +6,7 @@ import {
 } from '@tldraw/intersect'
 import Vec from '@tldraw/vec'
 import { action, computed, makeObservable, observable } from 'mobx'
-import type { TLBounds, AnyObject, TLBoundsCorner, TLBoundsEdge } from '~types'
+import type { TLBounds, AnyObject, TLResizeCorner, TLResizeEdge } from '~types'
 import type { TLHandle } from '~types/TLHandle'
 import { BoundsUtils, PointUtils, assignOwnProps } from '~utils'
 import { deepCopy } from '~utils/DataUtils'
@@ -35,7 +35,7 @@ export interface TLShapeProps {
 }
 
 export interface TLResizeInfo<P = any> {
-  type: TLBoundsEdge | TLBoundsCorner
+  type: TLResizeEdge | TLResizeCorner
   scale: number[]
   transformOrigin: number[]
   initialShape: TLShapeModel<P>

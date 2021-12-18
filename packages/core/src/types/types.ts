@@ -3,21 +3,34 @@ import type { TLApp, TLShape } from '~lib'
 import type { TLEventMap } from './TLEventMap'
 import type { TLHandle } from './TLHandle'
 
-export enum TLBoundsEdge {
+export enum TLResizeEdge {
   Top = 'top_edge',
   Right = 'right_edge',
   Bottom = 'bottom_edge',
   Left = 'left_edge',
 }
 
-export enum TLBoundsCorner {
+export enum TLResizeCorner {
   TopLeft = 'top_left_corner',
   TopRight = 'top_right_corner',
   BottomRight = 'bottom_right_corner',
   BottomLeft = 'bottom_left_corner',
 }
 
-export type TLSelectionHandle = TLBoundsCorner | TLBoundsEdge | 'rotate' | 'background' | 'center'
+export enum TLRotateCorner {
+  TopLeft = 'top_left_resize_corner',
+  TopRight = 'top_right_resize_corner',
+  BottomRight = 'bottom_right_resize_corner',
+  BottomLeft = 'bottom_left_resize_corner',
+}
+
+export type TLSelectionHandle =
+  | TLResizeCorner
+  | TLResizeEdge
+  | TLRotateCorner
+  | 'rotate'
+  | 'background'
+  | 'center'
 
 export interface TLBoundsWithCenter extends TLBounds {
   midX: number

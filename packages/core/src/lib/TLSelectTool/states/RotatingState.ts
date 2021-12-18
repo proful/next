@@ -1,7 +1,17 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Vec } from '@tldraw/vec'
+import { CURSORS } from '~constants'
 import { TLApp, TLSelectTool, TLShape, TLShapeWithHandles, TLToolState } from '~lib'
-import { TLBounds, TLCursor, TLEventMap, TLEvents, TLHandle } from '~types'
+import {
+  TLBounds,
+  TLCursor,
+  TLEventMap,
+  TLEvents,
+  TLEventSelectionInfo,
+  TLHandle,
+  TLRotateCorner,
+  TLSelectionHandle,
+} from '~types'
 import { BoundsUtils, deepCopy, GeomUtils } from '~utils'
 
 export class RotatingState<
@@ -11,7 +21,7 @@ export class RotatingState<
   P extends TLSelectTool<S, K, R>
 > extends TLToolState<S, K, R, P> {
   static id = 'rotating'
-  cursor = TLCursor.Grabbing
+  cursor = TLCursor.Rotate
 
   snapshot: Record<
     string,
@@ -27,13 +37,15 @@ export class RotatingState<
   initialCommonBounds = {} as TLBounds
   initialAngle = 0
   initialSelectionRotation = 0
+  handle = '' as TLSelectionHandle
 
-  onEnter = () => {
+  onEnter = (info: TLEventSelectionInfo) => {
     const { history, selectedShapesArray, selectionBounds } = this.app
 
     if (!selectionBounds) throw Error('Expected selected bounds.')
 
     history.pause()
+    this.handle = info.handle
     this.initialSelectionRotation = this.app.boundsRotation
     this.initialCommonBounds = { ...selectionBounds }
     this.initialCommonCenter = BoundsUtils.getBoundsCenter(selectionBounds)
@@ -140,6 +152,6 @@ export class RotatingState<
   }
 
   private updateCursor() {
-    this.app.cursors.setCursor(TLCursor.Grabbing, this.app.boundsRotation)
+    this.app.cursors.setCursor(CURSORS[this.handle], this.app.boundsRotation)
   }
 }

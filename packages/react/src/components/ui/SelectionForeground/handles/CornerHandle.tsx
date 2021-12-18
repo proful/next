@@ -1,13 +1,13 @@
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { useBoundsEvents } from '~hooks/useBoundsEvents'
-import { TLBoundsCorner } from '@tldraw/core'
+import { TLResizeCorner } from '@tldraw/core'
 
 const cornerBgClassnames = {
-  [TLBoundsCorner.TopLeft]: 'tl-cursor-nwse',
-  [TLBoundsCorner.TopRight]: 'tl-cursor-nesw',
-  [TLBoundsCorner.BottomRight]: 'tl-cursor-nwse',
-  [TLBoundsCorner.BottomLeft]: 'tl-cursor-nesw',
+  [TLResizeCorner.TopLeft]: 'tl-cursor-nwse',
+  [TLResizeCorner.TopRight]: 'tl-cursor-nesw',
+  [TLResizeCorner.BottomRight]: 'tl-cursor-nwse',
+  [TLResizeCorner.BottomLeft]: 'tl-cursor-nesw',
 }
 
 interface CornerHandleProps {
@@ -15,7 +15,7 @@ interface CornerHandleProps {
   cy: number
   size: number
   targetSize: number
-  corner: TLBoundsCorner
+  corner: TLResizeCorner
   isHidden?: boolean
 }
 

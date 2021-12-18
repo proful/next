@@ -1,43 +1,30 @@
-import { Vec } from '@tldraw/vec'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { CURSORS } from '~constants'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
 import {
   TLEvents,
   TLSelectionHandle,
   TLEventMap,
-  TLBoundsEdge,
-  TLBoundsCorner,
+  TLResizeEdge,
+  TLResizeCorner,
   TLCursor,
   TLTargetType,
   TLEventSelectionInfo,
+  TLRotateCorner,
 } from '~types'
 
-export class HoveringResizeHandleState<
+export class HoveringSelectionHandleState<
   S extends TLShape,
   K extends TLEventMap,
   R extends TLApp<S, K>,
   P extends TLSelectTool<S, K, R>
 > extends TLToolState<S, K, R, P> {
-  static id = 'hoveringResizeHandle'
+  static id = 'hoveringSelectionHandle'
 
   handle?: TLSelectionHandle
 
-  CURSORS: Record<TLSelectionHandle, TLCursor> = {
-    [TLBoundsEdge.Bottom]: TLCursor.NsResize,
-    [TLBoundsEdge.Top]: TLCursor.NsResize,
-    [TLBoundsEdge.Left]: TLCursor.EwResize,
-    [TLBoundsEdge.Right]: TLCursor.EwResize,
-    [TLBoundsCorner.BottomLeft]: TLCursor.NeswResize,
-    [TLBoundsCorner.BottomRight]: TLCursor.NwseResize,
-    [TLBoundsCorner.TopLeft]: TLCursor.NwseResize,
-    [TLBoundsCorner.TopRight]: TLCursor.NeswResize,
-    rotate: TLCursor.Grab,
-    center: TLCursor.Grab,
-    background: TLCursor.Grab,
-  }
-
   onEnter = (info: TLEventSelectionInfo) => {
-    const rotation = this.app.selectionBounds!.rotation
-    this.app.cursors.setCursor(this.CURSORS[info.handle], rotation)
+    this.app.cursors.setCursor(CURSORS[info.handle], this.app.selectionBounds!.rotation ?? 0)
     this.handle = info.handle
   }
 
@@ -69,8 +56,11 @@ export class HoveringResizeHandleState<
           case 'background': {
             break
           }
-          case 'rotate': {
-            this.tool.transition('pointingRotateHandle')
+          case TLRotateCorner.TopLeft:
+          case TLRotateCorner.TopRight:
+          case TLRotateCorner.BottomRight:
+          case TLRotateCorner.BottomLeft: {
+            this.tool.transition('pointingRotateHandle', info)
             break
           }
           default: {

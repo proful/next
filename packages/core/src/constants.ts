@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TLBoundsCorner, TLBoundsEdge, TLSelectionHandle, TLCursor } from '~types'
+import { TLResizeCorner, TLResizeEdge, TLSelectionHandle, TLCursor, TLRotateCorner } from '~types'
 
 export const PI = Math.PI
 export const TAU = PI / 2
@@ -15,26 +15,30 @@ export const EMPTY_ARRAY: any[] = []
 //   canvas: 'default',
 //   grab: 'grab',
 //   grabbing: 'grabbing',
-//   [TLBoundsCorner.TopLeft]: 'resize-nwse',
-//   [TLBoundsCorner.TopRight]: 'resize-nesw',
-//   [TLBoundsCorner.BottomRight]: 'resize-nwse',
-//   [TLBoundsCorner.BottomLeft]: 'resize-nesw',
-//   [TLBoundsEdge.Top]: 'resize-ns',
-//   [TLBoundsEdge.Right]: 'resize-ew',
-//   [TLBoundsEdge.Bottom]: 'resize-ns',
-//   [TLBoundsEdge.Left]: 'resize-ew',
+//   [TLResizeCorner.TopLeft]: 'resize-nwse',
+//   [TLResizeCorner.TopRight]: 'resize-nesw',
+//   [TLResizeCorner.BottomRight]: 'resize-nwse',
+//   [TLResizeCorner.BottomLeft]: 'resize-nesw',
+//   [TLResizeEdge.Top]: 'resize-ns',
+//   [TLResizeEdge.Right]: 'resize-ew',
+//   [TLResizeEdge.Bottom]: 'resize-ns',
+//   [TLResizeEdge.Left]: 'resize-ew',
 // }
 
 export const CURSORS: Record<TLSelectionHandle, TLCursor> = {
-  rotate: TLCursor.Grab,
+  [TLResizeEdge.Bottom]: TLCursor.NsResize,
+  [TLResizeEdge.Top]: TLCursor.NsResize,
+  [TLResizeEdge.Left]: TLCursor.EwResize,
+  [TLResizeEdge.Right]: TLCursor.EwResize,
+  [TLResizeCorner.BottomLeft]: TLCursor.NeswResize,
+  [TLResizeCorner.BottomRight]: TLCursor.NwseResize,
+  [TLResizeCorner.TopLeft]: TLCursor.NwseResize,
+  [TLResizeCorner.TopRight]: TLCursor.NeswResize,
+  [TLRotateCorner.BottomLeft]: TLCursor.SwneRotate,
+  [TLRotateCorner.BottomRight]: TLCursor.SenwRotate,
+  [TLRotateCorner.TopLeft]: TLCursor.NwseRotate,
+  [TLRotateCorner.TopRight]: TLCursor.NeswRotate,
+  rotate: TLCursor.Rotate,
   center: TLCursor.Grab,
   background: TLCursor.Grab,
-  [TLBoundsEdge.Bottom]: TLCursor.NsResize,
-  [TLBoundsEdge.Top]: TLCursor.NsResize,
-  [TLBoundsEdge.Left]: TLCursor.EwResize,
-  [TLBoundsEdge.Right]: TLCursor.EwResize,
-  [TLBoundsCorner.BottomLeft]: TLCursor.NeswResize,
-  [TLBoundsCorner.BottomRight]: TLCursor.NwseResize,
-  [TLBoundsCorner.TopLeft]: TLCursor.NwseResize,
-  [TLBoundsCorner.TopRight]: TLCursor.NeswResize,
 }

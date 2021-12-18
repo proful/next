@@ -22,7 +22,7 @@ describe('HTMLLayer', () => {
           showSelection={app.showSelection}
           showSelectionRotation={app.showSelectionRotation}
           showResizeHandles={app.showResizeHandles}
-          showRotateHandle={app.showRotateHandle}
+          showRotateHandles={app.showRotateHandles}
           showSelectionDetail={app.showSelectionDetail}
           showContextBar={app.showContextBar}
         />

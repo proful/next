@@ -465,18 +465,18 @@ export class TLApp<
   @computed get showContextBar() {
     const { selectedShapesArray } = this
     return (
-      this.isInAny('select.idle', 'select.hoveringResizeHandle') &&
+      this.isInAny('select.idle', 'select.hoveringSelectionHandle') &&
       selectedShapesArray.length > 0 &&
       !selectedShapesArray.every(shape => shape.hideContextBar)
     )
   }
 
-  @computed get showRotateHandle() {
+  @computed get showRotateHandles() {
     const { selectedShapesArray } = this
     return (
       this.isInAny(
         'select.idle',
-        'select.hoveringResizeHandle',
+        'select.hoveringSelectionHandle',
         'select.pointingRotateHandle',
         'select.pointingResizeHandle'
       ) &&
@@ -490,7 +490,7 @@ export class TLApp<
     return (
       this.isInAny(
         'select.idle',
-        'select.hoveringResizeHandle',
+        'select.hoveringSelectionHandle',
         'select.pointingRotateHandle',
         'select.pointingResizeHandle'
       ) &&

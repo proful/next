@@ -264,7 +264,6 @@ const tlcss = css`
     stroke: var(--tl-selectStroke);
     fill: var(--tl-background);
     stroke-width: calc(1.5px * var(--tl-scale));
-    cursor: grab;
   }
 
   .tl-binding {

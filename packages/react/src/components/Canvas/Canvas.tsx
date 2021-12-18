@@ -45,7 +45,7 @@ export interface TLCanvasProps<S extends TLReactShape> {
   showSelection?: boolean
   showHandles?: boolean
   showResizeHandles?: boolean
-  showRotateHandle?: boolean
+  showRotateHandles?: boolean
   showContextBar?: boolean
   showSelectionDetail?: boolean
   showSelectionRotation?: boolean
@@ -69,7 +69,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   showHandles = true,
   showSelectionRotation = false,
   showResizeHandles = true,
-  showRotateHandle = true,
+  showRotateHandles = true,
   showSelectionDetail = true,
   showContextBar = true,
   showGrid = true,
@@ -112,7 +112,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                 shapes={selectedShapes}
                 bounds={selectionBounds}
                 showResizeHandles={showResizeHandles}
-                showRotateHandle={showRotateHandle}
+                showRotateHandles={showRotateHandles}
               />
             </Container>
           )}
@@ -153,7 +153,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                     shapes={selectedShapes}
                     bounds={selectionBounds}
                     showResizeHandles={showResizeHandles}
-                    showRotateHandle={showRotateHandle}
+                    showRotateHandles={showRotateHandles}
                   />
                 </Container>
               )}

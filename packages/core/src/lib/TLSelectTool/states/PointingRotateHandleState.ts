@@ -1,7 +1,7 @@
 import { Vec } from '@tldraw/vec'
 import { CURSORS } from '~constants'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
-import { TLCursor, TLEventMap, TLEvents } from '~types'
+import { TLCursor, TLEventMap, TLEvents, TLEventSelectionInfo, TLSelectionHandle } from '~types'
 
 export class PointingRotateHandleState<
   S extends TLShape,
@@ -11,9 +11,11 @@ export class PointingRotateHandleState<
 > extends TLToolState<S, K, R, P> {
   static id = 'pointingRotateHandle'
 
-  cursor = TLCursor.Grabbing
+  cursor = TLCursor.Rotate
+  handle = '' as TLSelectionHandle
 
-  onEnter = () => {
+  onEnter = (info: TLEventSelectionInfo) => {
+    this.handle = info.handle
     this.updateCursor()
   }
 
@@ -24,7 +26,7 @@ export class PointingRotateHandleState<
   onPointerMove: TLEvents<S>['pointer'] = () => {
     const { currentPoint, originPoint } = this.app.inputs
     if (Vec.dist(currentPoint, originPoint) > 5) {
-      this.tool.transition('rotating')
+      this.tool.transition('rotating', { handle: this.handle })
     }
   }
 
@@ -37,6 +39,6 @@ export class PointingRotateHandleState<
   }
 
   private updateCursor() {
-    this.app.cursors.setCursor(TLCursor.Grabbing, this.app.boundsRotation)
+    this.app.cursors.setCursor(CURSORS[this.handle], this.app.boundsRotation)
   }
 }

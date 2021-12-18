@@ -9,7 +9,7 @@ import {
   TLEventMap,
   TLStateEvents,
   TLBounds,
-  TLBoundsCorner,
+  TLResizeCorner,
   TLCursor,
 } from '@tldraw/core'
 import Vec from '@tldraw/vec'
@@ -64,26 +64,11 @@ export class CreatingState<
 
     const bounds = BoundsUtils.getTransformedBoundingBox(
       initialBounds,
-      TLBoundsCorner.BottomRight,
+      TLResizeCorner.BottomRight,
       Vec.sub(currentPoint, originPoint),
       0,
       shiftKey || this.creatingShape.isAspectRatioLocked
     )
-
-    if (bounds.scaleX < 0) {
-      console.log(true)
-    }
-
-    // if (this.aspectRatio) {
-    //   const size = [bounds.width, Math.max(1, bounds.width * this.aspectRatio)]
-    //   const delta = Vec.sub(currentPoint, originPoint)
-    //   const point = [
-    //     delta[0] < 0 ? originPoint[0] - size[0] : originPoint[0],
-    //     delta[1] < 0 ? originPoint[1] - size[1] : originPoint[1],
-    //   ]
-    //   this.creatingShape.update({ point, size })
-    //   return
-    // }
 
     this.creatingShape.update({
       point: [bounds.minX, bounds.minY],

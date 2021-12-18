@@ -1,6 +1,6 @@
 import { Vec } from '@tldraw/vec'
 import { TLApp, TLShape, TLSelectTool, TLToolState, TLShapeModel } from '~lib'
-import { TLBounds, TLBoundsCorner, TLBoundsEdge, TLCursor, TLEventMap, TLEvents } from '~types'
+import { TLBounds, TLResizeCorner, TLResizeEdge, TLCursor, TLEventMap, TLEvents } from '~types'
 import { BoundsUtils } from '~utils'
 
 export class ResizingState<
@@ -13,7 +13,7 @@ export class ResizingState<
 
   isSingle = false
   isAspectRatioLocked = false
-  handle: TLBoundsCorner | TLBoundsEdge = TLBoundsCorner.BottomRight
+  handle: TLResizeCorner | TLResizeEdge = TLResizeCorner.BottomRight
   snapshots: Record<
     string,
     {
@@ -28,18 +28,18 @@ export class ResizingState<
   transformOrigins: Record<string, number[]> = {}
   boundsRotation = 0
 
-  static CURSORS: Record<TLBoundsCorner | TLBoundsEdge, TLCursor> = {
-    [TLBoundsEdge.Bottom]: TLCursor.NsResize,
-    [TLBoundsEdge.Top]: TLCursor.NsResize,
-    [TLBoundsEdge.Left]: TLCursor.EwResize,
-    [TLBoundsEdge.Right]: TLCursor.EwResize,
-    [TLBoundsCorner.BottomLeft]: TLCursor.NeswResize,
-    [TLBoundsCorner.BottomRight]: TLCursor.NwseResize,
-    [TLBoundsCorner.TopLeft]: TLCursor.NwseResize,
-    [TLBoundsCorner.TopRight]: TLCursor.NeswResize,
+  static CURSORS: Record<TLResizeCorner | TLResizeEdge, TLCursor> = {
+    [TLResizeEdge.Bottom]: TLCursor.NsResize,
+    [TLResizeEdge.Top]: TLCursor.NsResize,
+    [TLResizeEdge.Left]: TLCursor.EwResize,
+    [TLResizeEdge.Right]: TLCursor.EwResize,
+    [TLResizeCorner.BottomLeft]: TLCursor.NeswResize,
+    [TLResizeCorner.BottomRight]: TLCursor.NwseResize,
+    [TLResizeCorner.TopLeft]: TLCursor.NwseResize,
+    [TLResizeCorner.TopRight]: TLCursor.NeswResize,
   }
 
-  onEnter = (info: { handle: TLBoundsCorner | TLBoundsEdge }) => {
+  onEnter = (info: { handle: TLResizeCorner | TLResizeEdge }) => {
     const { history, selectedShapesArray, selectionBounds } = this.app
     if (!selectionBounds) throw Error('Expected a selected bounds.')
 
@@ -116,8 +116,8 @@ export class ResizingState<
     const isFlippedY = scaleY < 0 && scaleX >= 0
 
     switch (handle) {
-      case TLBoundsCorner.TopLeft:
-      case TLBoundsCorner.BottomRight: {
+      case TLResizeCorner.TopLeft:
+      case TLResizeCorner.BottomRight: {
         if (isFlippedX || isFlippedY) {
           if (this.app.cursors.cursor === TLCursor.NwseResize) {
             this.app.cursors.setCursor(TLCursor.NeswResize, this.app.selectionBounds?.rotation)
@@ -129,8 +129,8 @@ export class ResizingState<
         }
         break
       }
-      case TLBoundsCorner.TopRight:
-      case TLBoundsCorner.BottomLeft: {
+      case TLResizeCorner.TopRight:
+      case TLResizeCorner.BottomLeft: {
         if (isFlippedX || isFlippedY) {
           if (this.app.cursors.cursor === TLCursor.NeswResize) {
             this.app.cursors.setCursor(TLCursor.NwseResize, this.app.selectionBounds?.rotation)

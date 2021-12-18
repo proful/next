@@ -1,16 +1,17 @@
 import * as React from 'react'
-import { TLBoundsCorner, TLBoundsEdge } from '@tldraw/core'
+import { TLResizeCorner, TLResizeEdge, TLRotateCorner } from '@tldraw/core'
 import { observer } from 'mobx-react-lite'
 import { EdgeHandle, CornerHandle, RotateHandle } from './handles'
 import { SVGContainer } from '~components'
 import type { TLReactShape } from '~lib'
 import type { TLSelectionComponentProps } from '~types'
+import { RotateCornerHandle } from './handles/RotateCornerHandle.tsx'
 
 export const SelectionForeground = observer(function SelectionForeground<S extends TLReactShape>({
   bounds,
   zoom,
   showResizeHandles,
-  showRotateHandle,
+  showRotateHandles,
 }: TLSelectionComponentProps<S>) {
   const { width, height } = bounds
 
@@ -31,7 +32,7 @@ export const SelectionForeground = observer(function SelectionForeground<S exten
         width={width - targetSize * 4}
         height={0}
         targetSize={targetSize}
-        edge={TLBoundsEdge.Top}
+        edge={TLResizeEdge.Top}
         isHidden={!showResizeHandles}
       />
       <EdgeHandle
@@ -40,7 +41,7 @@ export const SelectionForeground = observer(function SelectionForeground<S exten
         width={0}
         height={height - targetSize * 4}
         targetSize={targetSize}
-        edge={TLBoundsEdge.Right}
+        edge={TLResizeEdge.Right}
         isHidden={!showResizeHandles}
       />
       <EdgeHandle
@@ -49,7 +50,7 @@ export const SelectionForeground = observer(function SelectionForeground<S exten
         width={width - targetSize * 4}
         height={0}
         targetSize={targetSize}
-        edge={TLBoundsEdge.Bottom}
+        edge={TLResizeEdge.Bottom}
         isHidden={!showResizeHandles}
       />
       <EdgeHandle
@@ -58,15 +59,43 @@ export const SelectionForeground = observer(function SelectionForeground<S exten
         width={0}
         height={height - targetSize * 4}
         targetSize={targetSize}
-        edge={TLBoundsEdge.Left}
+        edge={TLResizeEdge.Left}
         isHidden={!showResizeHandles}
+      />
+      <RotateCornerHandle
+        cx={0}
+        cy={0}
+        targetSize={targetSize}
+        corner={TLRotateCorner.TopLeft}
+        isHidden={!showRotateHandles}
+      />
+      <RotateCornerHandle
+        cx={width + targetSize * 2}
+        cy={0}
+        targetSize={targetSize}
+        corner={TLRotateCorner.TopRight}
+        isHidden={!showRotateHandles}
+      />
+      <RotateCornerHandle
+        cx={width + targetSize * 2}
+        cy={height + targetSize * 2}
+        targetSize={targetSize}
+        corner={TLRotateCorner.BottomRight}
+        isHidden={!showRotateHandles}
+      />
+      <RotateCornerHandle
+        cx={0}
+        cy={height + targetSize * 2}
+        targetSize={targetSize}
+        corner={TLRotateCorner.BottomLeft}
+        isHidden={!showRotateHandles}
       />
       <CornerHandle
         cx={0}
         cy={0}
         size={size}
         targetSize={targetSize}
-        corner={TLBoundsCorner.TopLeft}
+        corner={TLResizeCorner.TopLeft}
         isHidden={!showResizeHandles}
       />
       <CornerHandle
@@ -74,7 +103,7 @@ export const SelectionForeground = observer(function SelectionForeground<S exten
         cy={0}
         size={size}
         targetSize={targetSize}
-        corner={TLBoundsCorner.TopRight}
+        corner={TLResizeCorner.TopRight}
         isHidden={!showResizeHandles}
       />
       <CornerHandle
@@ -82,7 +111,7 @@ export const SelectionForeground = observer(function SelectionForeground<S exten
         cy={height}
         size={size}
         targetSize={targetSize}
-        corner={TLBoundsCorner.BottomRight}
+        corner={TLResizeCorner.BottomRight}
         isHidden={!showResizeHandles}
       />
       <CornerHandle
@@ -90,12 +119,12 @@ export const SelectionForeground = observer(function SelectionForeground<S exten
         cy={height}
         size={size}
         targetSize={targetSize}
-        corner={TLBoundsCorner.BottomLeft}
+        corner={TLResizeCorner.BottomLeft}
         isHidden={!showResizeHandles}
       />
-      {showRotateHandle && (
+      {/* {showRotateHandles && (
         <RotateHandle cx={width / 2} cy={0 - targetSize * 2} size={size} targetSize={targetSize} />
-      )}
+      )} */}
     </SVGContainer>
   )
 })

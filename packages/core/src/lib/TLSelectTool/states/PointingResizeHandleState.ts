@@ -5,7 +5,7 @@ import {
   TLEvents,
   TLSelectionHandle,
   TLEventMap,
-  TLBoundsCorner,
+  TLResizeCorner,
   TLEventSelectionInfo,
 } from '~types'
 import { CURSORS } from '~constants'
@@ -18,7 +18,7 @@ export class PointingResizeHandleState<
 > extends TLToolState<S, K, R, P> {
   static id = 'pointingResizeHandle'
 
-  handle: TLSelectionHandle = TLBoundsCorner.BottomLeft
+  handle: TLSelectionHandle = TLResizeCorner.BottomLeft
 
   onEnter = (info: TLEventSelectionInfo) => {
     this.handle = info.handle

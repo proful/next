@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TLTestApp } from '~test/TLTestApp'
 import { TLTestBox } from '~test/TLTestBox'
-import { TLBoundsCorner, TLTargetType } from '~types'
+import { TLResizeCorner, TLTargetType } from '~types'
 
 describe('TLTestApp', () => {
   it('creates a new app', () => {
@@ -496,7 +496,7 @@ describe('app.showContextBar', () => {
     expect(app.showContextBar).toBe(false)
   })
 
-  it('Hides context bar when the state is not select.idle/hoveringResizeHandle', () => {
+  it('Hides context bar when the state is not select.idle/hoveringSelectionHandle', () => {
     const app = new TLTestApp()
     app.setSelectedShapes(['box1'])
     expect(app.isIn('select.idle')).toBe(true)
@@ -509,13 +509,13 @@ describe('app.showContextBar', () => {
     expect(app.showContextBar).toBe(true)
     app.pointerEnter([0, 0], {
       type: TLTargetType.Selection,
-      handle: TLBoundsCorner.TopLeft,
+      handle: TLResizeCorner.TopLeft,
     })
-    expect(app.isIn('select.hoveringResizeHandle')).toBe(true)
+    expect(app.isIn('select.hoveringSelectionHandle')).toBe(true)
     expect(app.showContextBar).toBe(true)
     app.pointerLeave([0, 0], {
       type: TLTargetType.Selection,
-      handle: TLBoundsCorner.TopLeft,
+      handle: TLResizeCorner.TopLeft,
     })
     app.pointerDown([-10, -10], { type: TLTargetType.Canvas })
     expect(app.isIn('select.pointingCanvas')).toBe(true)
@@ -573,7 +573,7 @@ describe('app.showResizeHandles', () => {
     expect(app.showResizeHandles).toBe(false)
   })
 
-  it('Hides resize handles when the state is not select.idle/hoveringResizeHandle/pointingResizeHandle/pointingRotateHandle', () => {
+  it('Hides resize handles when the state is not select.idle/hoveringSelectionHandle/pointingResizeHandle/pointingRotateHandle', () => {
     const app = new TLTestApp()
     app.setSelectedShapes(['box1'])
     expect(app.isIn('select.idle')).toBe(true)
@@ -586,24 +586,24 @@ describe('app.showResizeHandles', () => {
     expect(app.showResizeHandles).toBe(true)
     app.pointerEnter([0, 0], {
       type: TLTargetType.Selection,
-      handle: TLBoundsCorner.TopLeft,
+      handle: TLResizeCorner.TopLeft,
     })
-    expect(app.isIn('select.hoveringResizeHandle')).toBe(true)
+    expect(app.isIn('select.hoveringSelectionHandle')).toBe(true)
     expect(app.showResizeHandles).toBe(true)
     app.pointerDown([0, 0], {
       type: TLTargetType.Selection,
-      handle: TLBoundsCorner.TopLeft,
+      handle: TLResizeCorner.TopLeft,
     })
     expect(app.isIn('select.pointingResizeHandle')).toBe(true)
     expect(app.showResizeHandles).toBe(true)
     app
       .pointerUp([0, 0], {
         type: TLTargetType.Selection,
-        handle: TLBoundsCorner.TopLeft,
+        handle: TLResizeCorner.TopLeft,
       })
       .pointerLeave([0, 0], {
         type: TLTargetType.Selection,
-        handle: TLBoundsCorner.TopLeft,
+        handle: TLResizeCorner.TopLeft,
       })
       // test rotate handle
       .pointerDown([-10, -10], { type: TLTargetType.Canvas })
@@ -612,17 +612,17 @@ describe('app.showResizeHandles', () => {
   })
 })
 
-describe('app.showRotateHandle', () => {
+describe('app.showRotateHandles', () => {
   it('Hides rotate handle when there are no shapes selected', () => {
     const app = new TLTestApp()
     app.setSelectedShapes([])
-    expect(app.showRotateHandle).toBe(false)
+    expect(app.showRotateHandles).toBe(false)
   })
 
   it('Shows rotate handle if any of the selected shapes has hideRotateHandle=false', () => {
     const app = new TLTestApp()
     app.setSelectedShapes(['box1'])
-    expect(app.showRotateHandle).toBe(true)
+    expect(app.showRotateHandles).toBe(true)
 
     class TLNoRotateHandleBoxShape extends TLTestBox {
       static id = 'norotatehandlesbox'
@@ -638,7 +638,7 @@ describe('app.showRotateHandle', () => {
       },
     ])
     app.setSelectedShapes(['box1', 'norotatehandlesbox1'])
-    expect(app.showRotateHandle).toBe(true)
+    expect(app.showRotateHandles).toBe(true)
   })
 
   it('Hides rotate handle if there is a selected shape with hideRotateHandles=true', () => {
@@ -657,32 +657,32 @@ describe('app.showRotateHandle', () => {
       },
     ])
     app.setSelectedShapes(['norotatehandlesbox1'])
-    expect(app.showRotateHandle).toBe(false)
+    expect(app.showRotateHandles).toBe(false)
   })
 
-  it('Hides rotate handles when the state is not hoveringResizeHandle/pointingResizeHandle/pointingRotateHandle', () => {
+  it('Hides rotate handles when the state is not hoveringSelectionHandle/pointingResizeHandle/pointingRotateHandle', () => {
     const app = new TLTestApp()
     app.setSelectedShapes(['box1'])
     expect(app.isIn('select.idle')).toBe(true)
-    expect(app.showRotateHandle).toBe(true)
+    expect(app.showRotateHandles).toBe(true)
     app.pointerDown([0, 0], 'box1')
     expect(app.isIn('select.pointingSelectedShape')).toBe(true)
-    expect(app.showRotateHandle).toBe(false)
+    expect(app.showRotateHandles).toBe(false)
     app.pointerUp([0, 0], 'box1')
     expect(app.isIn('select.idle')).toBe(true)
-    expect(app.showRotateHandle).toBe(true)
+    expect(app.showRotateHandles).toBe(true)
     app.pointerEnter([0, 0], {
       type: TLTargetType.Selection,
       handle: 'rotate',
     })
-    expect(app.isIn('select.hoveringResizeHandle')).toBe(true)
-    expect(app.showRotateHandle).toBe(true)
+    expect(app.isIn('select.hoveringSelectionHandle')).toBe(true)
+    expect(app.showRotateHandles).toBe(true)
     app.pointerDown([0, 0], {
       type: TLTargetType.Selection,
       handle: 'rotate',
     })
     expect(app.isIn('select.pointingRotateHandle')).toBe(true)
-    expect(app.showRotateHandle).toBe(true)
+    expect(app.showRotateHandles).toBe(true)
     app
       .pointerUp([0, 0], {
         type: TLTargetType.Selection,
@@ -695,7 +695,7 @@ describe('app.showRotateHandle', () => {
       // test resize handle
       .pointerDown([-10, -10], { type: TLTargetType.Canvas })
     expect(app.isIn('select.pointingCanvas')).toBe(true)
-    expect(app.showRotateHandle).toBe(false)
+    expect(app.showRotateHandles).toBe(false)
   })
 })
 

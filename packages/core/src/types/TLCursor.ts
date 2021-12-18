@@ -3,6 +3,7 @@ export enum TLCursor {
   Pointer = 'pointer',
   Cross = 'crosshair',
   Grab = 'grab',
+  Rotate = 'rotate',
   Grabbing = 'grabbing',
   ResizeEdge = 'resize-edge',
   ResizeCorner = 'resize-corner',
@@ -12,4 +13,8 @@ export enum TLCursor {
   NsResize = 'ns-resize',
   NeswResize = 'nesw-resize',
   NwseResize = 'nwse-resize',
+  NeswRotate = 'nesw-rotate',
+  NwseRotate = 'nwse-rotate',
+  SwneRotate = 'swne-rotate',
+  SenwRotate = 'senw-rotate',
 }

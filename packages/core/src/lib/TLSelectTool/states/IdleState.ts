@@ -37,7 +37,7 @@ export class IdleState<
       }
       case TLTargetType.Selection: {
         if (!(info.handle === 'background' || info.handle === 'center')) {
-          this.tool.transition('hoveringResizeHandle', info)
+          this.tool.transition('hoveringSelectionHandle', info)
         }
         break
       }

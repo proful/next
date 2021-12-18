@@ -12,12 +12,14 @@ export function useBoundsEvents(handle: TLSelectionHandle) {
   const events = React.useMemo(() => {
     const onPointerMove: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
+      if (order) return
       callbacks.onPointerMove?.({ type: TLTargetType.Selection, handle, order }, e)
       e.order = order + 1
     }
 
     const onPointerDown: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
+      if (order) return
       if (e.currentTarget.tagName === 'g') {
         // Bounds events are set on SVG elements; we need to set
         // pointer capture on their parent,the SVG container (an
@@ -30,6 +32,7 @@ export function useBoundsEvents(handle: TLSelectionHandle) {
 
     const onPointerUp: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
+      if (order) return
       if (e.currentTarget.tagName === 'g') {
         e.currentTarget?.releasePointerCapture(e.pointerId)
       }
@@ -52,12 +55,14 @@ export function useBoundsEvents(handle: TLSelectionHandle) {
 
     const onPointerEnter: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
+      if (order) return
       callbacks.onPointerEnter?.({ type: TLTargetType.Selection, handle, order }, e)
       e.order = order + 1
     }
 
     const onPointerLeave: TLReactCustomEvents['pointer'] = e => {
       const { order = 0 } = e
+      if (order) return
       callbacks.onPointerLeave?.({ type: TLTargetType.Selection, handle, order }, e)
       e.order = order + 1
     }

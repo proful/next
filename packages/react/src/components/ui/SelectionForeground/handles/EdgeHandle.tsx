@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
-import { TLBoundsEdge } from '@tldraw/core'
+import { TLResizeEdge } from '@tldraw/core'
 import { useBoundsEvents } from '~hooks/useBoundsEvents'
 
 const edgeClassnames = {
-  [TLBoundsEdge.Top]: 'tl-cursor-ns',
-  [TLBoundsEdge.Right]: 'tl-cursor-ew',
-  [TLBoundsEdge.Bottom]: 'tl-cursor-ns',
-  [TLBoundsEdge.Left]: 'tl-cursor-ew',
+  [TLResizeEdge.Top]: 'tl-cursor-ns',
+  [TLResizeEdge.Right]: 'tl-cursor-ew',
+  [TLResizeEdge.Bottom]: 'tl-cursor-ns',
+  [TLResizeEdge.Left]: 'tl-cursor-ew',
 }
 
 interface EdgeHandleProps {
@@ -16,7 +16,7 @@ interface EdgeHandleProps {
   width: number
   height: number
   targetSize: number
-  edge: TLBoundsEdge
+  edge: TLResizeEdge
   isHidden?: boolean
 }
 
