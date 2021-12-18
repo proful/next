@@ -434,58 +434,52 @@ export class TLApp<
   }
 
   @computed get showSelection() {
+    const { selectedShapesArray } = this
     return (
-      this.currentState.id === 'select' &&
-      (this.selectedShapes.size > 0 || !this.selectedShapesArray[0].hideBounds)
+      this.isIn('select') &&
+      ((selectedShapesArray.length === 1 && !selectedShapesArray[0]?.hideBounds) ||
+        selectedShapesArray.length > 1)
     )
   }
 
   @computed get showSelectionDetail() {
     return (
+      this.isIn('select') &&
       this.selectedShapes.size > 0 &&
-      this.currentState.id === 'select' &&
       !this.selectedShapesArray.every(shape => shape.hideSelectionDetail)
     )
   }
 
   @computed get showSelectionRotation() {
-    const stateId = this.selectedTool.currentState.id
     return (
-      this.showSelectionDetail && (stateId === 'rotating' || stateId === 'pointingRotateHandle')
+      this.showSelectionDetail && this.isInAny('select.rotating', 'select.pointingRotateHandle')
     )
   }
 
   @computed get showContextBar() {
-    const stateId = this.selectedTool.currentState.id
+    const { selectedShapesArray } = this
     return (
-      this.selectedShapes.size > 0 &&
-      this.currentState.id === 'select' &&
-      (stateId === 'idle' || stateId === 'hoveringResizeHandle') &&
-      !this.selectedShapesArray.every(shape => shape.hideSelectionDetail)
+      this.isInAny('select.idle', 'select.hoveringResizeHandle') &&
+      selectedShapesArray.length > 0 &&
+      !selectedShapesArray.every(shape => shape.hideSelectionDetail)
     )
   }
 
   @computed get showRotateHandle() {
-    const stateId = this.selectedTool.currentState.id
+    const { selectedShapesArray } = this
     return (
-      this.currentState.id === 'select' &&
-      this.selectedShapes.size > 0 &&
-      (stateId === 'idle' ||
-        stateId === 'hoveringResizeHandle' ||
-        stateId === 'pointingResizeHandle') &&
-      !this.selectedShapesArray.every(shape => shape.hideRotateHandle)
+      this.isInAny('select.idle', 'select.hoveringResizeHandle', 'select.pointingResizeHandle') &&
+      selectedShapesArray.length > 0 &&
+      !selectedShapesArray.every(shape => shape.hideRotateHandle)
     )
   }
 
   @computed get showResizeHandles() {
-    const stateId = this.selectedTool.currentState.id
+    const { selectedShapesArray } = this
     return (
-      this.currentState.id === 'select' &&
-      this.selectedShapes.size > 0 &&
-      (stateId === 'idle' ||
-        stateId === 'hoveringResizeHandle' ||
-        stateId === 'pointingResizeHandle') &&
-      !this.selectedShapesArray.every(shape => shape.hideResizeHandles)
+      this.isInAny('select.idle', 'select.hoveringResizeHandle', 'select.pointingResizingHandle') &&
+      selectedShapesArray.length > 0 &&
+      !selectedShapesArray.every(shape => shape.hideResizeHandles)
     )
   }
 

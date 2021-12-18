@@ -126,6 +126,31 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
     }
   }
 
+  isIn = (path: string) => {
+    const ids = path.split('.').reverse()
+    let state = this as TLRootState<any, any>
+    while (ids.length > 0) {
+      const id = ids.pop()
+      if (!id) {
+        return true
+      }
+      if (state.currentState.id === id) {
+        if (ids.length === 0) {
+          return true
+        }
+        state = state.currentState
+        continue
+      } else {
+        return false
+      }
+    }
+    return false
+  }
+
+  isInAny = (...paths: string[]) => {
+    return paths.some(this.isIn)
+  }
+
   /* ----------------- Internal Events ---------------- */
 
   private forwardEvent = <

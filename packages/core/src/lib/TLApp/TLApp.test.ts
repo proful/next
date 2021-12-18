@@ -156,7 +156,7 @@ describe('app.createShapes', () => {
       .createShapes([
         {
           id: 'newbox1',
-          parentId: 'page1',
+          parentId: app.currentPageId,
           type: 'box',
           point: [120, 120],
         },
@@ -176,7 +176,7 @@ describe('app.createShapes', () => {
       .createShapes([
         new TLTestBox({
           id: 'newbox2',
-          parentId: 'page1',
+          parentId: app.currentPageId,
           type: 'box',
           point: [220, 220],
         }),
@@ -311,7 +311,11 @@ describe('app.shapesInViewport', () => {
 })
 
 describe('app.showSelection', () => {
-  it.todo('Shows bounds only if the select tool is active and there are selected shapes')
+  it('Shows bounds only if the select tool is active and there are selected shapes', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes(['box1'])
+    expect(app.showSelection).toBe(true)
+  })
   it.todo('Hides bounds if the only selected shape has hideBounds=true')
   it.todo('Shows when more than one shape is selected, even if some/all have hideBounds=true')
 })
@@ -329,13 +333,107 @@ describe('app.showSelectionRotation', () => {
 
 describe('app.showContextBar', () => {
   it.todo(
-    'Shows context bar only if the select tool is active and there are selected shapes and the select tool is in either idle or hoveringResizeHandle states'
+    'Shows context bar if there are selected shapes and the tool state is select/idle or select/hoveringResizeHandle'
   )
   it.todo('Hides context bar if all selected shapes have hideContextBar=true')
 })
 
+describe('app.showResizeHandles', () => {
+  it('Hides resize handles when there are no shapes selected', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes([])
+    expect(app.showResizeHandles).toBe(false)
+  })
+
+  it('Shows resize handles if any of the selected shapes has hideResizeHandles=false', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes(['box1'])
+    expect(app.showResizeHandles).toBe(true)
+
+    class TLNoHandlesBoxShape extends TLTestBox {
+      static id = 'noresizehandlesbox'
+      hideResizeHandles = true
+    }
+    app.registerShapes([TLNoHandlesBoxShape])
+    app.createShapes([
+      {
+        id: 'noresizehandlesbox1',
+        type: 'noresizehandlesbox',
+        point: [0, 0],
+        parentId: app.currentPageId,
+      },
+    ])
+    app.setSelectedShapes(['box1', 'noresizehandlesbox1'])
+    expect(app.showResizeHandles).toBe(true)
+  })
+
+  it('Hides resize handles if there is a selected shape with hideResizeHandles=true', () => {
+    const app = new TLTestApp()
+    class TLNoHandlesBoxShape extends TLTestBox {
+      static id = 'noresizehandlesbox'
+      hideResizeHandles = true
+    }
+    app.registerShapes([TLNoHandlesBoxShape])
+    app.createShapes([
+      {
+        id: 'noresizehandlesbox1',
+        type: 'noresizehandlesbox',
+        point: [0, 0],
+        parentId: app.currentPageId,
+      },
+    ])
+    app.setSelectedShapes(['noresizehandlesbox1'])
+    expect(app.showRotateHandle).toBe(false)
+  })
+})
+
 describe('app.showRotateHandle', () => {
-  it.todo('...')
+  it('Hides rotate handle when there are no shapes selected', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes([])
+    expect(app.showRotateHandle).toBe(false)
+  })
+
+  it('Shows rotate handle if any of the selected shapes has hideRotateHandle=false', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes(['box1'])
+    expect(app.showRotateHandle).toBe(true)
+
+    class TLNoRotateHandleBoxShape extends TLTestBox {
+      static id = 'norotatehandlesbox'
+      hideRotateHandle = true
+    }
+    app.registerShapes([TLNoRotateHandleBoxShape])
+    app.createShapes([
+      {
+        id: 'norotatehandlesbox1',
+        type: 'norotatehandlesbox',
+        point: [0, 0],
+        parentId: app.currentPageId,
+      },
+    ])
+    app.setSelectedShapes(['box1', 'norotatehandlesbox1'])
+    expect(app.showRotateHandle).toBe(true)
+  })
+
+  it('Hides rotate handle if there is a selected shape with hideRotateHandles=true', () => {
+    const app = new TLTestApp()
+    class TLNoRotateHandleBoxShape extends TLTestBox {
+      static id = 'norotatehandlesbox'
+      hideRotateHandle = true
+    }
+    app.registerShapes([TLNoRotateHandleBoxShape])
+    app.createShapes([
+      {
+        id: 'norotatehandlesbox1',
+        type: 'norotatehandlesbox',
+        point: [0, 0],
+        parentId: app.currentPageId,
+      },
+    ])
+    app.setSelectedShapes(['norotatehandlesbox1'])
+    expect(app.showRotateHandle).toBe(false)
+  })
 })
 
 /* ---------------------- Brush --------------------- */
