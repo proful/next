@@ -75,7 +75,7 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
     // Pause the history, to prevent any loops
     this.pause()
 
-    const pagesMap = new Map(this.app.pages.map(page => [page.id, page]))
+    const pagesMap = new Map(this.app.pages)
     const pagesToAdd: TLPage<S, K>[] = []
 
     for (const serializedPage of pages) {

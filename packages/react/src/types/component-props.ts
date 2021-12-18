@@ -5,7 +5,7 @@ import type { TLReactShape } from '~lib'
 
 /* ------------------- Components ------------------- */
 
-export type TLBoundsComponentProps<S extends TLReactShape = TLReactShape> = {
+export type TLSelectionComponentProps<S extends TLReactShape = TLReactShape> = {
   zoom: number
   shapes: S[]
   bounds: TLBounds
@@ -14,7 +14,7 @@ export type TLBoundsComponentProps<S extends TLReactShape = TLReactShape> = {
 }
 
 export type TLBoundsComponent<S extends TLReactShape = TLReactShape> = (
-  props: TLBoundsComponentProps<S>
+  props: TLSelectionComponentProps<S>
 ) => JSX.Element | null
 
 export type TLContextBarProps<S extends TLReactShape = TLReactShape> = {
@@ -29,7 +29,7 @@ export type TLContextBarComponent<S extends TLReactShape = TLReactShape> = (
   props: TLContextBarProps<S>
 ) => JSX.Element | null
 
-export type TLBoundsDetailProps<S extends TLReactShape = TLReactShape> = {
+export type TLSelectionDetailProps<S extends TLReactShape = TLReactShape> = {
   shapes: S[]
   bounds: TLBounds
   scaledBounds: TLBounds
@@ -38,8 +38,8 @@ export type TLBoundsDetailProps<S extends TLReactShape = TLReactShape> = {
   detail?: 'size' | 'rotation'
 }
 
-export type TLBoundsDetailComponent<S extends TLReactShape = TLReactShape> = (
-  props: TLBoundsDetailProps<S>
+export type TLSelectionDetailComponent<S extends TLReactShape = TLReactShape> = (
+  props: TLSelectionDetailProps<S>
 ) => JSX.Element | null
 
 export interface TLBrushProps {
@@ -69,9 +69,9 @@ export interface TLGridProps {
 export type TLGridComponent = (props: TLGridProps) => JSX.Element | null
 
 export type TLReactComponents<S extends TLReactShape = TLReactShape> = {
-  BoundsBackground?: TLBoundsComponent<S> | null
-  BoundsForeground?: TLBoundsComponent<S> | null
-  BoundsDetail?: TLBoundsDetailComponent<S> | null
+  SelectionBackground?: TLBoundsComponent<S> | null
+  SelectionForeground?: TLBoundsComponent<S> | null
+  SelectionDetail?: TLSelectionDetailComponent<S> | null
   Handle?: TLHandleComponent<S> | null
   ContextBar?: TLContextBarComponent<S> | null
   Brush?: TLBrushComponent | null

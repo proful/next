@@ -1,17 +1,17 @@
 import * as React from 'react'
+import { TLBoundsCorner, TLBoundsEdge } from '@tldraw/core'
 import { observer } from 'mobx-react-lite'
 import { EdgeHandle, CornerHandle, RotateHandle } from './handles'
-import { SVGContainer } from '../../SVGContainer'
+import { SVGContainer } from '~components'
 import type { TLReactShape } from '~lib'
-import type { TLBoundsComponentProps } from '~types/component-props'
-import { TLBoundsCorner, TLBoundsEdge } from '@tldraw/core'
+import type { TLSelectionComponentProps } from '~types'
 
-export const BoundsForeground = observer(function BoundsForeground<S extends TLReactShape>({
+export const SelectionForeground = observer(function SelectionForeground<S extends TLReactShape>({
   bounds,
   zoom,
   showResizeHandles,
   showRotateHandle,
-}: TLBoundsComponentProps<S>) {
+}: TLSelectionComponentProps<S>) {
   const { width, height } = bounds
 
   const size = 8 / zoom

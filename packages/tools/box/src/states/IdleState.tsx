@@ -1,6 +1,6 @@
 import type { TLBoxTool } from '../TLBoxTool'
 import type { TLBoxShape } from '@tldraw/box-shape'
-import { TLShape, TLApp, TLToolState, TLShortcut, TLEventMap, TLStateEvents } from '@tldraw/core'
+import { TLShape, TLApp, TLToolState, TLEventMap, TLStateEvents } from '@tldraw/core'
 
 export class IdleState<
   S extends TLShape,

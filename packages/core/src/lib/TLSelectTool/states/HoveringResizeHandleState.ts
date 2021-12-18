@@ -38,7 +38,7 @@ export class HoveringResizeHandleState<
   }
 
   onEnter = (info: TLEventBoundsInfo) => {
-    const rotation = this.app.selectedBounds!.rotation
+    const rotation = this.app.selectionBounds!.rotation
     this.app.cursors.setCursor(this.CURSORS[info.handle], rotation)
     this.handle = info.handle
   }

@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { BoundsDetail } from './BoundsDetail'
+import { SelectionDetail } from './SelectionDetail'
 import { renderWithApp } from '~test/renderWithApp'
 
-describe('BoundsDetail', () => {
+describe('SelectionDetail', () => {
   test('mounts component without crashing', () => {
     renderWithApp(
-      <BoundsDetail
+      <SelectionDetail
         shapes={[]}
         bounds={{
           minX: 500,

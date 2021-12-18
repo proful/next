@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
-import type { TLCursor, TLEventHandlers, TLInputs, TLViewport } from '@tldraw/core'
+import type { TLEventHandlers, TLInputs, TLViewport } from '@tldraw/core'
 import {
-  BoundsBackground as _BoundsBackground,
-  BoundsForeground as _BoundsForeground,
-  BoundsDetail as _BoundsDetail,
+  SelectionBackground as _SelectionBackground,
+  SelectionForeground as _SelectionForeground,
+  SelectionDetail as _SelectionDetail,
   Grid as _Grid,
   Brush as _Brush,
   Handle as _Handle,
@@ -46,8 +46,15 @@ export const RendererContext = observer(function App<S extends TLReactShape>({
   children,
 }: TLRendererContextProps<S>): JSX.Element {
   const [currentContext, setCurrentContext] = React.useState<TLRendererContext<S>>(() => {
-    const { Brush, Handle, Grid, ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } =
-      components
+    const {
+      Brush,
+      Handle,
+      Grid,
+      ContextBar,
+      SelectionBackground,
+      SelectionForeground,
+      SelectionDetail,
+    } = components
 
     return {
       id,
@@ -56,9 +63,9 @@ export const RendererContext = observer(function App<S extends TLReactShape>({
       callbacks,
       meta,
       components: {
-        BoundsBackground: BoundsBackground === null ? undefined : _BoundsBackground,
-        BoundsForeground: BoundsForeground === null ? undefined : _BoundsForeground,
-        BoundsDetail: BoundsDetail === null ? undefined : _BoundsDetail,
+        SelectionBackground: SelectionBackground === null ? undefined : _SelectionBackground,
+        SelectionForeground: SelectionForeground === null ? undefined : _SelectionForeground,
+        SelectionDetail: SelectionDetail === null ? undefined : _SelectionDetail,
         Brush: Brush === null ? undefined : _Brush,
         Grid: Grid === null ? undefined : _Grid,
         Handle: Handle === null ? undefined : _Handle,
@@ -68,8 +75,15 @@ export const RendererContext = observer(function App<S extends TLReactShape>({
   })
 
   React.useLayoutEffect(() => {
-    const { Brush, Handle, Grid, ContextBar, BoundsBackground, BoundsForeground, BoundsDetail } =
-      components
+    const {
+      Brush,
+      Handle,
+      Grid,
+      ContextBar,
+      SelectionBackground,
+      SelectionForeground,
+      SelectionDetail,
+    } = components
 
     return autorun(() => {
       setCurrentContext({
@@ -79,9 +93,9 @@ export const RendererContext = observer(function App<S extends TLReactShape>({
         callbacks,
         meta,
         components: {
-          BoundsBackground: BoundsBackground === null ? undefined : _BoundsBackground,
-          BoundsForeground: BoundsForeground === null ? undefined : _BoundsForeground,
-          BoundsDetail: BoundsDetail === null ? undefined : _BoundsDetail,
+          SelectionBackground: SelectionBackground === null ? undefined : _SelectionBackground,
+          SelectionForeground: SelectionForeground === null ? undefined : _SelectionForeground,
+          SelectionDetail: SelectionDetail === null ? undefined : _SelectionDetail,
           Brush: Brush === null ? undefined : _Brush,
           Grid: Grid === null ? undefined : _Grid,
           Handle: Handle === null ? undefined : _Handle,

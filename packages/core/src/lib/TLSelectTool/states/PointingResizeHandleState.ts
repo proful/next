@@ -43,7 +43,7 @@ export class PointingResizeHandleState<
   }
 
   private updateCursor() {
-    const rotation = this.app.selectedBounds!.rotation
+    const rotation = this.app.selectionBounds!.rotation
     const cursor = CURSORS[this.handle]
     this.app.cursors.setCursor(cursor, rotation)
   }

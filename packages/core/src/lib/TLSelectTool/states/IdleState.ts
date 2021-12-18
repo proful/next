@@ -80,8 +80,8 @@ export class IdleState<
         if (selectedShapes.has(info.shape)) {
           this.tool.transition('pointingSelectedShape', info)
         } else {
-          const { selectedBounds, inputs } = this.app
-          if (selectedBounds && PointUtils.pointInBounds(inputs.currentPoint, selectedBounds)) {
+          const { selectionBounds, inputs } = this.app
+          if (selectionBounds && PointUtils.pointInBounds(inputs.currentPoint, selectionBounds)) {
             this.tool.transition('pointingShapeBehindBounds', info)
           } else {
             this.tool.transition('pointingShape', info)

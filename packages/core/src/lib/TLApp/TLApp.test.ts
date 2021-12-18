@@ -57,81 +57,6 @@ describe('When interacting with the public API', () => {
   it.todo('Saves as (triggers onSaveAs prop)') // saveAs
 })
 
-describe('app.setSelectedShapes', () => {
-  it('Sets selected shapes when passed an array of ids', () => {
-    const app = new TLTestApp()
-      .setSelectedShapes(['box1', 'box2'])
-      .expectSelectedIdsToBe(['box1', 'box2'])
-      .expectSelectedShapesToBe(['box1', 'box2'])
-    expect(app.selectedShapesArray.length).toBe(2)
-    expect(
-      ['box1', 'box2'].every(id => app.selectedShapesArray.includes(app.getShapeById(id)))
-    ).toBe(true)
-  })
-
-  it('Sets selected shapes when passed an array of shape instances', () => {
-    const app = new TLTestApp()
-    app
-      .setSelectedShapes(app.getShapesById(['box1', 'box2']))
-      .expectSelectedIdsToBe(['box1', 'box2'])
-      .expectSelectedShapesToBe(['box1', 'box2'])
-    expect(app.selectedShapesArray.length).toBe(2)
-    expect(
-      ['box1', 'box2'].every(id => app.selectedShapesArray.includes(app.getShapeById(id)))
-    ).toBe(true)
-  })
-
-  it('Clears selected shapes when passed an empty array', () => {
-    const app = new TLTestApp()
-      .setSelectedShapes([])
-      .expectSelectedIdsToBe([])
-      .expectSelectedShapesToBe([])
-    expect(app.selectedShapesArray.length).toBe(0)
-  })
-})
-
-describe('app.setHoveredShape', () => {
-  it('Sets hovered shape when passed a shape id', () => {
-    const app = new TLTestApp().setHoveredShape('box1')
-    expect(app.hoveredId).toBe('box1')
-    expect(app.hoveredShape).toBe(app.getShapeById('box1'))
-  })
-
-  it('Sets hovered shape when passed a shape instance', () => {
-    const app = new TLTestApp()
-    app.setHoveredShape(app.getShapeById('box1'))
-    expect(app.hoveredId).toBe('box1')
-    expect(app.hoveredShape).toBe(app.getShapeById('box1'))
-  })
-
-  it('Clears hovered shape when passed undefined', () => {
-    const app = new TLTestApp().setHoveredShape('box1').setHoveredShape(undefined)
-    expect(app.hoveredId).toBeUndefined()
-    expect(app.hoveredShape).toBeUndefined()
-  })
-})
-
-describe('app.setEditingShape', () => {
-  it('Sets editing shape when passed a shape id', () => {
-    const app = new TLTestApp().setEditingShape('box3')
-    expect(app.editingId).toBe('box3')
-    expect(app.editingShape).toBe(app.getShapeById('box3'))
-  })
-
-  it('Sets editing shape when passed a shape instance', () => {
-    const app = new TLTestApp()
-    app.setEditingShape(app.getShapeById('box3'))
-    expect(app.editingId).toBe('box3')
-    expect(app.editingShape).toBe(app.getShapeById('box3'))
-  })
-
-  it('Clears editing shape when passed undefined', () => {
-    const app = new TLTestApp().setEditingShape('box3').setEditingShape(undefined)
-    expect(app.editingId).toBeUndefined()
-    expect(app.editingShape).toBeUndefined()
-  })
-})
-
 /* ---------------------- Pages --------------------- */
 
 describe('app.getPageById', () => {
@@ -149,6 +74,73 @@ describe('app.addPages', () => {
 
 describe('app.removePages', () => {
   it.todo('removes pages when passed an array of page instances')
+})
+
+/* ---------------------- Tools --------------------- */
+
+describe('app.selectTool', () => {
+  it.todo('Selects a tool when passed a tool id')
+})
+
+/* ------------------ Shape Classes ----------------- */
+
+describe('app.registerShapes', () => {
+  it.todo('Registers a shape class when passed an array of shape classes')
+})
+
+describe('app.deregisterShapes', () => {
+  it.todo('Deregisters a shape class when passed an array of shape classes')
+})
+
+describe('app.getShapeClass', () => {
+  it.todo('Accesses a tool class when passed an id')
+})
+
+/* ------------------ Tool Classes ----------------- */
+
+describe('app.registerTools', () => {
+  it.todo('Registers a tool class when passed an array of tool classes')
+})
+
+describe('app.deregisterTools', () => {
+  it.todo('Deregisters a tool class when passed an array of tool classes')
+})
+
+/* ------------------ Subscriptions ----------------- */
+
+describe('app.subscribe', () => {
+  it.todo('Subscribes to an event and calls the callback')
+})
+
+describe('app.unsubscribe', () => {
+  it.todo('Unsubscribes to an event and no longer calls the callback')
+})
+
+describe('app.notify', () => {
+  it.todo('Calls all subscribed callbacks')
+})
+
+/* --------------------- Events --------------------- */
+
+describe('When receiving an onTransition event', () => {
+  it.todo('Sets `isToolLocked` to false')
+})
+
+describe('When receiving an onWheel event', () => {
+  it.todo('Updates the viewport')
+})
+
+describe('Updates the inputs when receiving events', () => {
+  it.todo('Updates the inputs onTransition')
+  it.todo('Updates the inputs onWheel')
+  it.todo('Updates the inputs onPointerDown')
+  it.todo('Updates the inputs onPointerUp')
+  it.todo('Updates the inputs onPointerMove')
+  it.todo('Updates the inputs onKeyDown')
+  it.todo('Updates the inputs onKeyUp')
+  it.todo('Updates the inputs onPinchStart')
+  it.todo('Updates the inputs onPinch')
+  it.todo('Updates the inputs onPinchEnd')
 })
 
 /* --------------------- Shapes --------------------- */
@@ -227,15 +219,114 @@ describe('app.deleteShapes', () => {
   })
 })
 
+describe('app.setSelectedShapes', () => {
+  it('Sets selected shapes when passed an array of ids', () => {
+    const app = new TLTestApp()
+      .setSelectedShapes(['box1', 'box2'])
+      .expectSelectedIdsToBe(['box1', 'box2'])
+      .expectSelectedShapesToBe(['box1', 'box2'])
+    expect(app.selectedShapesArray.length).toBe(2)
+    expect(
+      ['box1', 'box2'].every(id => app.selectedShapesArray.includes(app.getShapeById(id)))
+    ).toBe(true)
+  })
+
+  it('Sets selected shapes when passed an array of shape instances', () => {
+    const app = new TLTestApp()
+    app
+      .setSelectedShapes(app.getShapesById(['box1', 'box2']))
+      .expectSelectedIdsToBe(['box1', 'box2'])
+      .expectSelectedShapesToBe(['box1', 'box2'])
+    expect(app.selectedShapesArray.length).toBe(2)
+    expect(
+      ['box1', 'box2'].every(id => app.selectedShapesArray.includes(app.getShapeById(id)))
+    ).toBe(true)
+  })
+
+  it('Clears selected shapes when passed an empty array', () => {
+    const app = new TLTestApp()
+      .setSelectedShapes([])
+      .expectSelectedIdsToBe([])
+      .expectSelectedShapesToBe([])
+    expect(app.selectedShapesArray.length).toBe(0)
+  })
+})
+
+describe('app.setSelectionRotation', () => {
+  it.todo('Sets the bounds rotation')
+})
+
+describe('app.setHoveredShape', () => {
+  it('Sets hovered shape when passed a shape id', () => {
+    const app = new TLTestApp().setHoveredShape('box1')
+    expect(app.hoveredId).toBe('box1')
+    expect(app.hoveredShape).toBe(app.getShapeById('box1'))
+  })
+
+  it('Sets hovered shape when passed a shape instance', () => {
+    const app = new TLTestApp()
+    app.setHoveredShape(app.getShapeById('box1'))
+    expect(app.hoveredId).toBe('box1')
+    expect(app.hoveredShape).toBe(app.getShapeById('box1'))
+  })
+
+  it('Clears hovered shape when passed undefined', () => {
+    const app = new TLTestApp().setHoveredShape('box1').setHoveredShape(undefined)
+    expect(app.hoveredId).toBeUndefined()
+    expect(app.hoveredShape).toBeUndefined()
+  })
+})
+
+describe('app.setEditingShape', () => {
+  it('Sets editing shape when passed a shape id', () => {
+    const app = new TLTestApp().setEditingShape('box3')
+    expect(app.editingId).toBe('box3')
+    expect(app.editingShape).toBe(app.getShapeById('box3'))
+  })
+
+  it('Sets editing shape when passed a shape instance', () => {
+    const app = new TLTestApp()
+    app.setEditingShape(app.getShapeById('box3'))
+    expect(app.editingId).toBe('box3')
+    expect(app.editingShape).toBe(app.getShapeById('box3'))
+  })
+
+  it('Clears editing shape when passed undefined', () => {
+    const app = new TLTestApp().setEditingShape('box3').setEditingShape(undefined)
+    expect(app.editingId).toBeUndefined()
+    expect(app.editingShape).toBeUndefined()
+  })
+})
+
+/* --------------------- Display -------------------- */
+
+describe('app.selectionBounds', () => {
+  it.todo('Updates selected bounds when selected shapes change')
+  it.todo('Clears selected bounds when selected shapes is empty')
+})
+
+describe('app.shapesInViewport', () => {
+  it.todo('Updates shapes in viewport when shapes change')
+  it.todo('Updates shapes in viewport when viewport bounds change')
+})
+
+describe('app.showSelection', () => {
+  it.todo('Shows bounds only if the select tool is active')
+  it.todo('Shows bounds only when there are selected shapes')
+  it.todo('Hides bounds if the only selected shape has hideBounds=true')
+  it.todo('Shows when more than one shape is selected, even if some/all have hideBounds=true')
+})
+
+describe('app.showSelectionDetail', () => {
+  it.todo('Shows bounds only if the select tool is active')
+  it.todo('Shows bounds only when there are selected shapes')
+  it.todo('Hides bounds if the only selected shape has hideBounds=true')
+  it.todo('Shows when more than one shape is selected, even if some/all have hideBounds=true')
+})
+
 /* ---------------------- Brush --------------------- */
 
 describe('app.setBrush', () => {
   it.todo('Sets brush when passed a bounding box')
   it.todo('Clears brush when passed undefined')
-})
-
-/* ---------------------- Tools --------------------- */
-
-describe('app.selectTool', () => {
-  it.todo('Selects a tool when passed a tool id')
 })

@@ -7,7 +7,7 @@ import {
   Indicator,
   HTMLLayer,
   Container,
-  BoundsDetailContainer,
+  SelectionDetailContainer,
   ContextBarContainer,
   SVGContainer,
 } from '~components'
@@ -34,7 +34,7 @@ export interface TLCanvasProps<S extends TLReactShape> {
   hoveredShape?: S
   editingShape?: S
   bindingShape?: S
-  selectedBounds?: TLBounds
+  selectionBounds?: TLBounds
   selectedShapes?: S[]
   erasingShapes?: S[]
   gridSize?: number
@@ -42,13 +42,13 @@ export interface TLCanvasProps<S extends TLReactShape> {
   cursorRotation?: number
   boundsRotation?: number
   showGrid?: boolean
-  showBounds?: boolean
+  showSelection?: boolean
   showHandles?: boolean
   showResizeHandles?: boolean
   showRotateHandle?: boolean
   showContextBar?: boolean
-  showBoundsDetail?: boolean
-  showBoundsRotation?: boolean
+  showSelectionDetail?: boolean
+  showSelectionRotation?: boolean
   children?: React.ReactNode
 }
 
@@ -59,18 +59,18 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
   bindingShape,
   editingShape,
   hoveredShape,
-  selectedBounds,
+  selectionBounds,
   selectedShapes,
   erasingShapes,
   cursor = TLCursor.Default,
   cursorRotation = 0,
   boundsRotation = 0,
-  showBounds = true,
+  showSelection = true,
   showHandles = true,
-  showBoundsRotation = false,
+  showSelectionRotation = false,
   showResizeHandles = true,
   showRotateHandle = true,
-  showBoundsDetail = true,
+  showSelectionDetail = true,
   showContextBar = true,
   showGrid = true,
   gridSize = 8,
@@ -102,12 +102,12 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
       <div tabIndex={-1} className="tl-absolute tl-canvas" {...events}>
         {showGrid && components.Grid && <components.Grid size={gridSize} />}
         <HTMLLayer>
-          {components.BoundsBackground && selectedShapes && selectedBounds && showBounds && (
-            <Container bounds={selectedBounds} zIndex={2}>
-              <components.BoundsBackground
+          {components.SelectionBackground && selectedShapes && selectionBounds && showSelection && (
+            <Container bounds={selectionBounds} zIndex={2}>
+              <components.SelectionBackground
                 zoom={zoom}
                 shapes={selectedShapes}
-                bounds={selectedBounds}
+                bounds={selectionBounds}
                 showResizeHandles={showResizeHandles}
                 showRotateHandle={showRotateHandle}
               />
@@ -141,21 +141,21 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
             <Indicator key={'hovered_indicator_' + hoveredShape.id} shape={hoveredShape} />
           )}
           {brush && components.Brush && <components.Brush bounds={brush} />}
-          {selectedShapes && selectedBounds && (
+          {selectedShapes && selectionBounds && (
             <>
-              {showBounds && components.BoundsForeground && (
-                <Container bounds={selectedBounds} zIndex={10002}>
-                  <components.BoundsForeground
+              {showSelection && components.SelectionForeground && (
+                <Container bounds={selectionBounds} zIndex={10002}>
+                  <components.SelectionForeground
                     zoom={zoom}
                     shapes={selectedShapes}
-                    bounds={selectedBounds}
+                    bounds={selectionBounds}
                     showResizeHandles={showResizeHandles}
                     showRotateHandle={showRotateHandle}
                   />
                 </Container>
               )}
               {showHandles && onlySelectedShapeWithHandles && components.Handle && (
-                <Container bounds={selectedBounds} zIndex={10003}>
+                <Container bounds={selectionBounds} zIndex={10003}>
                   <SVGContainer>
                     {onlySelectedShapeWithHandles.handles.map((handle, i) =>
                       React.createElement(components.Handle!, {
@@ -168,13 +168,13 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                   </SVGContainer>
                 </Container>
               )}
-              {selectedShapes && components.BoundsDetail && (
-                <BoundsDetailContainer
+              {selectedShapes && components.SelectionDetail && (
+                <SelectionDetailContainer
                   key={'detail' + selectedShapes.map(shape => shape.id).join('')}
                   shapes={selectedShapes}
-                  bounds={selectedBounds}
-                  detail={showBoundsRotation ? 'rotation' : 'size'}
-                  hidden={!showBoundsDetail}
+                  bounds={selectionBounds}
+                  detail={showSelectionRotation ? 'rotation' : 'size'}
+                  hidden={!showSelectionDetail}
                   rotation={boundsRotation}
                 />
               )}
@@ -183,7 +183,7 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                   key={'context' + selectedShapes.map(shape => shape.id).join('')}
                   shapes={selectedShapes}
                   hidden={!showContextBar}
-                  bounds={selectedShapes.length === 1 ? selectedShapes[0].bounds : selectedBounds}
+                  bounds={selectedShapes.length === 1 ? selectedShapes[0].bounds : selectionBounds}
                   rotation={selectedShapes.length === 1 ? selectedShapes[0].rotation : 0}
                 />
               )}

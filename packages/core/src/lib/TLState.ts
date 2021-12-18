@@ -84,11 +84,11 @@ export abstract class TLRootState<S extends TLShape, K extends TLEventMap>
 
   children = new Map<string, TLState<S, K, any, any>>([])
 
-  registerStates = (...stateClasses: TLStateClass<S, K, any>[]): void => {
+  registerStates = (stateClasses: TLStateClass<S, K, any>[]): void => {
     stateClasses.forEach(StateClass => this.children.set(StateClass.id, new StateClass(this, this)))
   }
 
-  deregisterStates = (...states: TLStateClass<S, K, any>[]): void => {
+  deregisterStates = (states: TLStateClass<S, K, any>[]): void => {
     states.forEach(StateClass => {
       this.children.get(StateClass.id)?.dispose()
       this.children.delete(StateClass.id)
@@ -392,7 +392,7 @@ export abstract class TLState<
     this._root = root
 
     if (this.states && this.states.length > 0) {
-      this.registerStates(...this.states)
+      this.registerStates(this.states)
       const initialId = this.initial ?? this.states[0].id
       const state = this.children.get(initialId)
       if (state) {
@@ -455,13 +455,13 @@ export abstract class TLState<
 
   children = new Map<string, TLState<S, K, R, any>>([])
 
-  registerStates = (...stateClasses: TLStateClass<S, K, R, any>[]): void => {
+  registerStates = (stateClasses: TLStateClass<S, K, R, any>[]): void => {
     stateClasses.forEach(StateClass =>
       this.children.set(StateClass.id, new StateClass(this, this._root))
     )
   }
 
-  deregisterStates = (...states: TLStateClass<S, K, R, any>[]): void => {
+  deregisterStates = (states: TLStateClass<S, K, R, any>[]): void => {
     states.forEach(StateClass => {
       this.children.get(StateClass.id)?.dispose()
       this.children.delete(StateClass.id)

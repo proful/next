@@ -45,13 +45,12 @@ export class TLApp<
   constructor(
     serializedApp?: TLSerializedApp,
     Shapes?: TLShapeConstructor<S>[],
-    tools?: TLToolConstructor<S, K>[]
+    Tools?: TLToolConstructor<S, K>[]
   ) {
     super()
     this.history.pause()
-
     if (this.states && this.states.length > 0) {
-      this.registerStates(...this.states)
+      this.registerStates(this.states)
       const initialId = this.initial ?? this.states[0].id
       const state = this.children.get(initialId)
       if (state) {
@@ -59,14 +58,10 @@ export class TLApp<
         this.currentState?._events.onEnter({ fromId: 'initial' })
       }
     }
-
-    if (Shapes) this.registerShapes(...Shapes)
-    if (tools) this.registerStates(...tools)
-
+    if (Shapes) this.registerShapes(Shapes)
+    if (Tools) this.registerTools(Tools)
     this.history.resume()
-
     if (serializedApp) this.history.deserialize(serializedApp)
-
     const ownShortcuts: TLShortcut<S, K>[] = [
       {
         keys: 'mod+shift+g',
@@ -132,7 +127,6 @@ export class TLApp<
         },
       },
     ]
-
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const shortcuts = (this.constructor['shortcuts'] || []) as TLShortcut<S, K>[]
@@ -143,11 +137,8 @@ export class TLApp<
         })
       })
     )
-
     this.api = new TLApi(this)
-
     makeObservable(this)
-
     this.notify('mount', null)
   }
 
@@ -216,15 +207,15 @@ export class TLApp<
     return {
       currentPageId: this.currentPageId,
       selectedIds: Array.from(this.selectedIds.values()),
-      pages: this.pages.map(page => page.serialized),
+      pages: Array.from(this.pages.values()).map(page => page.serialized),
     }
   }
 
   /* ---------------------- Pages --------------------- */
 
-  @observable pages: TLPage<S, K>[] = [
-    new TLPage(this, { id: 'page', name: 'page', shapes: [], bindings: [] }),
-  ]
+  @observable pages: Map<string, TLPage<S, K>> = new Map([
+    ['page', new TLPage(this, { id: 'page', name: 'page', shapes: [], bindings: [] })],
+  ])
 
   @observable currentPageId = 'page'
 
@@ -233,24 +224,26 @@ export class TLApp<
   }
 
   getPageById = (pageId: string): TLPage<S, K> => {
-    const page = this.pages.find(page => page.id === pageId)
+    const page = this.pages.get(pageId)
     if (!page) throw Error(`Could not find a page named ${pageId}.`)
     return page
   }
 
-  @action setCurrentPage(page: string | TLPage<S, K>) {
+  @action setCurrentPage(page: string | TLPage<S, K>): this {
     this.currentPageId = typeof page === 'string' ? page : page.id
     return this
   }
 
-  @action addPages(pages: TLPage<S, K>[]): void {
-    this.pages.push(...pages)
+  @action addPages(pages: TLPage<S, K>[]): this {
+    pages.forEach(page => this.pages.set(page.id, page))
     this.persist()
+    return this
   }
 
-  @action removePages(pages: TLPage<S, K>[]): void {
-    this.pages = this.pages.filter(page => !pages.includes(page))
+  @action removePages(pages: TLPage<S, K>[]): this {
+    pages.forEach(page => this.pages.delete(page.id))
     this.persist()
+    return this
   }
 
   /* --------------------- Shapes --------------------- */
@@ -334,6 +327,8 @@ export class TLApp<
 
   @observable selectedShapes: Set<S> = new Set()
 
+  @observable boundsRotation = 0
+
   @computed get selectedShapesArray() {
     const { selectedShapes, selectedTool } = this
     const stateId = selectedTool.id
@@ -358,6 +353,10 @@ export class TLApp<
       this.boundsRotation = 0
     }
     return this
+  }
+
+  @action setSelectionRotation(radians: number) {
+    this.boundsRotation = radians
   }
 
   /* ------------------ Erasing Shape ----------------- */
@@ -412,22 +411,43 @@ export class TLApp<
 
   /* --------------------- Display -------------------- */
 
-  @computed get showBounds() {
+  @computed get shapesInViewport(): S[] {
+    const {
+      currentPage,
+      viewport: { currentView },
+    } = this
+
+    return currentPage.shapes.filter(shape => {
+      return (
+        shape.parentId === currentPage.id &&
+        (shape.stayMounted ||
+          BoundsUtils.boundsContain(currentView, shape.rotatedBounds) ||
+          BoundsUtils.boundsCollide(currentView, shape.rotatedBounds))
+      )
+    })
+  }
+
+  @computed get selectionBounds(): TLBounds | undefined {
+    return this.selectedShapesArray.length === 1
+      ? { ...this.selectedShapesArray[0].bounds, rotation: this.selectedShapesArray[0].rotation }
+      : BoundsUtils.getCommonBounds(this.selectedShapesArray.map(shape => shape.rotatedBounds))
+  }
+
+  @computed get showSelection() {
     return (
       this.currentState.id === 'select' &&
-      (this.selectedShapes.size > 1 || !this.selectedShapesArray.every(shape => shape.hideBounds))
+      (this.selectedShapes.size > 0 || !this.selectedShapesArray[0].hideBounds)
     )
   }
 
-  @computed get showBoundsDetail() {
+  @computed get showSelectionDetail() {
     return (
       this.currentState.id === 'select' &&
-      this.selectedShapes.size > 0 &&
-      !this.selectedShapesArray.every(shape => shape.hideBoundsDetail)
+      (this.selectedShapes.size > 0 || !this.selectedShapesArray[0].hideSelectionDetail)
     )
   }
 
-  @computed get showBoundsRotation() {
+  @computed get showSelectionRotation() {
     const stateId = this.selectedTool.currentState.id
     return (
       this.currentState.id === 'select' &&
@@ -470,43 +490,15 @@ export class TLApp<
     )
   }
 
-  @computed get shapesInViewport(): S[] {
-    const {
-      currentPage,
-      viewport: { currentView },
-    } = this
-
-    return currentPage.shapes.filter(shape => {
-      return (
-        shape.parentId === currentPage.id &&
-        (shape.stayMounted ||
-          BoundsUtils.boundsContain(currentView, shape.rotatedBounds) ||
-          BoundsUtils.boundsCollide(currentView, shape.rotatedBounds))
-      )
-    })
-  }
-
-  @computed get selectedBounds(): TLBounds | undefined {
-    return this.selectedShapesArray.length === 1
-      ? { ...this.selectedShapesArray[0].bounds, rotation: this.selectedShapesArray[0].rotation }
-      : BoundsUtils.getCommonBounds(this.selectedShapesArray.map(shape => shape.rotatedBounds))
-  }
-
-  @observable boundsRotation = 0
-
-  @action setBoundsRotation(radians: number) {
-    this.boundsRotation = radians
-  }
-
   /* ------------------ Shape Classes ----------------- */
 
   Shapes = new Map<string, TLShapeConstructor<S>>()
 
-  registerShapes = (...Shapes: TLShapeConstructor<S>[]) => {
+  registerShapes = (Shapes: TLShapeConstructor<S>[]) => {
     Shapes.forEach(Shape => this.Shapes.set(Shape.id, Shape))
   }
 
-  deregisterShapes = (...Shapes: TLShapeConstructor<S>[]) => {
+  deregisterShapes = (Shapes: TLShapeConstructor<S>[]) => {
     Shapes.forEach(Shape => this.Shapes.delete(Shape.id))
   }
 
@@ -517,14 +509,9 @@ export class TLApp<
     return Shape
   }
 
-  /* --------------------- Events --------------------- */
+  /* ------------------ Subscriptions ----------------- */
 
   private subscriptions = new Set<TLSubscription<S, K, any, TLSubscriptionEventName>>([])
-
-  readonly unsubscribe = (subscription: TLSubscription<S, K, any, TLSubscriptionEventName>) => {
-    this.subscriptions.delete(subscription)
-    return this
-  }
 
   subscribe = <E extends TLSubscriptionEventName>(
     event: E | TLSubscription<S>,
@@ -539,6 +526,11 @@ export class TLApp<
       this.subscriptions.add(subscription)
       return () => this.unsubscribe(subscription)
     }
+  }
+
+  unsubscribe = (subscription: TLSubscription<S, K, any, TLSubscriptionEventName>) => {
+    this.subscriptions.delete(subscription)
+    return this
   }
 
   notify = <E extends TLSubscriptionEventName>(event: E, info: TLSubscriptionEventInfo<E>) => {

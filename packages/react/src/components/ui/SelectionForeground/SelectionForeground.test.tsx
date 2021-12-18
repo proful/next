@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { renderWithApp } from '~test/renderWithApp'
-import { BoundsForeground } from './BoundsForeground'
+import { SelectionForeground } from './SelectionForeground'
 
-describe('BoundsForeground', () => {
+describe('SelectionForeground', () => {
   test('mounts component without crashing', () => {
     renderWithApp(
-      <BoundsForeground
+      <SelectionForeground
         bounds={{
           minX: 500,
           maxX: 600,

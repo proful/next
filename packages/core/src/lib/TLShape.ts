@@ -83,7 +83,7 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   readonly hideResizeHandles: boolean = false
   readonly hideRotateHandle: boolean = false
   readonly hideContextBar: boolean = false
-  readonly hideBoundsDetail: boolean = false
+  readonly hideSelectionDetail: boolean = false
   readonly hideBounds: boolean = false
   readonly isEditable: boolean = false
   readonly isStateful: boolean = false

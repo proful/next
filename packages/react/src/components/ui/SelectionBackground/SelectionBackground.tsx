@@ -3,11 +3,11 @@ import { observer } from 'mobx-react-lite'
 import { useBoundsEvents } from '~hooks/useBoundsEvents'
 import { SVGContainer } from '~components'
 import type { TLReactShape } from '~lib'
-import type { TLBoundsComponentProps } from '~types/component-props'
+import type { TLSelectionComponentProps } from '~types/component-props'
 
-export const BoundsBackground = observer(function BoundsBackground<S extends TLReactShape>({
+export const SelectionBackground = observer(function SelectionBackground<S extends TLReactShape>({
   bounds,
-}: TLBoundsComponentProps<S>) {
+}: TLSelectionComponentProps<S>) {
   const events = useBoundsEvents('background')
 
   return (

@@ -1,11 +1,12 @@
 import * as React from 'react'
+import { SelectionDetailContainer } from './SelectionDetailContainer'
 import { renderWithApp } from '~test/renderWithApp'
-import { BoundsBackground } from './BoundsBackground'
 
-describe('BoundsBackground', () => {
+describe('SelectionDetailContainer', () => {
   test('mounts component without crashing', () => {
     renderWithApp(
-      <BoundsBackground
+      <SelectionDetailContainer
+        shapes={[]}
         bounds={{
           minX: 500,
           maxX: 600,
@@ -14,10 +15,8 @@ describe('BoundsBackground', () => {
           width: 100,
           height: 100,
         }}
-        zoom={1}
-        shapes={[]}
-        showResizeHandles={false}
-        showRotateHandle={false}
+        detail={'size'}
+        hidden={false}
       />
     )
   })

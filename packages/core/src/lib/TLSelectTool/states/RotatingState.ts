@@ -26,17 +26,17 @@ export class RotatingState<
   initialCommonCenter = [0, 0]
   initialCommonBounds = {} as TLBounds
   initialAngle = 0
-  initialBoundsRotation = 0
+  initialSelectionRotation = 0
 
   onEnter = () => {
-    const { history, selectedShapesArray, selectedBounds } = this.app
+    const { history, selectedShapesArray, selectionBounds } = this.app
 
-    if (!selectedBounds) throw Error('Expected selected bounds.')
+    if (!selectionBounds) throw Error('Expected selected bounds.')
 
     history.pause()
-    this.initialBoundsRotation = this.app.boundsRotation
-    this.initialCommonBounds = { ...selectedBounds }
-    this.initialCommonCenter = BoundsUtils.getBoundsCenter(selectedBounds)
+    this.initialSelectionRotation = this.app.boundsRotation
+    this.initialCommonBounds = { ...selectionBounds }
+    this.initialCommonCenter = BoundsUtils.getBoundsCenter(selectionBounds)
     this.initialAngle = Vec.angle(this.initialCommonCenter, this.app.inputs.currentPoint)
     this.snapshot = Object.fromEntries(
       selectedShapesArray.map(shape => [
@@ -114,7 +114,7 @@ export class RotatingState<
     })
 
     this.updateCursor()
-    this.app.setBoundsRotation(this.initialBoundsRotation + angleDelta)
+    this.app.setSelectionRotation(this.initialSelectionRotation + angleDelta)
   }
 
   onPointerUp: TLEvents<S>['pointer'] = () => {

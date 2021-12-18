@@ -4,16 +4,16 @@ import { HTMLContainer } from '~components'
 import { TAU } from '~constants'
 import { GeomUtils, TLShapeWithHandles } from '@tldraw/core'
 import type { TLReactShape } from '~lib'
-import type { TLBoundsDetailProps } from '~types/component-props'
+import type { TLSelectionDetailProps } from '~types/component-props'
 import Vec from '@tldraw/vec'
 
-export const BoundsDetail = observer(function BoundsDetail<S extends TLReactShape>({
+export const SelectionDetail = observer(function SelectionDetail<S extends TLReactShape>({
   bounds,
   shapes,
   scaledBounds,
   detail = 'size',
   rotation = 0,
-}: TLBoundsDetailProps<S>) {
+}: TLSelectionDetailProps<S>) {
   // This is the actual rotation of the bounding box, used to position the detail. Note that when rotating only one shape, the bounds rotation and the rotation shown in the detail will be the same; however, when rotating more than one shape, the bounding box will be axis-aligned, but the detail will show the angle that the bounds has been rotated by.
   const boundsRotation = shapes.length === 1 ? rotation : bounds.rotation ?? 0
   const isFlipped = Math.abs(boundsRotation) > TAU

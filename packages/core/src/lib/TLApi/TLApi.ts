@@ -124,9 +124,9 @@ export class TLApi<S extends TLShape = TLShape, K extends TLEventMap = TLEventMa
 
   /** Zoom to fit the current selection in the viewport. */
   zoomToSelection = (): this => {
-    const { selectedBounds } = this.#app
-    if (!selectedBounds) return this
-    this.#app.viewport.zoomToBounds(selectedBounds)
+    const { selectionBounds } = this.#app
+    if (!selectionBounds) return this
+    this.#app.viewport.zoomToBounds(selectionBounds)
     return this
   }
 

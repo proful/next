@@ -22,7 +22,7 @@ export class TLDotShape<P extends TLDotShapeProps = any> extends TLShape<P> {
   readonly hideBounds = true
   readonly hideResizeHandles = true
   readonly hideRotateHandle = true
-  readonly hideBoundsDetail = true
+  readonly hideSelectionDetail = true
 
   ReactComponent = observer(({ events, isErasing }: TLComponentProps) => {
     const { radius } = this

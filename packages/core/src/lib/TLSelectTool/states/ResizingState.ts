@@ -40,13 +40,13 @@ export class ResizingState<
   }
 
   onEnter = (info: { handle: TLBoundsCorner | TLBoundsEdge }) => {
-    const { history, selectedShapesArray, selectedBounds } = this.app
-    if (!selectedBounds) throw Error('Expected a selected bounds.')
+    const { history, selectedShapesArray, selectionBounds } = this.app
+    if (!selectionBounds) throw Error('Expected a selected bounds.')
 
     this.handle = info.handle
     this.app.cursors.setCursor(
       ResizingState.CURSORS[info.handle],
-      this.app.selectedBounds?.rotation
+      this.app.selectionBounds?.rotation
     )
     history.pause()
 
@@ -57,7 +57,7 @@ export class ResizingState<
     this.isSingle = selectedShapesArray.length === 1
     this.isAspectRatioLocked = this.isSingle && !!selectedShapesArray[0].isAspectRatioLocked
     this.boundsRotation = this.isSingle ? selectedShapesArray[0].rotation ?? 0 : 0
-    this.initialCommonBounds = { ...selectedBounds }
+    this.initialCommonBounds = { ...selectionBounds }
     this.initialCommonCenter = BoundsUtils.getBoundsCenter(this.initialCommonBounds)
 
     this.snapshots = Object.fromEntries(
