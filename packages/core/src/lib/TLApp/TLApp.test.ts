@@ -383,7 +383,7 @@ describe('app.showResizeHandles', () => {
       },
     ])
     app.setSelectedShapes(['noresizehandlesbox1'])
-    expect(app.showRotateHandle).toBe(false)
+    expect(app.showResizeHandles).toBe(false)
   })
 })
 
