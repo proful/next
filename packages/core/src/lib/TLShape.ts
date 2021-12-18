@@ -11,7 +11,7 @@ import type { TLHandle } from '~types/TLHandle'
 import { BoundsUtils, PointUtils, assignOwnProps } from '~utils'
 import { deepCopy } from '~utils/DataUtils'
 
-export type TLSerializedShape<P = AnyObject> = TLShapeProps & {
+export type TLShapeModel<P = AnyObject> = TLShapeProps & {
   type: string
   nonce?: number
 } & P
@@ -38,13 +38,13 @@ export interface TLResizeInfo<P = any> {
   type: TLBoundsEdge | TLBoundsCorner
   scale: number[]
   transformOrigin: number[]
-  initialShape: TLSerializedShape<P>
+  initialShape: TLShapeModel<P>
 }
 
 export interface TLHandleChangeInfo<P = any> {
   index: number
   delta: number[]
-  initialShape: TLSerializedShape<P>
+  initialShape: TLShapeModel<P>
 }
 
 export type TLCustomProps<P extends AnyObject = any> = TLShapeProps & Partial<P>
@@ -92,7 +92,7 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   readonly id: string = 'id'
   nonce = 0
   isDirty = false
-  private lastSerialized = {} as TLSerializedShape<P>
+  private lastSerialized = {} as TLShapeModel<P>
 
   @observable parentId = 'parentId'
   @observable point: number[] = [0, 0]
@@ -173,14 +173,12 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
     return this.getRotatedBounds()
   }
 
-  getSerialized = (): TLSerializedShape<P> => {
+  getSerialized = (): TLShapeModel<P> => {
     const propKeys = Array.from(this.propsKeys.values()) as (keyof TLShapeProps & P)[]
-    return deepCopy(
-      Object.fromEntries(propKeys.map(key => [key, this[key]]))
-    ) as TLSerializedShape<P>
+    return deepCopy(Object.fromEntries(propKeys.map(key => [key, this[key]]))) as TLShapeModel<P>
   }
 
-  protected getCachedSerialized = (): TLSerializedShape<P> => {
+  protected getCachedSerialized = (): TLShapeModel<P> => {
     if (this.isDirty) {
       this.nonce++
       this.isDirty = false
@@ -189,7 +187,7 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
     return this.lastSerialized
   }
 
-  get serialized(): TLSerializedShape<P> {
+  get serialized(): TLShapeModel<P> {
     return this.getCachedSerialized()
   }
 

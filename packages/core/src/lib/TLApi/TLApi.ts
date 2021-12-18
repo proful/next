@@ -1,4 +1,4 @@
-import type { TLApp, TLCustomProps, TLPage, TLSerializedShape, TLShape } from '~lib'
+import type { TLApp, TLCustomProps, TLPage, TLShapeModel, TLShape } from '~lib'
 import type { TLEventMap } from '~types'
 import { BoundsUtils } from '~utils'
 
@@ -34,7 +34,7 @@ export class TLApi<S extends TLShape = TLShape, K extends TLEventMap = TLEventMa
    *
    * @param shapes The new shape instances or serialized shapes.
    */
-  createShapes = (...shapes: S[] | TLSerializedShape[]): this => {
+  createShapes = (...shapes: S[] | TLShapeModel[]): this => {
     this.#app.createShapes(shapes)
     return this
   }

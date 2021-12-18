@@ -28,7 +28,7 @@ export class EditingShapeState<
         this.tool.transition('idle', info)
         break
       }
-      case TLTargetType.Bounds: {
+      case TLTargetType.Selection: {
         break
       }
       case TLTargetType.Handle: {

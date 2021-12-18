@@ -35,7 +35,7 @@ export class IdleState<
         this.app.setHoveredShape(info.shape.id)
         break
       }
-      case TLTargetType.Bounds: {
+      case TLTargetType.Selection: {
         if (!(info.handle === 'background' || info.handle === 'center')) {
           this.tool.transition('hoveringResizeHandle', info)
         }
@@ -57,7 +57,7 @@ export class IdleState<
     }
 
     switch (info.type) {
-      case TLTargetType.Bounds: {
+      case TLTargetType.Selection: {
         switch (info.handle) {
           case 'center': {
             break
@@ -126,7 +126,7 @@ export class IdleState<
         this.tool.transition('editingShape', info)
         break
       }
-      case TLTargetType.Bounds: {
+      case TLTargetType.Selection: {
         if (this.app.selectedShapesArray.length === 1) {
           this.tool.transition('editingShape', {
             type: TLTargetType.Shape,

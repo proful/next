@@ -2,13 +2,13 @@ import type { TLShape, TLShapeConstructor } from '../TLShape'
 import { AppNode } from './nodes/AppNode'
 import type { TLToolNodeConstructor } from './nodes/ToolNode'
 import type { TLShortcut, TLStateEvents } from './nodes/shared'
-import type { TLSerializedApp } from '../TLApp'
+import type { TLDocumentModel } from '../TLApp'
 
 class FinalApp<S extends TLShape = TLShape> extends AppNode<S> {
   constructor(
     options = {} as {
       id?: string
-      serializedApp?: TLSerializedApp
+      serializedApp?: TLDocumentModel
       Shapes?: TLShapeConstructor<S>[]
       tools?: TLToolNodeConstructor<S>[]
     }

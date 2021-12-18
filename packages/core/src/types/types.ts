@@ -17,14 +17,7 @@ export enum TLBoundsCorner {
   BottomLeft = 'bottom_left_corner',
 }
 
-export type TLBoundsHandle =
-  | TLBoundsCorner
-  | TLBoundsEdge
-  | 'rotate'
-  | 'left'
-  | 'right'
-  | 'center'
-  | 'background'
+export type TLSelectionHandle = TLBoundsCorner | TLBoundsEdge | 'rotate' | 'background' | 'center'
 
 export interface TLBoundsWithCenter extends TLBounds {
   midX: number
@@ -117,12 +110,16 @@ export type TLSubscriptionEvent =
       event: 'load'
       info: null
     }
+  | {
+      event: 'error'
+      info: Error
+    }
 
 export type TLSubscriptionEventName = TLSubscriptionEvent['event']
 
-export type TLSubscriptionEventInfo<T extends TLSubscriptionEventName> = Extract<
+export type TLSubscriptionEventInfo<E extends TLSubscriptionEventName> = Extract<
   TLSubscriptionEvent,
-  { event: T }
+  { event: E }
 >['info']
 
 export type TLCallback<
@@ -160,6 +157,7 @@ export interface TLCallbacks<
   onPersist: TLCallback<S, K, R, 'persist'>
   onSave: TLCallback<S, K, R, 'save'>
   onSaveAs: TLCallback<S, K, R, 'saveAs'>
+  onError: TLCallback<S, K, R, 'error'>
 }
 
 /* ----------------- Event Handlers ----------------- */
@@ -167,7 +165,7 @@ export interface TLCallbacks<
 export enum TLTargetType {
   Canvas = 'canvas',
   Shape = 'shape',
-  Bounds = 'bounds',
+  Selection = 'selection',
   Handle = 'handle',
 }
 
@@ -184,16 +182,16 @@ export type TLEventHandleInfo<S extends TLShape, H extends TLHandle = TLHandle> 
   index: number
   order?: number
 }
-export type TLEventBoundsInfo = {
-  type: TLTargetType.Bounds
-  handle: TLBoundsHandle
-  order: number
+export type TLEventSelectionInfo = {
+  type: TLTargetType.Selection
+  handle: TLSelectionHandle
+  order?: number
 }
-export type TLEventInfo<S extends TLShape, H extends TLHandle = TLHandle> =
+export type TLEventInfo<S extends TLShape = TLShape> =
   | TLEventCanvasInfo
   | TLEventShapeInfo<S>
-  | TLEventHandleInfo<S, H>
-  | TLEventBoundsInfo
+  | TLEventHandleInfo<S>
+  | TLEventSelectionInfo
 
 /* ----------------- Type Assertion ----------------- */
 

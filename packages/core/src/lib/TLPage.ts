@@ -2,12 +2,12 @@
 import { action, observable, makeObservable, computed, observe } from 'mobx'
 import type { TLBinding, TLEventMap } from '~types'
 import type { TLApp, TLShape } from '~lib'
-import type { TLSerializedShape } from './TLShape'
+import type { TLShapeModel } from './TLShape'
 
-export interface TLSerializedPage {
+export interface TLPageModel {
   id: string
   name: string
-  shapes: TLSerializedShape[]
+  shapes: TLShapeModel[]
   bindings: TLBinding[]
   nonce?: number
 }
@@ -40,18 +40,18 @@ export class TLPage<S extends TLShape = TLShape, E extends TLEventMap = TLEventM
 
   @observable bindings: TLBinding[]
 
-  @action addShapes(...shapes: S[] | TLSerializedShape[]) {
+  @action addShapes(...shapes: S[] | TLShapeModel[]) {
     if (shapes.length === 0) return
 
     const shapeInstances =
       'getBounds' in shapes[0]
         ? (shapes as S[])
-        : (shapes as TLSerializedShape[]).map((shape) => {
+        : (shapes as TLShapeModel[]).map(shape => {
             const ShapeClass = this.app.getShapeClass(shape.type)
             return new ShapeClass(shape)
           })
 
-    shapeInstances.forEach((instance) => observe(instance, this.app.saveState))
+    shapeInstances.forEach(instance => observe(instance, this.app.saveState))
 
     this.shapes.push(...shapeInstances)
     this.bump()
@@ -60,21 +60,21 @@ export class TLPage<S extends TLShape = TLShape, E extends TLEventMap = TLEventM
 
   @action removeShapes(...shapes: S[] | string[]) {
     if (typeof shapes[0] === 'string') {
-      this.shapes = this.shapes.filter((shape) => !(shapes as string[]).includes(shape.id))
+      this.shapes = this.shapes.filter(shape => !(shapes as string[]).includes(shape.id))
     } else {
-      this.shapes = this.shapes.filter((shape) => !(shapes as S[]).includes(shape))
+      this.shapes = this.shapes.filter(shape => !(shapes as S[]).includes(shape))
     }
     // this.bump()
     // this.app.persist()
   }
 
   // TODO: How to avoid making deep copies when shapes have not changed?
-  @computed get serialized(): TLSerializedPage {
+  @computed get serialized(): TLPageModel {
     return {
       id: this.id,
       name: this.name,
-      shapes: this.shapes.map((shape) => shape.serialized),
-      bindings: this.bindings.map((binding) => ({ ...binding })),
+      shapes: this.shapes.map(shape => shape.serialized),
+      bindings: this.bindings.map(binding => ({ ...binding })),
       nonce: this.nonce,
     }
   }

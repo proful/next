@@ -2,10 +2,10 @@
 import * as React from 'react'
 import { TLHandle, TLTargetType } from '@tldraw/core'
 import { useRendererContext } from '~hooks'
-import type { TLReactShape } from '~lib'
+import type { TLReactShapeWithHandles } from '~lib'
 import type { TLReactCustomEvents } from '~types'
 
-export function useHandleEvents<S extends TLReactShape = TLReactShape>(
+export function useHandleEvents<S extends TLReactShapeWithHandles = TLReactShapeWithHandles>(
   shape: S & { handles: TLHandle[] },
   index: number
 ) {

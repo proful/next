@@ -2,13 +2,13 @@ import { Vec } from '@tldraw/vec'
 import { TLApp, TLSelectTool, TLShape, TLToolState } from '~lib'
 import {
   TLEvents,
-  TLBoundsHandle,
+  TLSelectionHandle,
   TLEventMap,
   TLBoundsEdge,
   TLBoundsCorner,
   TLCursor,
   TLTargetType,
-  TLEventBoundsInfo,
+  TLEventSelectionInfo,
 } from '~types'
 
 export class HoveringResizeHandleState<
@@ -19,9 +19,9 @@ export class HoveringResizeHandleState<
 > extends TLToolState<S, K, R, P> {
   static id = 'hoveringResizeHandle'
 
-  handle?: TLBoundsHandle
+  handle?: TLSelectionHandle
 
-  CURSORS: Record<TLBoundsHandle, TLCursor> = {
+  CURSORS: Record<TLSelectionHandle, TLCursor> = {
     [TLBoundsEdge.Bottom]: TLCursor.NsResize,
     [TLBoundsEdge.Top]: TLCursor.NsResize,
     [TLBoundsEdge.Left]: TLCursor.EwResize,
@@ -31,13 +31,11 @@ export class HoveringResizeHandleState<
     [TLBoundsCorner.TopLeft]: TLCursor.NwseResize,
     [TLBoundsCorner.TopRight]: TLCursor.NeswResize,
     rotate: TLCursor.Grab,
-    left: TLCursor.Grab,
-    right: TLCursor.Grab,
     center: TLCursor.Grab,
     background: TLCursor.Grab,
   }
 
-  onEnter = (info: TLEventBoundsInfo) => {
+  onEnter = (info: TLEventSelectionInfo) => {
     const rotation = this.app.selectionBounds!.rotation
     this.app.cursors.setCursor(this.CURSORS[info.handle], rotation)
     this.handle = info.handle
@@ -63,7 +61,7 @@ export class HoveringResizeHandleState<
     }
 
     switch (info.type) {
-      case TLTargetType.Bounds: {
+      case TLTargetType.Selection: {
         switch (info.handle) {
           case 'center': {
             break
@@ -100,7 +98,7 @@ export class HoveringResizeHandleState<
         this.tool.transition('editingShape', info)
         break
       }
-      case TLTargetType.Bounds: {
+      case TLTargetType.Selection: {
         if (this.app.selectedShapesArray.length === 1) {
           this.tool.transition('editingShape', {
             type: TLTargetType.Shape,

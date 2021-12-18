@@ -33,4 +33,5 @@ export interface TLReactCallbacks<
   onPersist: TLReactCallback<S, R, 'persist'>
   onSave: TLReactCallback<S, R, 'save'>
   onSaveAs: TLReactCallback<S, R, 'saveAs'>
+  onError: TLReactCallback<S, R, 'error'>
 }

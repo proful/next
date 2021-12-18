@@ -9,10 +9,10 @@ import {
   TLPage,
   TLViewport,
   TLShape,
-  TLSerializedPage,
+  TLPageModel,
   TLToolConstructor,
   TLShapeConstructor,
-  TLSerializedShape,
+  TLShapeModel,
   TLCustomProps,
 } from '~lib'
 import type {
@@ -32,10 +32,10 @@ import { TLRootState } from '../TLState'
 import { TLApi } from '~lib/TLApi'
 import { TLCursors } from '~lib/TLCursors'
 
-export interface TLSerializedApp {
+export interface TLDocumentModel {
   currentPageId: string
   selectedIds: string[]
-  pages: TLSerializedPage[]
+  pages: TLPageModel[]
 }
 
 export class TLApp<
@@ -43,7 +43,7 @@ export class TLApp<
   K extends TLEventMap = TLEventMap
 > extends TLRootState<S, K> {
   constructor(
-    serializedApp?: TLSerializedApp,
+    serializedApp?: TLDocumentModel,
     Shapes?: TLShapeConstructor<S>[],
     Tools?: TLToolConstructor<S, K>[]
   ) {
@@ -154,8 +154,6 @@ export class TLApp<
 
   /* --------------------- History -------------------- */
 
-  // this needs to be at the bottom
-
   history = new TLHistory<S, K>(this)
 
   persist = this.history.persist
@@ -181,7 +179,7 @@ export class TLApp<
   /*                      Document                      */
   /* -------------------------------------------------- */
 
-  loadDocumentModel(state: TLSerializedApp) {
+  loadDocumentModel(state: TLDocumentModel) {
     this.history.deserialize(state)
   }
 
@@ -203,7 +201,7 @@ export class TLApp<
     return this
   }
 
-  @computed get serialized(): TLSerializedApp {
+  @computed get serialized(): TLDocumentModel {
     return {
       currentPageId: this.currentPageId,
       selectedIds: Array.from(this.selectedIds.values()),
@@ -254,7 +252,7 @@ export class TLApp<
     return shape
   }
 
-  @action readonly createShapes = (shapes: S[] | TLSerializedShape[]): this => {
+  @action readonly createShapes = (shapes: S[] | TLShapeModel[]): this => {
     this.currentPage.addShapes(...shapes)
     return this
   }
@@ -336,7 +334,7 @@ export class TLApp<
     return Array.from(selectedShapes.values())
   }
 
-  @action readonly setSelectedShapes = (shapes: S[] | string[]): this => {
+  @action setSelectedShapes = (shapes: S[] | string[]): this => {
     const { selectedIds, selectedShapes } = this
     selectedIds.clear()
     selectedShapes.clear()
@@ -411,6 +409,14 @@ export class TLApp<
 
   /* --------------------- Display -------------------- */
 
+  @computed get shapes(): S[] {
+    const {
+      currentPage: { shapes },
+    } = this
+
+    return Array.from(shapes.values())
+  }
+
   @computed get shapesInViewport(): S[] {
     const {
       currentPage,
@@ -461,14 +467,14 @@ export class TLApp<
     return (
       this.isInAny('select.idle', 'select.hoveringResizeHandle') &&
       selectedShapesArray.length > 0 &&
-      !selectedShapesArray.every(shape => shape.hideSelectionDetail)
+      !selectedShapesArray.every(shape => shape.hideContextBar)
     )
   }
 
   @computed get showRotateHandle() {
     const { selectedShapesArray } = this
     return (
-      this.isInAny('select.idle', 'select.hoveringResizeHandle', 'select.pointingResizeHandle') &&
+      this.isInAny('select.idle', 'select.hoveringResizeHandle', 'select.pointingRotateHandle') &&
       selectedShapesArray.length > 0 &&
       !selectedShapesArray.every(shape => shape.hideRotateHandle)
     )
@@ -477,7 +483,7 @@ export class TLApp<
   @computed get showResizeHandles() {
     const { selectedShapesArray } = this
     return (
-      this.isInAny('select.idle', 'select.hoveringResizeHandle', 'select.pointingResizingHandle') &&
+      this.isInAny('select.idle', 'select.hoveringResizeHandle', 'select.pointingResizeHandle') &&
       selectedShapesArray.length > 0 &&
       !selectedShapesArray.every(shape => shape.hideResizeHandles)
     )
@@ -504,24 +510,19 @@ export class TLApp<
 
   /* ------------------ Subscriptions ----------------- */
 
-  private subscriptions = new Set<TLSubscription<S, K, any, TLSubscriptionEventName>>([])
+  private subscriptions = new Set<TLSubscription<S, K, this, any>>([])
 
   subscribe = <E extends TLSubscriptionEventName>(
-    event: E | TLSubscription<S>,
-    callback?: TLCallback<S, K, this, E>
+    event: E,
+    callback: TLCallback<S, K, this, E>
   ) => {
-    if (typeof event === 'object') {
-      this.subscriptions.add(event)
-      return () => this.unsubscribe(event)
-    } else {
-      if (callback === undefined) throw Error('Callback is required.')
-      const subscription = { event, callback }
-      this.subscriptions.add(subscription)
-      return () => this.unsubscribe(subscription)
-    }
+    if (callback === undefined) throw Error('Callback is required.')
+    const subscription: TLSubscription<S, K, this, E> = { event, callback }
+    this.subscriptions.add(subscription)
+    return () => this.unsubscribe(subscription)
   }
 
-  unsubscribe = (subscription: TLSubscription<S, K, any, TLSubscriptionEventName>) => {
+  unsubscribe = (subscription: TLSubscription<S, K, this, any>) => {
     this.subscriptions.delete(subscription)
     return this
   }

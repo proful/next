@@ -37,7 +37,7 @@ export class NuBoxShape extends TLBoxShape<NuBoxShapeProps> {
     } = this
 
     return (
-      <SVGContainer {...events} opacity={isErasing ? 0.2 : opacity}>
+      <SVGContainer opacity={isErasing ? 0.2 : opacity} {...events}>
         <rect
           className={isSelected ? 'tl-hitarea-fill' : 'tl-hitarea-stroke'}
           x={strokeWidth / 2}

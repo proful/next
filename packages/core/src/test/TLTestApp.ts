@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { TLApp, TLSerializedApp } from '~lib'
+import { TLApp, TLDocumentModel } from '~lib'
 import { TLEventInfo, TLTargetType } from '~types'
 import { TLTestBox } from './TLTestBox'
 import { TLTestEditableBox } from './TLTestEditableBox'
@@ -20,7 +20,7 @@ interface PointerOptions {
 type S = TLTestBox
 
 export class TLTestApp extends TLApp<S> {
-  constructor(serializedApp?: TLSerializedApp) {
+  constructor(serializedApp?: TLDocumentModel) {
     super(serializedApp, [TLTestBox, TLTestEditableBox], [])
     this.viewport.updateBounds({
       minX: 0,
@@ -117,6 +117,14 @@ export class TLTestApp extends TLApp<S> {
     return this
   }
 
+  wheel = (delta: number[], point: number[], options?: KeyboardOptions) => {
+    this._events.onWheel?.(
+      { type: TLTargetType.Canvas, point, delta },
+      this.getWheelEvent(point, options)
+    )
+    return this
+  }
+
   // Events
 
   getInfo = (info: string | TLEventInfo<S>): TLEventInfo<S> => {
@@ -147,6 +155,18 @@ export class TLTestApp extends TLApp<S> {
       clientX: point[0],
       clientY: point[1],
     } as PointerEvent
+  }
+
+  getWheelEvent = (point: number[], options = {} as PointerOptions): WheelEvent => {
+    const { shiftKey = false, altKey = false, ctrlKey = false } = options
+
+    return {
+      shiftKey,
+      altKey,
+      ctrlKey,
+      clientX: point[0],
+      clientY: point[1],
+    } as WheelEvent
   }
 
   getShapesById(ids: string[]) {

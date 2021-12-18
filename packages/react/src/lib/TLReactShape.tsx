@@ -1,4 +1,4 @@
-import { TLShape } from '@tldraw/core'
+import { TLHandle, TLShape, TLShapeWithHandles } from '@tldraw/core'
 
 export interface TLCommonShapeProps<M = unknown> {
   meta: M
@@ -29,6 +29,15 @@ export interface TLReactShapeConstructor<S extends TLReactShape = TLReactShape> 
 }
 
 export abstract class TLReactShape<P = any, M = any> extends TLShape<P, M> {
+  abstract ReactComponent: (props: TLComponentProps<M>) => JSX.Element | null
+  abstract ReactIndicator: (props: TLIndicatorProps<M>) => JSX.Element | null
+}
+
+export abstract class TLReactShapeWithHandles<
+  P extends { handles: TLHandle[] } = any,
+  H extends TLHandle = TLHandle,
+  M = any
+> extends TLShapeWithHandles<P, H, M> {
   abstract ReactComponent: (props: TLComponentProps<M>) => JSX.Element | null
   abstract ReactIndicator: (props: TLIndicatorProps<M>) => JSX.Element | null
 }

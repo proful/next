@@ -97,6 +97,9 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
       ? (selectedShapes[0] as S & { handles: TLHandle[] })
       : undefined
 
+  const selectedShapesSet = React.useMemo(() => new Set(selectedShapes || []), [selectedShapes])
+  const erasingShapesSet = React.useMemo(() => new Set(erasingShapes || []), [erasingShapes])
+
   return (
     <div ref={rContainer} className="tl-container">
       <div tabIndex={-1} className="tl-absolute tl-canvas" {...events}>
@@ -121,8 +124,8 @@ export const Canvas = observer(function Renderer<S extends TLReactShape>({
                 isEditing={shape === editingShape}
                 isHovered={shape === hoveredShape}
                 isBinding={shape === bindingShape}
-                isSelected={selectedShapes?.includes(shape)}
-                isErasing={erasingShapes?.includes(shape)}
+                isSelected={selectedShapesSet.has(shape)}
+                isErasing={erasingShapesSet.has(shape)}
                 meta={meta}
                 zIndex={1000 + i}
               />

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TLTestApp } from '~test/TLTestApp'
 import { TLTestBox } from '~test/TLTestBox'
-import { TLApp } from './TLApp'
+import { TLBoundsCorner, TLTargetType } from '~types'
 
-describe('TLApp', () => {
+describe('TLTestApp', () => {
   it('creates a new app', () => {
-    const app = new TLApp()
+    const app = new TLTestApp()
     expect(app).toBeTruthy()
   })
 
@@ -15,7 +15,7 @@ describe('TLApp', () => {
   })
 })
 
-describe('When creating a TLApp', () => {
+describe('When creating a TLTestApp', () => {
   it.todo('Loads serialized document via constructor')
   it.todo('Registers shape classes via constructor')
   it.todo('Registers tool classes via constructor')
@@ -33,7 +33,7 @@ describe('When interacting with the public API', () => {
   it.todo('Changes selected tool...')
 
   it('Handles events', () => {
-    const app = new TLApp()
+    const app = new TLTestApp()
     const spy = jest.fn()
     app.subscribe('mount', spy)
     app.notify('mount', null)
@@ -109,29 +109,70 @@ describe('app.deregisterTools', () => {
 /* ------------------ Subscriptions ----------------- */
 
 describe('app.subscribe', () => {
-  it.todo('Subscribes to an event and calls the callback')
+  it('Subscribes to an event and calls the callback', () => {
+    const app = new TLTestApp()
+    const spy = jest.fn()
+    app.subscribe('mount', spy)
+    app.notify('mount', null)
+    expect(spy).toHaveBeenCalled()
+  })
 })
 
 describe('app.unsubscribe', () => {
-  it.todo('Unsubscribes to an event and no longer calls the callback')
+  it('Unsubscribes to an event and no longer calls the callback', () => {
+    const app = new TLTestApp()
+    const spy = jest.fn()
+    const unsub = app.subscribe('mount', spy)
+    unsub()
+    app.notify('mount', null)
+    expect(spy).not.toHaveBeenCalled()
+  })
 })
 
 describe('app.notify', () => {
-  it.todo('Calls all subscribed callbacks')
+  it('Calls all subscribed callbacks', () => {
+    const app = new TLTestApp()
+    const spy1 = jest.fn()
+    const spy2 = jest.fn()
+    app.subscribe('mount', spy1)
+    app.subscribe('mount', spy2)
+    app.notify('mount', null)
+    expect(spy1).toHaveBeenCalled()
+    expect(spy2).toHaveBeenCalled()
+  })
 })
 
 /* --------------------- Events --------------------- */
 
 describe('When receiving an onTransition event', () => {
-  it.todo('Sets `isToolLocked` to false')
+  it('Sets `isToolLocked` to false', () => {
+    const app = new TLTestApp()
+    app.settings.update({ isToolLocked: true })
+    app.transition('select')
+    expect(app.settings.isToolLocked).toBe(false)
+  })
 })
 
 describe('When receiving an onWheel event', () => {
-  it.todo('Updates the viewport')
+  it('Updates the viewport', () => {
+    const app = new TLTestApp()
+    app.wheel([-1, -1], [0, 0])
+    expect(app.viewport.camera).toMatchObject({
+      point: [1, 1],
+      zoom: 1,
+    })
+    expect(app.viewport.currentView).toMatchObject({
+      minX: -1,
+      minY: -1,
+      maxX: 1079,
+      maxY: 719,
+      width: 1080,
+      height: 720,
+    })
+  })
 })
 
 describe('Updates the inputs when receiving events', () => {
-  it.todo('Updates the inputs onTransition')
   it.todo('Updates the inputs onWheel')
   it.todo('Updates the inputs onPointerDown')
   it.todo('Updates the inputs onPointerUp')
@@ -298,45 +339,191 @@ describe('app.setEditingShape', () => {
   })
 })
 
+/* --------------------- Camera --------------------- */
+
+describe('app.setCamera', () => {
+  it('Sets the camera when passed a point and zoom', () => {
+    const app = new TLTestApp().setCamera([100, 100], 0.5)
+    expect(app.viewport.camera).toEqual({ point: [100, 100], zoom: 0.5 })
+  })
+})
+
+describe('app.getPagePoint', () => {
+  it('Converts a screen point to a page point', () => {
+    const app = new TLTestApp()
+    const points = [
+      [100, 120],
+      [200, 500],
+      [300, 200],
+      [-500, -1500],
+    ]
+    expect(points.map(p => app.getPagePoint(p))).toMatchSnapshot('points1')
+    app.setCamera([100, 100], 0.95)
+    expect(points.map(p => app.getPagePoint(p))).toMatchSnapshot('points2')
+  })
+
+  it('Converts a page point to a screen point', () => {
+    const app = new TLTestApp()
+    const points = [
+      [100, 120],
+      [200, 500],
+      [300, 200],
+      [-500, -1500],
+    ]
+    expect(points.map(p => app.getScreenPoint(p))).toMatchSnapshot('points1')
+    app.setCamera([100, 100], 0.95)
+    expect(points.map(p => app.getScreenPoint(p))).toMatchSnapshot('points2')
+  })
+})
+
 /* --------------------- Display -------------------- */
 
 describe('app.selectionBounds', () => {
-  it.todo('Updates selected bounds when selected shapes change')
-  it.todo('Clears selected bounds when selected shapes is empty')
+  it('Updates selected bounds when selected shapes change', () => {
+    const app = new TLTestApp()
+
+    app.setSelectedShapes(['box1'])
+    expect(app.selectionBounds).toMatchObject({
+      minX: 0,
+      minY: 0,
+      maxX: 100,
+      maxY: 100,
+      width: 100,
+      height: 100,
+    })
+    app.setSelectedShapes(['box1', 'box2'])
+    expect(app.selectionBounds).toMatchObject({
+      minX: 0,
+      minY: 0,
+      maxX: 350,
+      maxY: 350,
+      width: 350,
+      height: 350,
+    })
+  })
+
+  it('Clears selected bounds when selected shapes is empty', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes(['box1', 'box2']).setSelectedShapes([])
+    expect(app.selectionBounds).toBeUndefined()
+  })
 })
 
 describe('app.shapesInViewport', () => {
-  it.todo('Updates shapes in viewport when shapes change')
+  it('Updates shapes in viewport when shapes change', () => {
+    const app = new TLTestApp()
+    expect(app.shapesInViewport).toMatchObject(app.getShapesById(['box1', 'box2', 'box3']))
+    app.setCamera([-150, 0], 1)
+    expect(app.shapesInViewport).toMatchObject(app.getShapesById(['box2', 'box3']))
+    app.setCamera([-550, 0], 1)
+    expect(app.shapesInViewport).toMatchObject(app.getShapesById([]))
+    app.setCamera([0, 0], 5)
+    expect(app.shapesInViewport).toMatchObject(app.getShapesById(['box1']))
+    app.setCamera([0, 0], 1)
+    expect(app.shapesInViewport).toMatchObject(app.getShapesById(['box1', 'box2', 'box3']))
+  })
   it.todo('Updates shapes in viewport when viewport bounds change')
 })
 
 describe('app.showSelection', () => {
-  it('Shows bounds only if the select tool is active and there are selected shapes', () => {
+  it('Shows selection only if the select tool is active and there are selected shapes', () => {
     const app = new TLTestApp()
     app.setSelectedShapes(['box1'])
     expect(app.showSelection).toBe(true)
   })
-  it.todo('Hides bounds if the only selected shape has hideBounds=true')
+  it.todo('Hides selection if the only selected shape has hideBounds=true')
   it.todo('Shows when more than one shape is selected, even if some/all have hideBounds=true')
 })
 
 describe('app.showSelectionDetail', () => {
-  it.todo('Shows bounds only if the select tool is active and there are selected shapes')
-  it.todo('Hides bounds if all selected shapes have hideBounds=true')
+  it.todo('Shows detail only if the select tool is active and there are selected shapes')
+  it.todo('Hides detail if all selected shapes have hideBounds=true')
   it.todo('Shows when more than one shape is selected, even if some/all have hideBounds=true')
 })
 
 describe('app.showSelectionRotation', () => {
-  it.todo('Shows bounds only if showing selection detail')
-  it.todo('Shows bounds only if select tool is in rotating or pointingRotateHandle state')
+  it.todo('Shows rotation only if showing selection detail')
+  it.todo('Shows rotation only if select tool is in rotating or pointingRotateHandle state')
 })
 
 describe('app.showContextBar', () => {
-  it.todo(
-    'Shows context bar if there are selected shapes and the tool state is select/idle or select/hoveringResizeHandle'
-  )
-  it.todo('Hides context bar if all selected shapes have hideContextBar=true')
+  it('Hides context bar when there are no shapes selected', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes([])
+    expect(app.showContextBar).toBe(false)
+  })
+
+  it('Shows context bar if any of the selected shapes has hideContextBar=false', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes(['box1'])
+    expect(app.showResizeHandles).toBe(true)
+
+    class TLNoContextBarBoxShape extends TLTestBox {
+      static id = 'nocontextbarbox'
+      hideContextBar = true
+    }
+    app.registerShapes([TLNoContextBarBoxShape])
+    app.createShapes([
+      {
+        id: 'nocontextbarbox1',
+        type: 'nocontextbarbox',
+        point: [0, 0],
+        parentId: app.currentPageId,
+      },
+    ])
+    app.setSelectedShapes(['box1', 'nocontextbarbox1'])
+    expect(app.showContextBar).toBe(true)
+  })
+
+  it('Hides context bar if all selected shapes have hideContextBar=true', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes(['box1'])
+
+    class TLNoContextBarBoxShape extends TLTestBox {
+      static id = 'nocontextbarbox'
+      hideContextBar = true
+    }
+    app.registerShapes([TLNoContextBarBoxShape])
+    app.createShapes([
+      {
+        id: 'nocontextbarbox1',
+        type: 'nocontextbarbox',
+        point: [0, 0],
+        parentId: app.currentPageId,
+      },
+    ])
+    app.setSelectedShapes(['nocontextbarbox1'])
+    expect(app.showContextBar).toBe(false)
+  })
+
+  it('Hides context bar when the state is not select.idle or select.hoveringResizeHandle', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes(['box1'])
+    expect(app.isIn('select.idle')).toBe(true)
+    expect(app.showContextBar).toBe(true)
+    app.pointerDown([0, 0], 'box1')
+    expect(app.isIn('select.pointingSelectedShape')).toBe(true)
+    expect(app.showContextBar).toBe(false)
+    app.pointerUp([0, 0], 'box1')
+    expect(app.isIn('select.idle')).toBe(true)
+    expect(app.showContextBar).toBe(true)
+    app.pointerEnter([0, 0], {
+      type: TLTargetType.Selection,
+      handle: TLBoundsCorner.TopLeft,
+    })
+    expect(app.isIn('select.hoveringResizeHandle')).toBe(true)
+    expect(app.showContextBar).toBe(true)
+    app.pointerLeave([0, 0], {
+      type: TLTargetType.Selection,
+      handle: TLBoundsCorner.TopLeft,
+    })
+    app.pointerDown([-10, -10], { type: TLTargetType.Canvas })
+    expect(app.isIn('select.pointingCanvas')).toBe(true)
+    expect(app.showContextBar).toBe(false)
+  })
 })
+
+// Resize handles
 
 describe('app.showResizeHandles', () => {
   it('Hides resize handles when there are no shapes selected', () => {
@@ -383,6 +570,43 @@ describe('app.showResizeHandles', () => {
       },
     ])
     app.setSelectedShapes(['noresizehandlesbox1'])
+    expect(app.showResizeHandles).toBe(false)
+  })
+
+  it('Hides resize handles when the state is not select.idle or select.hoveringResizeHandle or select.pointingResizeHandle', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes(['box1'])
+    expect(app.isIn('select.idle')).toBe(true)
+    expect(app.showResizeHandles).toBe(true)
+    app.pointerDown([0, 0], 'box1')
+    expect(app.isIn('select.pointingSelectedShape')).toBe(true)
+    expect(app.showResizeHandles).toBe(false)
+    app.pointerUp([0, 0], 'box1')
+    expect(app.isIn('select.idle')).toBe(true)
+    expect(app.showResizeHandles).toBe(true)
+    app.pointerEnter([0, 0], {
+      type: TLTargetType.Selection,
+      handle: TLBoundsCorner.TopLeft,
+    })
+    expect(app.isIn('select.hoveringResizeHandle')).toBe(true)
+    expect(app.showResizeHandles).toBe(true)
+    app.pointerDown([0, 0], {
+      type: TLTargetType.Selection,
+      handle: TLBoundsCorner.TopLeft,
+    })
+    expect(app.isIn('select.pointingResizeHandle')).toBe(true)
+    expect(app.showResizeHandles).toBe(true)
+    app
+      .pointerUp([0, 0], {
+        type: TLTargetType.Selection,
+        handle: TLBoundsCorner.TopLeft,
+      })
+      .pointerLeave([0, 0], {
+        type: TLTargetType.Selection,
+        handle: TLBoundsCorner.TopLeft,
+      })
+      .pointerDown([-10, -10], { type: TLTargetType.Canvas })
+    expect(app.isIn('select.pointingCanvas')).toBe(true)
     expect(app.showResizeHandles).toBe(false)
   })
 })
@@ -434,11 +658,138 @@ describe('app.showRotateHandle', () => {
     app.setSelectedShapes(['norotatehandlesbox1'])
     expect(app.showRotateHandle).toBe(false)
   })
+
+  it('Hides rotate handles when the state is not select.idle or select.hoveringRotateHandle or select.pointingRotateHandle', () => {
+    const app = new TLTestApp()
+    app.setSelectedShapes(['box1'])
+    expect(app.isIn('select.idle')).toBe(true)
+    expect(app.showRotateHandle).toBe(true)
+    app.pointerDown([0, 0], 'box1')
+    expect(app.isIn('select.pointingSelectedShape')).toBe(true)
+    expect(app.showRotateHandle).toBe(false)
+    app.pointerUp([0, 0], 'box1')
+    expect(app.isIn('select.idle')).toBe(true)
+    expect(app.showRotateHandle).toBe(true)
+    app.pointerEnter([0, 0], {
+      type: TLTargetType.Selection,
+      handle: 'rotate',
+    })
+    expect(app.isIn('select.hoveringResizeHandle')).toBe(true)
+    expect(app.showRotateHandle).toBe(true)
+    app.pointerDown([0, 0], {
+      type: TLTargetType.Selection,
+      handle: 'rotate',
+    })
+    expect(app.isIn('select.pointingRotateHandle')).toBe(true)
+    expect(app.showRotateHandle).toBe(true)
+    app
+      .pointerUp([0, 0], {
+        type: TLTargetType.Selection,
+        handle: 'rotate',
+      })
+      .pointerLeave([0, 0], {
+        type: TLTargetType.Selection,
+        handle: 'rotate',
+      })
+      .pointerDown([-10, -10], { type: TLTargetType.Canvas })
+    expect(app.isIn('select.pointingCanvas')).toBe(true)
+    expect(app.showRotateHandle).toBe(false)
+  })
 })
 
 /* ---------------------- Brush --------------------- */
 
 describe('app.setBrush', () => {
-  it.todo('Sets brush when passed a bounding box')
-  it.todo('Clears brush when passed undefined')
+  it('Sets brush when passed a bounding box', () => {
+    const app = new TLTestApp()
+    app.setBrush({
+      minX: 0,
+      maxX: 100,
+      minY: 0,
+      maxY: 100,
+      width: 100,
+      height: 100,
+    })
+    expect(app.brush).toMatchObject({
+      minX: 0,
+      maxX: 100,
+      minY: 0,
+      maxY: 100,
+      width: 100,
+      height: 100,
+    })
+  })
+
+  it('Clears brush when passed undefined', () => {
+    const app = new TLTestApp()
+    app.setBrush({
+      minX: 0,
+      maxX: 100,
+      minY: 0,
+      maxY: 100,
+      width: 100,
+      height: 100,
+    })
+    app.setBrush(undefined)
+    expect(app.brush).toBeUndefined()
+  })
+})
+
+/* --------------------- History -------------------- */
+
+describe('app.undo', () => {
+  it.todo('undoes a change')
+  it.todo('does nothing if no past undo history')
+})
+
+describe('app.redo', () => {
+  it.todo('redoes a change')
+  it.todo('does nothing if no future undo history')
+})
+
+/* -------------------- Document -------------------- */
+
+describe('app.loadDocumentModel', () => {
+  it('Loads a document from JSON', () => {
+    const app = new TLTestApp()
+    app.loadDocumentModel({
+      currentPageId: 'page1',
+      selectedIds: ['jbox'],
+      pages: [
+        {
+          name: 'page1',
+          id: 'page1',
+          shapes: [
+            {
+              id: 'jbox',
+              type: 'box',
+              point: [0, 0],
+              parentId: 'page1',
+            },
+          ],
+          bindings: [],
+        },
+      ],
+    })
+
+    expect(app.currentPageId).toBe('page1')
+    expect(app.selectedIds.size).toBe(1)
+    expect(app.selectedShapesArray[0]).toBe(app.getShapeById('jbox'))
+    expect(app.pages.size).toBe(1)
+    expect(app.currentPage.shapes.length).toBe(1)
+    expect(app.getShapeById('jbox')).toBeDefined
+  })
+
+  it('Fails with warning if given a malformed document', () => {
+    const app = new TLTestApp()
+    const warn = jest.fn()
+    jest.spyOn(console, 'warn').mockImplementation(warn)
+    app.loadDocumentModel({
+      currentPageId: 'page1',
+      selectedIds: [],
+      // @ts-expect-error - we're testing the warning
+      pages: 'frog dog',
+    })
+    expect(warn).toHaveBeenCalled()
+  })
 })

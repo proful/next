@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TLBoundsCorner, TLBoundsEdge, TLBoundsHandle, TLCursor } from '~types'
+import { TLBoundsCorner, TLBoundsEdge, TLSelectionHandle, TLCursor } from '~types'
 
 export const PI = Math.PI
 export const TAU = PI / 2
@@ -25,10 +25,8 @@ export const EMPTY_ARRAY: any[] = []
 //   [TLBoundsEdge.Left]: 'resize-ew',
 // }
 
-export const CURSORS: Record<TLBoundsHandle, TLCursor> = {
+export const CURSORS: Record<TLSelectionHandle, TLCursor> = {
   rotate: TLCursor.Grab,
-  left: TLCursor.Grab,
-  right: TLCursor.Grab,
   center: TLCursor.Grab,
   background: TLCursor.Grab,
   [TLBoundsEdge.Bottom]: TLCursor.NsResize,

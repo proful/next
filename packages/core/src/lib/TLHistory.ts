@@ -1,4 +1,4 @@
-import { TLApp, TLPage, TLSerializedApp, TLShape } from '~lib'
+import { TLApp, TLPage, TLDocumentModel, TLShape } from '~lib'
 import type { TLEventMap } from '~types'
 
 export class TLHistory<S extends TLShape, K extends TLEventMap> {
@@ -7,7 +7,7 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
   }
 
   app: TLApp<S, K>
-  stack: TLSerializedApp[] = []
+  stack: TLDocumentModel[] = []
   pointer = 0
   isPaused = true
 
@@ -68,73 +68,75 @@ export class TLHistory<S extends TLShape, K extends TLEventMap> {
     this.app.notify('persist', null)
   }
 
-  deserialize = (snapshot: TLSerializedApp) => {
+  deserialize = (snapshot: TLDocumentModel) => {
     const { currentPageId, selectedIds, pages } = snapshot
     const wasPaused = this.isPaused
-
-    // Pause the history, to prevent any loops
     this.pause()
 
-    const pagesMap = new Map(this.app.pages)
-    const pagesToAdd: TLPage<S, K>[] = []
+    try {
+      const pagesMap = new Map(this.app.pages)
+      const pagesToAdd: TLPage<S, K>[] = []
 
-    for (const serializedPage of pages) {
-      const page = pagesMap.get(serializedPage.id)
+      for (const serializedPage of pages) {
+        const page = pagesMap.get(serializedPage.id)
 
-      if (page !== undefined) {
-        // Update the page
-        const shapesMap = new Map(page.shapes.map(shape => [shape.id, shape]))
-        const shapesToAdd: TLShape[] = []
+        if (page !== undefined) {
+          // Update the page
+          const shapesMap = new Map(page.shapes.map(shape => [shape.id, shape]))
+          const shapesToAdd: TLShape[] = []
 
-        for (const serializedShape of serializedPage.shapes) {
-          const shape = shapesMap.get(serializedShape.id)
+          for (const serializedShape of serializedPage.shapes) {
+            const shape = shapesMap.get(serializedShape.id)
 
-          if (shape !== undefined) {
-            // Update the shape
-            if (shape.nonce !== serializedShape.nonce) {
-              shape.update(serializedShape, true)
-            }
-            shapesMap.delete(serializedShape.id)
-          } else {
-            // Create the shape
-            const ShapeClass = this.app.getShapeClass(serializedShape.type)
-            shapesToAdd.push(new ShapeClass(serializedShape))
-          }
-        }
-
-        // Any shapes remaining in the shapes map need to be removed
-        if (shapesMap.size > 0) page.removeShapes(...shapesMap.values())
-
-        // Add any new shapes
-        if (shapesToAdd.length > 0) page.addShapes(...shapesToAdd)
-
-        // Remove the page from the map
-        pagesMap.delete(serializedPage.id)
-      } else {
-        // Create the page
-        const { id, name, shapes, bindings } = serializedPage
-
-        pagesToAdd.push(
-          new TLPage(this.app, {
-            id,
-            name,
-            bindings,
-            shapes: shapes.map(serializedShape => {
+            if (shape !== undefined) {
+              // Update the shape
+              if (shape.nonce !== serializedShape.nonce) {
+                shape.update(serializedShape, true)
+              }
+              shapesMap.delete(serializedShape.id)
+            } else {
+              // Create the shape
               const ShapeClass = this.app.getShapeClass(serializedShape.type)
-              return new ShapeClass(serializedShape)
-            }),
-          })
-        )
+              shapesToAdd.push(new ShapeClass(serializedShape))
+            }
+          }
+
+          // Any shapes remaining in the shapes map need to be removed
+          if (shapesMap.size > 0) page.removeShapes(...shapesMap.values())
+
+          // Add any new shapes
+          if (shapesToAdd.length > 0) page.addShapes(...shapesToAdd)
+
+          // Remove the page from the map
+          pagesMap.delete(serializedPage.id)
+        } else {
+          // Create the page
+          const { id, name, shapes, bindings } = serializedPage
+
+          pagesToAdd.push(
+            new TLPage(this.app, {
+              id,
+              name,
+              bindings,
+              shapes: shapes.map(serializedShape => {
+                const ShapeClass = this.app.getShapeClass(serializedShape.type)
+                return new ShapeClass(serializedShape)
+              }),
+            })
+          )
+        }
       }
+
+      // Any pages remaining in the pages map need to be removed
+      if (pagesMap.size > 0) this.app.removePages(Array.from(pagesMap.values()))
+
+      // Add any new pages
+      if (pagesToAdd.length > 0) this.app.addPages(pagesToAdd)
+
+      this.app.setCurrentPage(currentPageId).setSelectedShapes(selectedIds).setErasingShapes([])
+    } catch (e) {
+      console.warn(e)
     }
-
-    // Any pages remaining in the pages map need to be removed
-    if (pagesMap.size > 0) this.app.removePages(Array.from(pagesMap.values()))
-
-    // Add any new pages
-    if (pagesToAdd.length > 0) this.app.addPages(pagesToAdd)
-
-    this.app.setCurrentPage(currentPageId).setSelectedShapes(selectedIds).setErasingShapes([])
 
     // Resume the history if not originally paused
     if (!wasPaused) this.resume()

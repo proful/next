@@ -51,7 +51,7 @@ export class BoundsUtils {
   }
 
   /**
-   * Get whether two bounds collide.
+   * Get whether bounds A collides with bounds B.
    *
    * @param a Bounds
    * @param b Bounds
@@ -122,7 +122,7 @@ export class BoundsUtils {
 
     if (rotation !== 0) {
       return BoundsUtils.getBoundsFromPoints(
-        points.map((pt) => Vec.rotWith(pt, [(minX + maxX) / 2, (minY + maxY) / 2], rotation))
+        points.map(pt => Vec.rotWith(pt, [(minX + maxX) / 2, (minY + maxY) / 2], rotation))
       )
     }
 
@@ -323,7 +323,7 @@ export class BoundsUtils {
       [b.minX, b.maxY],
     ]
 
-    if (rotation) return corners.map((point) => Vec.rotWith(point, center, rotation))
+    if (rotation) return corners.map(point => Vec.rotWith(point, center, rotation))
     return corners
   }
 
@@ -668,7 +668,7 @@ left past the initial left edge) then swap points on that axis.
   static getRotatedSize(size: number[], rotation: number): number[] {
     const center = Vec.div(size, 2)
 
-    const points = [[0, 0], [size[0], 0], size, [0, size[1]]].map((point) =>
+    const points = [[0, 0], [size[0], 0], size, [0, size[1]]].map(point =>
       Vec.rotWith(point, center, rotation)
     )
 
@@ -708,7 +708,7 @@ left past the initial left edge) then swap points on that axis.
   static getCommonTopLeft(points: number[][]) {
     const min = [Infinity, Infinity]
 
-    points.forEach((point) => {
+    points.forEach(point => {
       min[0] = Math.min(min[0], point[0])
       min[1] = Math.min(min[1], point[1])
     })
@@ -742,7 +742,7 @@ left past the initial left edge) then swap points on that axis.
     const xs = [TLSnapPoints.midX, TLSnapPoints.minX, TLSnapPoints.maxX]
     const ys = [TLSnapPoints.midY, TLSnapPoints.minY, TLSnapPoints.maxY]
 
-    const snapResults = others.map((B) => {
+    const snapResults = others.map(B => {
       const rx = xs.flatMap((f, i) =>
         xs.map((t, k) => {
           const gap = A[f] - B[t]
@@ -781,14 +781,14 @@ left past the initial left edge) then swap points on that axis.
     let minY = Infinity
 
     snapResults.forEach(([_, rx, ry]) => {
-      rx.forEach((r) => {
+      rx.forEach(r => {
         if (r.distance < snapDistance && r.distance < minX) {
           minX = r.distance
           gapX = r.gap
         }
       })
 
-      ry.forEach((r) => {
+      ry.forEach(r => {
         if (r.distance < snapDistance && r.distance < minY) {
           minY = r.distance
           gapY = r.gap
@@ -800,7 +800,7 @@ left past the initial left edge) then swap points on that axis.
 
     snapResults.forEach(([B, rx, ry]) => {
       if (gapX !== Infinity) {
-        rx.forEach((r) => {
+        rx.forEach(r => {
           if (Math.abs(r.gap - gapX) < 2) {
             snaps[r.f] = {
               ...snaps[r.f],
@@ -814,7 +814,7 @@ left past the initial left edge) then swap points on that axis.
       }
 
       if (gapY !== Infinity) {
-        ry.forEach((r) => {
+        ry.forEach(r => {
           if (Math.abs(r.gap - gapY) < 2) {
             snaps[r.f] = {
               ...snaps[r.f],
@@ -842,7 +842,7 @@ left past the initial left edge) then swap points on that axis.
     // Calculate snap lines based on adjusted bounds A. This has
     // to happen after we've adjusted both dimensions x and y of
     // the bounds A!
-    xs.forEach((from) => {
+    xs.forEach(from => {
       const snap = snaps[from]
 
       if (!snap.isSnapped) return
@@ -868,7 +868,7 @@ left past the initial left edge) then swap points on that axis.
       )
     })
 
-    ys.forEach((from) => {
+    ys.forEach(from => {
       const snap = snaps[from]
 
       if (!snap.isSnapped) return

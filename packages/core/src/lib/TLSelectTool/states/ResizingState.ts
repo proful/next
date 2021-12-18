@@ -1,5 +1,5 @@
 import { Vec } from '@tldraw/vec'
-import { TLApp, TLShape, TLSelectTool, TLToolState, TLSerializedShape } from '~lib'
+import { TLApp, TLShape, TLSelectTool, TLToolState, TLShapeModel } from '~lib'
 import { TLBounds, TLBoundsCorner, TLBoundsEdge, TLCursor, TLEventMap, TLEvents } from '~types'
 import { BoundsUtils } from '~utils'
 
