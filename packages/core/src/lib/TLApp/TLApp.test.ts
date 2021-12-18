@@ -496,7 +496,7 @@ describe('app.showContextBar', () => {
     expect(app.showContextBar).toBe(false)
   })
 
-  it('Hides context bar when the state is not select.idle or select.hoveringResizeHandle', () => {
+  it('Hides context bar when the state is not select.idle/hoveringResizeHandle', () => {
     const app = new TLTestApp()
     app.setSelectedShapes(['box1'])
     expect(app.isIn('select.idle')).toBe(true)
@@ -573,7 +573,7 @@ describe('app.showResizeHandles', () => {
     expect(app.showResizeHandles).toBe(false)
   })
 
-  it('Hides resize handles when the state is not select.idle or select.hoveringResizeHandle or select.pointingResizeHandle', () => {
+  it('Hides resize handles when the state is not select.idle/hoveringResizeHandle/pointingResizeHandle/pointingRotateHandle', () => {
     const app = new TLTestApp()
     app.setSelectedShapes(['box1'])
     expect(app.isIn('select.idle')).toBe(true)
@@ -605,6 +605,7 @@ describe('app.showResizeHandles', () => {
         type: TLTargetType.Selection,
         handle: TLBoundsCorner.TopLeft,
       })
+      // test rotate handle
       .pointerDown([-10, -10], { type: TLTargetType.Canvas })
     expect(app.isIn('select.pointingCanvas')).toBe(true)
     expect(app.showResizeHandles).toBe(false)
@@ -659,7 +660,7 @@ describe('app.showRotateHandle', () => {
     expect(app.showRotateHandle).toBe(false)
   })
 
-  it('Hides rotate handles when the state is not select.idle or select.hoveringRotateHandle or select.pointingRotateHandle', () => {
+  it('Hides rotate handles when the state is not hoveringResizeHandle/pointingResizeHandle/pointingRotateHandle', () => {
     const app = new TLTestApp()
     app.setSelectedShapes(['box1'])
     expect(app.isIn('select.idle')).toBe(true)
@@ -691,6 +692,7 @@ describe('app.showRotateHandle', () => {
         type: TLTargetType.Selection,
         handle: 'rotate',
       })
+      // test resize handle
       .pointerDown([-10, -10], { type: TLTargetType.Canvas })
     expect(app.isIn('select.pointingCanvas')).toBe(true)
     expect(app.showRotateHandle).toBe(false)

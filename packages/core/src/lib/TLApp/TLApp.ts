@@ -474,7 +474,12 @@ export class TLApp<
   @computed get showRotateHandle() {
     const { selectedShapesArray } = this
     return (
-      this.isInAny('select.idle', 'select.hoveringResizeHandle', 'select.pointingRotateHandle') &&
+      this.isInAny(
+        'select.idle',
+        'select.hoveringResizeHandle',
+        'select.pointingRotateHandle',
+        'select.pointingResizeHandle'
+      ) &&
       selectedShapesArray.length > 0 &&
       !selectedShapesArray.every(shape => shape.hideRotateHandle)
     )
@@ -483,7 +488,12 @@ export class TLApp<
   @computed get showResizeHandles() {
     const { selectedShapesArray } = this
     return (
-      this.isInAny('select.idle', 'select.hoveringResizeHandle', 'select.pointingResizeHandle') &&
+      this.isInAny(
+        'select.idle',
+        'select.hoveringResizeHandle',
+        'select.pointingRotateHandle',
+        'select.pointingResizeHandle'
+      ) &&
       selectedShapesArray.length > 0 &&
       !selectedShapesArray.every(shape => shape.hideResizeHandles)
     )
