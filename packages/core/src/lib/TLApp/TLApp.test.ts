@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TLTestApp } from '~test/TLTestApp'
 import { TLTestBox } from '~test/TLTestBox'
-import { TLResizeCorner, TLTargetType } from '~types'
+import { TLResizeCorner, TLRotateCorner, TLTargetType } from '~types'
 
 describe('TLTestApp', () => {
   it('creates a new app', () => {
@@ -679,7 +679,7 @@ describe('app.showRotateHandles', () => {
     expect(app.showRotateHandles).toBe(true)
     app.pointerDown([0, 0], {
       type: TLTargetType.Selection,
-      handle: 'rotate',
+      handle: TLRotateCorner.TopLeft,
     })
     expect(app.isIn('select.pointingRotateHandle')).toBe(true)
     expect(app.showRotateHandles).toBe(true)
