@@ -20,7 +20,7 @@ interface PointerOptions {
 type S = TLTestBox
 
 export class TLTestApp extends TLApp<S> {
-  constructor(serializedApp?: TLDocumentModel) {
+  constructor(serializedApp: TLDocumentModel = defaultModel) {
     super(serializedApp, [TLTestBox, TLTestEditableBox], [])
     this.viewport.updateBounds({
       minX: 0,
@@ -29,41 +29,6 @@ export class TLTestApp extends TLApp<S> {
       maxY: 720,
       width: 1080,
       height: 720,
-    })
-    this.setExampleDocument()
-  }
-
-  setExampleDocument = () => {
-    this.loadDocumentModel({
-      currentPageId: 'page1',
-      selectedIds: ['box1'],
-      pages: [
-        {
-          name: 'Page',
-          id: 'page1',
-          shapes: [
-            {
-              id: 'box1',
-              type: 'box',
-              parentId: 'page1',
-              point: [0, 0],
-            },
-            {
-              id: 'box2',
-              type: 'box',
-              parentId: 'page1',
-              point: [250, 250],
-            },
-            {
-              id: 'box3',
-              type: 'editable-box',
-              parentId: 'page1',
-              point: [300, 300], // Overlapping box2
-            },
-          ],
-          bindings: [],
-        },
-      ],
     })
   }
 
@@ -214,4 +179,41 @@ export class TLTestApp extends TLApp<S> {
     })
     return this
   }
+
+  expectShapesInOrder = (...ids: string[]) => {
+    ids.forEach((id, i) => expect(this.shapes.indexOf(this.getShapeById(id))).toBe(i))
+    return this
+  }
+}
+
+const defaultModel: TLDocumentModel = {
+  currentPageId: 'page1',
+  selectedIds: ['box1'],
+  pages: [
+    {
+      name: 'Page',
+      id: 'page1',
+      shapes: [
+        {
+          id: 'box1',
+          type: 'box',
+          parentId: 'page1',
+          point: [0, 0],
+        },
+        {
+          id: 'box2',
+          type: 'box',
+          parentId: 'page1',
+          point: [250, 250],
+        },
+        {
+          id: 'box3',
+          type: 'editable-box',
+          parentId: 'page1',
+          point: [300, 300], // Overlapping box2
+        },
+      ],
+      bindings: [],
+    },
+  ],
 }

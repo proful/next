@@ -215,20 +215,7 @@ export abstract class TLShapeWithHandles<
   H extends TLHandle = TLHandle,
   M = any
 > extends TLShape<P, M> {
-  protected propsKeys = new Set<string>([
-    'type',
-    'nonce',
-    'parentId',
-    'point',
-    'name',
-    'rotation',
-    'handles',
-    'isGhost',
-    'isHidden',
-    'isLocked',
-    'isGenerated',
-    'isAspectRatioLocked',
-  ])
+  protected propsKeys = new Set<string>(defaultPropKeys)
 
   @observable handles: TLHandle[] = []
 

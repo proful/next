@@ -24,6 +24,13 @@ export enum TLRotateCorner {
   BottomLeft = 'bottom_left_resize_corner',
 }
 
+export enum TLMoveDirection {
+  Forward = 'forward',
+  Backward = 'backward',
+  ToFront = 'to_front',
+  ToBack = 'to_back',
+}
+
 export type TLSelectionHandle =
   | TLResizeCorner
   | TLResizeEdge

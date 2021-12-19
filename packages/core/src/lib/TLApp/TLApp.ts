@@ -92,6 +92,22 @@ export class TLApp<
         fn: () => this.redo(),
       },
       {
+        keys: '[',
+        fn: () => this.sendBackward(),
+      },
+      {
+        keys: 'shift+[',
+        fn: () => this.sendToBack(),
+      },
+      {
+        keys: ']',
+        fn: () => this.bringForward(),
+      },
+      {
+        keys: 'shift+]',
+        fn: () => this.bringToFront(),
+      },
+      {
         keys: 'mod+a',
         fn: () => {
           const { selectedTool } = this
@@ -179,23 +195,24 @@ export class TLApp<
   /*                      Document                      */
   /* -------------------------------------------------- */
 
-  loadDocumentModel(state: TLDocumentModel) {
+  loadDocumentModel(state: TLDocumentModel): this {
     this.history.deserialize(state)
+    return this
   }
 
-  load = () => {
+  load = (): this => {
     // todo
     this.notify('load', null)
     return this
   }
 
-  save = () => {
+  save = (): this => {
     // todo
     this.notify('save', null)
     return this
   }
 
-  saveAs = () => {
+  saveAs = (): this => {
     // todo
     this.notify('saveAs', null)
     return this
@@ -277,9 +294,25 @@ export class TLApp<
     return this
   }
 
-  /* -------------------------------------------------- */
-  /*                      App State                     */
-  /* -------------------------------------------------- */
+  bringForward = (shapes: S[] | string[] = this.selectedShapesArray): this => {
+    if (shapes.length > 0) this.currentPage.bringForward(shapes)
+    return this
+  }
+
+  sendBackward = (shapes: S[] | string[] = this.selectedShapesArray): this => {
+    if (shapes.length > 0) this.currentPage.sendBackward(shapes)
+    return this
+  }
+
+  sendToBack = (shapes: S[] | string[] = this.selectedShapesArray): this => {
+    if (shapes.length > 0) this.currentPage.sendToBack(shapes)
+    return this
+  }
+
+  bringToFront = (shapes: S[] | string[] = this.selectedShapesArray): this => {
+    if (shapes.length > 0) this.currentPage.bringToFront(shapes)
+    return this
+  }
 
   /* ---------------------- Tools --------------------- */
 
