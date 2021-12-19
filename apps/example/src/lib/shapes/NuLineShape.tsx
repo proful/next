@@ -23,7 +23,7 @@ export class NuLineShape extends TLLineShape<NuLineShapeProps> {
   @observable strokeWidth = 2
   @observable opacity = 1
 
-  hideBounds = true
+  hideSelection = true
 
   static id = 'line'
 

@@ -19,7 +19,7 @@ export class TLDotShape<P extends TLDotShapeProps = any> extends TLShape<P> {
 
   @observable radius = 4
 
-  readonly hideBounds = true
+  readonly hideSelection = true
   readonly hideResizeHandles = true
   readonly hideRotateHandle = true
   readonly hideSelectionDetail = true

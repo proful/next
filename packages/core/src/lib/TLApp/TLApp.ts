@@ -446,7 +446,7 @@ export class TLApp<
     const { selectedShapesArray } = this
     return (
       this.isIn('select') &&
-      ((selectedShapesArray.length === 1 && !selectedShapesArray[0]?.hideBounds) ||
+      ((selectedShapesArray.length === 1 && !selectedShapesArray[0]?.hideSelection) ||
         selectedShapesArray.length > 1)
     )
   }

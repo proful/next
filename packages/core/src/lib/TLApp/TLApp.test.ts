@@ -431,14 +431,14 @@ describe('app.showSelection', () => {
     app.setSelectedShapes(['box1'])
     expect(app.showSelection).toBe(true)
   })
-  it.todo('Hides selection if the only selected shape has hideBounds=true')
-  it.todo('Shows when more than one shape is selected, even if some/all have hideBounds=true')
+  it.todo('Hides selection if the only selected shape has hideSelection=true')
+  it.todo('Shows when more than one shape is selected, even if some/all have hideSelection=true')
 })
 
 describe('app.showSelectionDetail', () => {
   it.todo('Shows detail only if the select tool is active and there are selected shapes')
-  it.todo('Hides detail if all selected shapes have hideBounds=true')
-  it.todo('Shows when more than one shape is selected, even if some/all have hideBounds=true')
+  it.todo('Hides detail if all selected shapes have hideSelection=true')
+  it.todo('Shows when more than one shape is selected, even if some/all have hideSelection=true')
 })
 
 describe('app.showSelectionRotation', () => {

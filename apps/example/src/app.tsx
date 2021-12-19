@@ -77,7 +77,7 @@ function App(): JSX.Element {
 
   const [model] = React.useState<TLDocumentModel>({
     currentPageId: 'page1',
-    selectedIds: ['box0'],
+    selectedIds: [],
     pages: [
       {
         name: 'Page',
@@ -92,35 +92,35 @@ function App(): JSX.Element {
           //     size: [100, 100],
           //   }))
           // ),
-          {
-            id: 'box0',
-            type: 'box',
-            parentId: 'page1',
-            point: [300, 200],
-            size: [100, 100],
-          },
-          {
-            id: 'box1',
-            type: 'box',
-            parentId: 'page1',
-            point: [100, 400],
-            size: [100, 100],
-            rotation: Math.PI / 6,
-          },
-          {
-            id: 'code1',
-            type: 'code',
-            parentId: 'page1',
-            point: [300, 400],
-            size: [100, 100],
-          },
-          {
-            id: 'polyline1',
-            type: 'polyline',
-            parentId: 'page1',
-            point: [100, 100],
-            handles: [{ point: [0, 0] }, { point: [30, 70] }, { point: [100, 100] }],
-          },
+          // {
+          //   id: 'box0',
+          //   type: 'box',
+          //   parentId: 'page1',
+          //   point: [300, 200],
+          //   size: [100, 100],
+          // },
+          // {
+          //   id: 'box1',
+          //   type: 'box',
+          //   parentId: 'page1',
+          //   point: [100, 400],
+          //   size: [100, 100],
+          //   rotation: Math.PI / 6,
+          // },
+          // {
+          //   id: 'code1',
+          //   type: 'code',
+          //   parentId: 'page1',
+          //   point: [300, 400],
+          //   size: [100, 100],
+          // },
+          // {
+          //   id: 'polyline1',
+          //   type: 'polyline',
+          //   parentId: 'page1',
+          //   point: [100, 100],
+          //   handles: [{ point: [0, 0] }, { point: [30, 70] }, { point: [100, 100] }],
+          // },
           // {
           //   id: 'line1',
           //   type: 'line',

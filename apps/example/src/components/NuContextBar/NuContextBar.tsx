@@ -21,28 +21,28 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
   const rSize = React.useRef([0, 0])
   const rContextBar = React.useRef<HTMLDivElement>(null)
 
-  const updateStroke = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
-    shapes.forEach((shape) => shape.update({ stroke: e.currentTarget.value }))
+  const updateStroke = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(e => {
+    shapes.forEach(shape => shape.update({ stroke: e.currentTarget.value }))
   }, [])
 
-  const updateFill = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
-    shapes.forEach((shape) => shape.update({ fill: e.currentTarget.value }))
+  const updateFill = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(e => {
+    shapes.forEach(shape => shape.update({ fill: e.currentTarget.value }))
   }, [])
 
-  const updateStrokeWidth = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
-    shapes.forEach((shape) => shape.update({ strokeWidth: +e.currentTarget.value }))
+  const updateStrokeWidth = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(e => {
+    shapes.forEach(shape => shape.update({ strokeWidth: +e.currentTarget.value }))
   }, [])
 
-  const updateOpacity = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
-    shapes.forEach((shape) => shape.update({ opacity: +e.currentTarget.value }))
+  const updateOpacity = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(e => {
+    shapes.forEach(shape => shape.update({ opacity: +e.currentTarget.value }))
   }, [])
 
-  const updateSides = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
-    shapes.forEach((shape) => shape.update({ sides: +e.currentTarget.value }))
+  const updateSides = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(e => {
+    shapes.forEach(shape => shape.update({ sides: +e.currentTarget.value }))
   }, [])
 
-  const updateRatio = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>((e) => {
-    shapes.forEach((shape) => shape.update({ ratio: +e.currentTarget.value }))
+  const updateRatio = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(e => {
+    shapes.forEach(shape => shape.update({ ratio: +e.currentTarget.value }))
   }, [])
 
   React.useLayoutEffect(() => {
@@ -62,7 +62,7 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
 
   if (!app) return null
 
-  const sidesShapes = shapes.filter((shape) => 'sides' in shape) as (NuPolygonShape | NuStarShape)[]
+  const sidesShapes = shapes.filter(shape => 'sides' in shape) as (NuPolygonShape | NuStarShape)[]
 
   return (
     <HTMLContainer centered>
@@ -71,14 +71,14 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
         <NuColorInput label="Fill" value={shapes[0].fill} onChange={updateFill} />
         <NuNumberInput
           label="Width"
-          value={Math.max(...shapes.map((shape) => shape.strokeWidth))}
+          value={Math.max(...shapes.map(shape => shape.strokeWidth))}
           onChange={updateStrokeWidth}
           style={{ width: 48 }}
         />
         {sidesShapes.length > 0 && (
           <NuNumberInput
             label="Sides"
-            value={Math.max(...sidesShapes.map((shape) => shape.sides))}
+            value={Math.max(...sidesShapes.map(shape => shape.sides))}
             onChange={updateSides}
             style={{ width: 40 }}
           />
@@ -86,7 +86,7 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
         {sidesShapes.length > 0 && (
           <NuNumberInput
             label="Ratio"
-            value={Math.max(...sidesShapes.map((shape) => shape.ratio))}
+            value={Math.max(...sidesShapes.map(shape => shape.ratio))}
             onChange={updateRatio}
             step={0.1}
             min={0}
@@ -96,7 +96,7 @@ const _NuContextBar: TLContextBarComponent<Shape> = ({
         )}
         <NuNumberInput
           label="Opacity"
-          value={Math.max(...shapes.map((shape) => shape.opacity))}
+          value={Math.max(...shapes.map(shape => shape.opacity))}
           onChange={updateOpacity}
           step={0.1}
           style={{ width: 48 }}

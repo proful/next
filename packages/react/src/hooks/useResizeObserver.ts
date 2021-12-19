@@ -42,8 +42,8 @@ export function useResizeObserver<T extends Element>(
     }
   }, [])
 
-  React.useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
+  React.useLayoutEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
       if (entries[0].contentRect) {
         updateBounds()
       }
@@ -58,7 +58,7 @@ export function useResizeObserver<T extends Element>(
     }
   }, [ref])
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     updateBounds()
   }, [ref])
 }

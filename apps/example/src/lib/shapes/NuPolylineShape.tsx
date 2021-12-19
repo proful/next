@@ -21,7 +21,7 @@ export class NuPolylineShape extends TLPolylineShape<NuPolylineShapeProps> {
   @observable strokeWidth = 2
   @observable opacity = 1
 
-  hideBounds = true
+  hideSelection = true
 
   static id = 'polyline'
 

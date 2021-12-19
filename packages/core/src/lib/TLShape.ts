@@ -6,7 +6,7 @@ import {
 } from '@tldraw/intersect'
 import Vec from '@tldraw/vec'
 import { action, computed, makeObservable, observable } from 'mobx'
-import type { TLBounds, AnyObject, TLResizeCorner, TLResizeEdge } from '~types'
+import type { TLBounds, AnyObject, TLResizeEdge, TLResizeCorner } from '~types'
 import type { TLHandle } from '~types/TLHandle'
 import { BoundsUtils, PointUtils, assignOwnProps } from '~utils'
 import { deepCopy } from '~utils/DataUtils'
@@ -84,7 +84,7 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
   readonly hideRotateHandle: boolean = false
   readonly hideContextBar: boolean = false
   readonly hideSelectionDetail: boolean = false
-  readonly hideBounds: boolean = false
+  readonly hideSelection: boolean = false
   readonly isEditable: boolean = false
   readonly isStateful: boolean = false
   readonly aspectRatio?: number
@@ -197,7 +197,7 @@ export abstract class TLShape<P = any, M = any> implements TLShapeProps {
     return props
   }
 
-  @action update = (props: Partial<TLShapeProps> | Partial<P>, isDeserializing = false) => {
+  @action update = (props: Partial<TLShapeProps & P & any>, isDeserializing = false) => {
     if (!(isDeserializing || this.isDirty)) this.isDirty = true
     Object.assign(this, this.validateProps(props as Partial<TLShapeProps> & Partial<P>))
     return this
