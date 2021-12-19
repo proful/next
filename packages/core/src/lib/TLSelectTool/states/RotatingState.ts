@@ -120,12 +120,14 @@ export class RotatingState<
       } else {
         shape.update({
           point: Vec.sub(rotatedCenter, relativeCenter),
-          rotation: (initialShape.rotation || 0) + angleDelta + initialAngle,
+          rotation: GeomUtils.clampRadians(
+            (initialShape.rotation || 0) + angleDelta + initialAngle
+          ),
         })
       }
     })
 
-    const selectionRotation = initialSelectionRotation + angleDelta
+    const selectionRotation = GeomUtils.clampRadians(initialSelectionRotation + angleDelta)
     this.app.setSelectionRotation(
       shiftKey ? GeomUtils.snapAngleToSegments(selectionRotation, 24) : selectionRotation
     )

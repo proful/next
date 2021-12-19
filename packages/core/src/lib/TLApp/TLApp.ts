@@ -434,9 +434,12 @@ export class TLApp<
   }
 
   @computed get selectionBounds(): TLBounds | undefined {
-    return this.selectedShapesArray.length === 1
-      ? { ...this.selectedShapesArray[0].bounds, rotation: this.selectedShapesArray[0].rotation }
-      : BoundsUtils.getCommonBounds(this.selectedShapesArray.map(shape => shape.rotatedBounds))
+    const { selectedShapesArray } = this
+    if (selectedShapesArray.length === 0) return undefined
+    if (selectedShapesArray.length === 1) {
+      return { ...selectedShapesArray[0].bounds, rotation: selectedShapesArray[0].rotation }
+    }
+    return BoundsUtils.getCommonBounds(this.selectedShapesArray.map(shape => shape.rotatedBounds))
   }
 
   @computed get showSelection() {
