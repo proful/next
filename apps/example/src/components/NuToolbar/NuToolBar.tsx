@@ -49,11 +49,28 @@ export const NuToolBar = observer(function ToolBar(): JSX.Element {
     app.api.zoomToSelection()
   }, [app])
 
+  const sendToBack = React.useCallback(() => {
+    app.sendToBack()
+  }, [app])
+
+  const sendBackward = React.useCallback(() => {
+    app.sendBackward()
+  }, [app])
+
+  const bringToFront = React.useCallback(() => {
+    app.bringToFront()
+  }, [app])
+
+  const bringForward = React.useCallback(() => {
+    app.bringForward()
+  }, [app])
+
   return (
     <div className="nu-toolbar">
-      <input type="checkbox" checked={app.settings.isToolLocked} onChange={handleToolLockClick} />
-      Camera
-      <button onClick={zoomOut}>-</button>
+      <button onClick={sendToBack}>Send to Back</button>
+      <button onClick={sendBackward}>Send Backward</button>
+      <button onClick={bringForward}>Bring Forward</button>
+      <button onClick={bringToFront}>Bring To Front</button>|<button onClick={zoomOut}>-</button>
       <button onClick={zoomIn}>+</button>
       <button onClick={resetZoom}>reset</button>
       <button onClick={zoomToFit}>zoom to fit</button>

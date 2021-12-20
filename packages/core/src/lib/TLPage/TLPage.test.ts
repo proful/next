@@ -57,7 +57,19 @@ const documentModel: TLDocumentModel = {
   ],
 }
 
-describe('When running tests', () => {
+describe('Creates a page from a serialized page model', () => {
+  it.todo('Creates page')
+})
+
+describe('When creating shapes', () => {
+  it.todo('Creates shapes')
+})
+
+describe('When removing shapes', () => {
+  it.todo('Removes shapes')
+})
+
+describe('When running zindex tests', () => {
   it('Correctly identifies shapes in order', () => {
     new TLTestApp(documentModel).expectShapesInOrder('A', 'B', 'C', 'D')
   })
